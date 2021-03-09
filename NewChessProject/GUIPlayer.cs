@@ -169,7 +169,8 @@ namespace NewChessProject
                     state = State.WaitForMove;
                 }
             }
-            else if(state == State.SelectPiece && (e.Result == MoveResult.Stalemate || e.Result == MoveResult.Mate))
+            else if(state == State.SelectPiece && (e.Result == MoveResult.Stalemate || 
+                e.Result == MoveResult.Mate || e.Result == MoveResult.MoveRepetition))
             {
                 ResetMove();
                 GameRepresentationUpdated();

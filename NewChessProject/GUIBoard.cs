@@ -239,8 +239,7 @@ namespace NewChessProject
 
             HidePieceSelection();
 
-            if (PieceSelected != null)
-                PieceSelected(this, new PieceSelectedEventArgs(selectedPice));
+            PieceSelected?.Invoke(this, new PieceSelectedEventArgs(selectedPice));
         }
         
         private void HidePieceSelection()

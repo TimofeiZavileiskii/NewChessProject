@@ -81,6 +81,8 @@ namespace NewChessProject
             }
             this.board = board;
 
+            gameHistory.Add(board.OutputPieces());
+
             GenerateMoves();
         }
 

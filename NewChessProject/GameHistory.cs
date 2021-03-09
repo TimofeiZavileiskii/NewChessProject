@@ -19,9 +19,20 @@ namespace NewChessProject
             previousPositions.Push(addedMove);
         }
 
-        private bool ComparePositions()
+        private bool ComparePositions(List<PieceRepresentation> list1, List<PieceRepresentation> list2)
         {
+            bool output = true;
 
+            foreach (PieceRepresentation pr in list1)
+            {
+                if (!list2.Contains(pr))
+                {
+                    output = false;
+                    break;
+                }
+            }
+            
+            return (list1.Count == list2.Count) && output;
         }
 
         public bool CheckPositionRepetition(int maxPositions)
@@ -30,11 +41,11 @@ namespace NewChessProject
             List<PieceRepresentation> currentPosition = previousPositions.Peek();
             foreach(List<PieceRepresentation> previousPosition in previousPositions)
             {
-                if (previousPosition == currentPosition)
+                if (ComparePositions(previousPosition, currentPosition))
                     repetitions++;
             }
             Console.WriteLine(repetitions);
-            return !(repetitions < maxPositions + 1);
+            return !(repetitions < maxPositions);
         }
 
         public List<PieceRepresentation> ReverseMove()
