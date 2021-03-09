@@ -23,9 +23,9 @@ namespace NewChessProject
         {
             int repetitions = 0;
             List<PieceRepresentation> currentPosition = previousMoves.Peek();
-            for(int i = 0; i > previousMoves.Count(); i++)
+            for(int i = previousMoves.Count() - 2; i > 0 && repetitions < maxPositions; i--)
             {
-                if(currentPosition == position.PreviousNode)
+                if(currentPosition == previousMoves)
                     repetitions++;
 
                 checkedPosition = checkedPosition.PreviousNode;
