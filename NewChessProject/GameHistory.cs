@@ -8,38 +8,39 @@ namespace NewChessProject
 {
     class GameHistory
     {
-        Stack<List<PieceRepresentation>> previousMoves;
+        Stack<List<PieceRepresentation>> previousPositions;
         public GameHistory()
         {
-            previousMoves = new Stack<List<PieceRepresentation>>();
+            previousPositions = new Stack<List<PieceRepresentation>>();
         }
 
         public void Add(List<PieceRepresentation> addedMove)
         {
-            previousMoves.Push(addedMove);
+            previousPositions.Push(addedMove);
+        }
+
+        private bool ComparePositions()
+        {
+
         }
 
         public bool CheckPositionRepetition(int maxPositions)
         {
             int repetitions = 0;
-            List<PieceRepresentation> currentPosition = previousMoves.Peek();
-            for(int i = previousMoves.Count() - 2; i > 0 && repetitions < maxPositions; i--)
+            List<PieceRepresentation> currentPosition = previousPositions.Peek();
+            foreach(List<PieceRepresentation> previousPosition in previousPositions)
             {
-                if(currentPosition == previousMoves)
+                if (previousPosition == currentPosition)
                     repetitions++;
-
-                checkedPosition = checkedPosition.PreviousNode;
             }
             Console.WriteLine(repetitions);
-            return !(repetitions < maxPositions);
+            return !(repetitions < maxPositions + 1);
         }
 
         public List<PieceRepresentation> ReverseMove()
         {
-            List<PieceRepresentation> output = currentMove.BoardPosition;
-            currentMove = currentMove.PreviousNode;
-
-            return output;
+            previousPositions.Pop();
+            return previousPositions.Peek();
         }
     }
 }
