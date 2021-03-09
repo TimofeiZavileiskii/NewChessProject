@@ -17,13 +17,27 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Column="2">
-            <StackPanel Orientation="Vertical" Grid.Column="2">
-                <Label Name ="WhiteTime" Content ="" IsEnabled="False"></Label>
-                <Label Name ="BlackTime" Content ="" IsEnabled="False"></Label>
-            </StackPanel>
+        <StackPanel x:Name="GameData" Grid.Column ="2" Orientation="Vertical">
+            <WrapPanel>
+                <Label Content="Black Time"/>
+                <Label Content=""/>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Content="Black Time"/>
+                <Label Content=""/>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Content="Black Time"/>
+                <Label Content=""/>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Content="Black Time"/>
+                <Label Content=""/>
+            </WrapPanel>
+        </StackPanel>
 
-            <StackPanel x:Name="SettingsTitles" Orientation="Vertical">
+            <StackPanel x:Name="Settings" Orientation="Horizontal" Grid.Column="2">
+            <StackPanel x:Name="SettingsTitles" Orientation="Vertical" Visibility="Visible">
                 <Button HorizontalAlignment="Center" Margin="20" Width="120" Height="25" FontSize="15" Foreground="Black" Click="Start">Start</Button>
                 <Label Content="White player:" HorizontalAlignment="Right" FontSize="15"></Label>
                 <Label Content="Black player:" HorizontalAlignment="Right" FontSize="15"></Label>
@@ -32,7 +46,7 @@
                 <Label Content="Touch rule:" Margin="0,30,0,0" HorizontalAlignment="Right" FontSize="15"></Label>
                 <Label Content="Drag pieces:" HorizontalAlignment="Right" FontSize="15"></Label>
             </StackPanel>
-            <StackPanel x:Name="SettingsSelection" Orientation="Vertical">
+            <StackPanel x:Name="SettingsSelection" Orientation="Vertical" Visibility="Visible">
                 <ComboBox Margin="5,68,0,0" Width="100" Height="25">
                     <ComboBoxItem>This computer</ComboBoxItem>
                     <ComboBoxItem>AI</ComboBoxItem>

@@ -228,8 +228,7 @@ namespace NewChessProject
             SwitchPlayers();
             GenerateMoves();
 
-            if (MoveMade != null)
-                MoveMade(this, new MadeMoveEventArgs(DetermineMoveResult()));
+            MoveMade?.Invoke(this, new MadeMoveEventArgs(DetermineMoveResult()));
         }
     }
 }
