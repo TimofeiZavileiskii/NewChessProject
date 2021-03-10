@@ -176,6 +176,11 @@ namespace NewChessProject
             return board.OutputPieces();
         }
 
+        public void Surrender(PlayerColour colour)
+        {
+
+        }
+
         public List<Vector> GetAllowedPositions(PlayerColour colour, Vector movedPiece)
         {
             List<Vector> output = new List<Vector>();

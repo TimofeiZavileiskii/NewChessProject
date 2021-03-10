@@ -118,7 +118,7 @@ namespace NewChessProject
             this.game = game;
             this.guiBoard = guiBoard;
             board = new Board();
-            SetDefaultBoardPosition();
+            board.SetDefaultBoardPosition();
 
             guiBoard.Update(null, new GUIBoardUpdateEventArgs(new GameRepresentation(board.OutputPieces())));
             playerWhite = white;
@@ -130,42 +130,7 @@ namespace NewChessProject
             CreatePlayerFunctions.Add("AI Player", CreateAIPlayer);
         }
         
-        private void SetDefaultBoardPosition()
-        {
-            board.AddPiece(new Bishop(PlayerColour.White), new Vector(2, 0));
-            board.AddPiece(new Bishop(PlayerColour.White), new Vector (5, 0));
-
-            board.AddPiece(new Bishop(PlayerColour.Black), new Vector(2, Board.boardHeight - 1));
-            board.AddPiece(new Bishop(PlayerColour.Black), new Vector(5, Board.boardHeight - 1));
-
-            board.AddPiece(new Knight(PlayerColour.White), new Vector(1, 0));
-            board.AddPiece(new Knight(PlayerColour.White), new Vector(6, 0));
-
-            board.AddPiece(new Knight(PlayerColour.Black), new Vector(1, Board.boardHeight - 1));
-            board.AddPiece(new Knight(PlayerColour.Black), new Vector(6, Board.boardHeight - 1));
-
-            board.AddPiece(new Rook(PlayerColour.White), new Vector(0, 0));
-            board.AddPiece(new Rook(PlayerColour.White), new Vector(7, 0));
-
-            board.AddPiece(new Rook(PlayerColour.Black), new Vector(0, Board.boardHeight - 1));
-            board.AddPiece(new Rook(PlayerColour.Black), new Vector(7, Board.boardHeight - 1));
-
-            board.AddPiece(new Queen(PlayerColour.White), new Vector(3, 0));
-            board.AddPiece(new Queen(PlayerColour.Black), new Vector(3, Board.boardHeight - 1));
-
-            board.AddPiece(new King(PlayerColour.White), new Vector(4, 0));
-            board.AddPiece(new King(PlayerColour.Black), new Vector(4, Board.boardHeight - 1));
-
-            for (int i = 0; i < Board.boardWidth; i++)
-            {
-                board.AddPiece(new Pawn(PlayerColour.White), new Vector(i, 1));
-            }
-
-            for (int i = 0; i < Board.boardWidth; i++)
-            {
-                board.AddPiece(new Pawn(PlayerColour.Black), new Vector(i, Board.boardWidth - 2));
-            }
-        }
+        
 
         public void StartGame()
         {

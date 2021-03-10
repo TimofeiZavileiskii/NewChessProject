@@ -61,6 +61,43 @@ namespace NewChessProject
             return new Vector(-1, -1);
         }
 
+        public void SetDefaultBoardPosition()
+        {
+            AddPiece(new Bishop(PlayerColour.White), new Vector(2, 0));
+            AddPiece(new Bishop(PlayerColour.White), new Vector(5, 0));
+
+            AddPiece(new Bishop(PlayerColour.Black), new Vector(2, boardHeight - 1));
+            AddPiece(new Bishop(PlayerColour.Black), new Vector(5, boardHeight - 1));
+
+            AddPiece(new Knight(PlayerColour.White), new Vector(1, 0));
+            AddPiece(new Knight(PlayerColour.White), new Vector(6, 0));
+
+            AddPiece(new Knight(PlayerColour.Black), new Vector(1, boardHeight - 1));
+            AddPiece(new Knight(PlayerColour.Black), new Vector(6, boardHeight - 1));
+
+            AddPiece(new Rook(PlayerColour.White), new Vector(0, 0));
+            AddPiece(new Rook(PlayerColour.White), new Vector(7, 0));
+
+            AddPiece(new Rook(PlayerColour.Black), new Vector(0, boardHeight - 1));
+            AddPiece(new Rook(PlayerColour.Black), new Vector(7, boardHeight - 1));
+
+            AddPiece(new Queen(PlayerColour.White), new Vector(3, 0));
+            AddPiece(new Queen(PlayerColour.Black), new Vector(3, boardHeight - 1));
+
+            AddPiece(new King(PlayerColour.White), new Vector(4, 0));
+            AddPiece(new King(PlayerColour.Black), new Vector(4, boardHeight - 1));
+
+            for (int i = 0; i < Board.boardWidth; i++)
+            {
+                AddPiece(new Pawn(PlayerColour.White), new Vector(i, 1));
+            }
+
+            for (int i = 0; i < Board.boardWidth; i++)
+            {
+                AddPiece(new Pawn(PlayerColour.Black), new Vector(i, Board.boardWidth - 2));
+            }
+        }
+
         private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = false)
         {
             Piece output = null;
