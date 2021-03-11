@@ -164,7 +164,7 @@ namespace NewChessProject
                     if (e.Result == MoveResult.Check)
                         check = game.GetKingsPosition(Colour);
                 }
-                else if(state == State.SelectPiece)
+                else
                 {
                     state = State.WaitForMove;
                 }
@@ -238,7 +238,6 @@ namespace NewChessProject
             if (state == State.SlectPawnTransformation)
             {
                 game.ChoosePawnTransformation(colour, e.SelectedPieceType);
-                state = State.SelectMove;
             }
         }
 

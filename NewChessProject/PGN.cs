@@ -13,10 +13,15 @@ namespace NewChessProject
             Board board = new Board();
             board.SetDefaultBoardPosition();
             Game game = new Game(board);
-            
 
 
+            return game;
         }
+
+       /* static public string TurnMoveToPGN(Game(game))
+        {
+
+        }*/
 
     }
 }
