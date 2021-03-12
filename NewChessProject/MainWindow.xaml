@@ -17,7 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="GameData" Grid.Column ="2" Orientation="Vertical" Visibility="Hidden">
+        <StackPanel x:Name="InGameInterface" Grid.Column ="2" Orientation="Vertical" Visibility="Visible">
             <WrapPanel Margin="0, 0, 0, 0">
                 <Label  FontSize="15" Content="Black Time"/>
                 <Label FontSize="15" Content=""/>
@@ -26,7 +26,7 @@
                 <Label FontSize="15" Content="Previous moves"/>
                 <Label FontSize="15" Content=""/>
             </WrapPanel>
-            <WrapPanel Margin="0,30, 0, 0">
+            <WrapPanel Name="ControlButtons" Margin="0,30, 0, 0">
                 <Button FontSize="15" Content="Take back" Margin ="100, 10, 0, 10" HorizontalAlignment="Center"/>
                 <Button FontSize="15" Content="Draw" Margin ="20, 10, 0 , 10" HorizontalAlignment="Center"/>
                 <Button FontSize="15" Content="Surrender" Margin ="20, 10, 0 , 10" HorizontalAlignment="Center"/>
@@ -37,7 +37,7 @@
             </WrapPanel>
         </StackPanel>
 
-        <StackPanel x:Name="Settings" Orientation="Horizontal" Grid.Column="2" Visibility ="Visible">
+        <StackPanel x:Name="Settings" Orientation="Horizontal" Grid.Column="2" Visibility ="Hidden">
             <StackPanel x:Name="SettingsTitles" Orientation="Vertical" Visibility="Visible">
                 <Button HorizontalAlignment="Center" Margin="20" Width="120" Height="25" FontSize="15" Foreground="Black" Click="Start">Start</Button>
                 <Label Content="White player:" HorizontalAlignment="Right" FontSize="15"></Label>

@@ -9,31 +9,6 @@ using System.Windows.Input;
 
 namespace NewChessProject
 {
-    class GUIBoardUpdateEventArgs : EventArgs
-    {
-        public GUIBoardUpdateEventArgs(GameRepresentation gr)
-        {
-            GR = gr;
-        }
-
-        public GameRepresentation GR
-        {
-            get; set;
-        }
-    }
-
-    class BoardClickedEventArgs : EventArgs
-    {
-        public BoardClickedEventArgs(Vector vector)
-        {
-            Position = vector;
-        }
-
-        public Vector Position
-        {
-            get; set;
-        }
-    }
 
     class GUIBoard
     {
@@ -49,6 +24,7 @@ namespace NewChessProject
         public event EventHandler<BoardClickedEventArgs> OnBoardClicked;
         public event EventHandler OnWindowClicked;
         public event EventHandler<PieceSelectedEventArgs> PieceSelected;
+
 
         double squareWidth;
         double squareHeight;
@@ -277,13 +253,16 @@ namespace NewChessProject
         public void EndGame(object sender, GameEndedEventArgs e)
         {
             string text = "";
-            switch(e.GameResult)
+            switch(e.Reason)
             {
                 case MoveResult.Stalemate:
                     text = "The game ended in a tie: stalemate";
                     break;
                 case MoveResult.Mate:
-                    text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory";
+                    text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory by checkmate";
+                    break;
+                case MoveResult.Resignation:
+                    text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory, as other player resigned";
                     break;
                 case MoveResult.MoveRepetition:
                     text = "The game ended in a tie: 3 position repetition";

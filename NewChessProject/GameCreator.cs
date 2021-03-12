@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Shapes;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using System.Windows.Input;
 
 namespace NewChessProject
 {
@@ -14,6 +20,7 @@ namespace NewChessProject
         Player playerBlack;
         GUIBoard guiBoard;
         Game game;
+        StackPanel inGameInterface;
 
         Dictionary<string, CreatePlayer> CreatePlayerFunctions;
 
@@ -31,12 +38,20 @@ namespace NewChessProject
         Player CreateGUIPlayer(PlayerColour colour)
         {
             GUIPlayer player = new GUIPlayer(colour, game);
+
             guiBoard.OnBoardClicked += player.OnBoardClicked;
             guiBoard.OnWindowClicked += player.OnWindowClicked;
             guiBoard.PieceSelected += player.PieceSelected;
+            
+            
+
             player.OnGameEnded += guiBoard.EndGame;
             player.OnPawnNeedsTransforemation += guiBoard.PreparePieceSelection;
             player.OnGameRepresentationUpdated += guiBoard.Update;
+
+            game.GameEnded += player.GameEnded;
+
+            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[2]).Click += player.Resign;
 
             return player;
         }
@@ -113,16 +128,17 @@ namespace NewChessProject
             }
         }
 
-        public GameCreator(Player white, Player black, Game game, GUIBoard guiBoard)
+
+        
+        public GameCreator(Game game, GUIBoard guiBoard, StackPanel inGameInterface)
         {
             this.game = game;
-            this.guiBoard = guiBoard;
+            this.guiBoard = guiBoard; 
+            this.inGameInterface = inGameInterface;
+
             board = new Board();
             board.SetDefaultBoardPosition();
-
             guiBoard.Update(null, new GUIBoardUpdateEventArgs(new GameRepresentation(board.OutputPieces())));
-            playerWhite = white;
-            playerBlack = black;
             ReadGameSettings();
 
             CreatePlayerFunctions = new Dictionary<string, CreatePlayer>();
@@ -144,6 +160,7 @@ namespace NewChessProject
 
             game.MoveMade += playerWhite.OnMadeMove;
             game.MoveMade += playerBlack.OnMadeMove;
+            game.GameEnded += guiBoard.EndGame;
         }
 
        

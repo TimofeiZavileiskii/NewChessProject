@@ -48,22 +48,19 @@ namespace NewChessProject
         Mate,
         Stalemate,
         MoveRepetition,
+        Resignation
     }
 
-    class MadeMoveEventArgs : EventArgs
-    {
-        public MadeMoveEventArgs(MoveResult result) : base()
-        {
-            Result = result;
-        }
 
-        public MoveResult Result { get; set; }
-    }
+
+
+
 
     class Game
     {
         const int maxPositionRepetition = 3;
         public event EventHandler<MadeMoveEventArgs> MoveMade;
+        public event EventHandler<GameEndedEventArgs> GameEnded;
         GameState gameState;
         Board board;
         List<Piece>[] takenPieces;
@@ -176,11 +173,6 @@ namespace NewChessProject
             return board.OutputPieces();
         }
 
-        public void Surrender(PlayerColour colour)
-        {
-
-        }
-
         public List<Vector> GetAllowedPositions(PlayerColour colour, Vector movedPiece)
         {
             List<Vector> output = new List<Vector>();
@@ -221,9 +213,31 @@ namespace NewChessProject
             return result;
         }
 
+        public void ImportGame()
+        {
+
+        }
+
         public Vector GetKingsPosition(PlayerColour colour)
         {
             return board.GetKingPosition(colour);
+        }
+
+        public void Resign(PlayerColour colour)
+        {
+            GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.Resignation, board.ReverseColour(IdentifyPlayersColour(gameState))));
+        }
+
+        public void OfferDraw(PlayerColour colour)
+        {
+
+        }
+
+        
+
+        public void Surrender(PlayerColour colour)
+        {
+            MoveMade?.Invoke(this, new MadeMoveEventArgs(MoveResult.MoveRepetition));
         }
 
         protected virtual void OnMadeMove()
@@ -233,7 +247,16 @@ namespace NewChessProject
             SwitchPlayers();
             GenerateMoves();
 
-            MoveMade?.Invoke(this, new MadeMoveEventArgs(DetermineMoveResult()));
+            MoveResult result = DetermineMoveResult();
+
+            if (result == MoveResult.Check || result == MoveResult.Continue)
+            {
+                MoveMade?.Invoke(this, new MadeMoveEventArgs(result));
+            }
+            else
+            {
+                GameEnded?.Invoke(this, new GameEndedEventArgs(result, board.ReverseColour(IdentifyPlayersColour(gameState))));
+            }
         }
     }
 }

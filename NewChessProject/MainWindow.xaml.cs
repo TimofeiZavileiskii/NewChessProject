@@ -16,25 +16,28 @@ namespace NewChessProject
     public partial class MainWindow : Window
     {
         GameCreator gc;
-        Player playerWhite;
-        Player playerBlack;
         Game game;
         GUIBoard guiBoard;
         public MainWindow()
         {
             InitializeComponent();
 
+            InGameInterface.Visibility = Visibility.Hidden;
+            Settings.Visibility = Visibility.Visible;
+            ImportButton.Visibility = Visibility.Visible;
+
             guiBoard = new GUIBoard(Screen, PieceSelection, this);
-            gc = new GameCreator(playerWhite, playerBlack, game, guiBoard);
+            gc = new GameCreator(game, guiBoard, InGameInterface);
             DataContext = gc;
-            
+
+
         }
 
         private void Start(object sender, RoutedEventArgs e)
         {
             gc.StartGame();
-            SettingsTitles.Visibility = Visibility.Hidden;
-            SettingsSelection.Visibility = Visibility.Hidden;
+            InGameInterface.Visibility = Visibility.Visible;
+            Settings.Visibility = Visibility.Hidden;
             ImportButton.Visibility = Visibility.Hidden;
         }
 

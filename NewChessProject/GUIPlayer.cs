@@ -23,26 +23,6 @@ namespace NewChessProject
         WaitForMove
     }
 
-    class PieceSelectedEventArgs : EventArgs
-    {
-        public PieceSelectedEventArgs(PieceType type)
-        {
-            SelectedPieceType = type;
-        }
-
-        public PieceType SelectedPieceType { get; set; }
-    }
-
-    class GameEndedEventArgs : EventArgs
-    {
-        public GameEndedEventArgs(MoveResult result)
-        {
-            GameResult = result;
-        }
-
-        public MoveResult GameResult { get; set; }
-    }
-
     class GUIPlayer : Player
     {
         Vector selectedPiece;
@@ -154,28 +134,32 @@ namespace NewChessProject
 
         override public void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
-            if((e.Result == MoveResult.Continue || e.Result == MoveResult.Check))
+            if (state == State.WaitForMove)
             {
-                if (state == State.WaitForMove)
-                {
-                    state = State.SelectPiece;
-                    GameRepresentationUpdated();
+                state = State.SelectPiece;
+                GameRepresentationUpdated();
 
-                    if (e.Result == MoveResult.Check)
-                        check = game.GetKingsPosition(Colour);
-                }
-                else
-                {
-                    state = State.WaitForMove;
-                }
+                if (e.Result == MoveResult.Check)
+                    check = game.GetKingsPosition(Colour);
             }
-            else if(state == State.SelectPiece && (e.Result == MoveResult.Stalemate || 
-                e.Result == MoveResult.Mate || e.Result == MoveResult.MoveRepetition))
+            else
+            {
+                state = State.WaitForMove;
+            }
+        }
+
+        public void GameEnded(object sender, GameEndedEventArgs e)
+        {
+            if (state == State.WaitForMove)
             {
                 ResetMove();
                 GameRepresentationUpdated();
+
+                OnGameEnded?.Invoke(this, e);
+            }
+            else
+            {
                 state = State.WaitForMove;
-                GameEnded(e.Result);
             }
         }
 
@@ -198,6 +182,14 @@ namespace NewChessProject
             return output;
         }
 
+        public void Resign(object sender, EventArgs e)
+        {
+            if(state != State.WaitForMove)
+            {
+                game.Resign(Colour);
+            }
+        }
+
         private void GameRepresentationUpdated()
         {
             GameRepresentation gr = new GameRepresentation(game.GetPieceRepresentations(), GenerateMoveTiles(), GenerateBoardHilights());
@@ -214,12 +206,6 @@ namespace NewChessProject
                 output.Add(new BoardIndicator(selectedPiece, Color.FromRgb(50, 230, 50)));
 
             return output;
-        }
-
-        private void GameEnded(MoveResult result)
-        {
-            if(OnGameEnded != null)
-                OnGameEnded(this, new GameEndedEventArgs(result));
         }
 
         private void PawnNeedsTransformation()
