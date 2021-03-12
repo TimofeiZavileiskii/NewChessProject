@@ -37,18 +37,6 @@ namespace NewChessProject
         }
     }
 
-    class GUIBoardUpdateEventArgs : EventArgs
-    {
-        public GUIBoardUpdateEventArgs(GameRepresentation gr)
-        {
-            GR = gr;
-        }
-
-        public GameRepresentation GR
-        {
-            get; set;
-        }
-    }
 
     class BoardClickedEventArgs : EventArgs
     {

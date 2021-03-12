@@ -43,11 +43,6 @@ namespace NewChessProject
             guiBoard.OnWindowClicked += player.OnWindowClicked;
             guiBoard.PieceSelected += player.PieceSelected;
             
-            
-
-            player.OnGameEnded += guiBoard.EndGame;
-
-
             game.GameEnded += player.GameEnded;
 
             ((Button)((WrapPanel)inGameInterface.Children[2]).Children[2]).Click += player.Resign;

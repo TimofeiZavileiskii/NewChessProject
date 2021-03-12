@@ -34,10 +34,6 @@ namespace NewChessProject
         delegate void StateTransition(Vector position);
         (StateTransition, State)[,] stateMachine;
 
-        public event EventHandler<GUIBoardUpdateEventArgs> OnGameRepresentationUpdated;
-        public event EventHandler OnPawnNeedsTransforemation;
-        public event EventHandler<GameEndedEventArgs> OnGameEnded;
-
         public GUIPlayer(PlayerColour colour, Game game, GUIBoard guiBoard) : base(colour, game)
         {
             allowedPositions = new List<Vector>();
