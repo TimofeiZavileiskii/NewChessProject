@@ -87,7 +87,6 @@
     <Compile Include="OneStepPiece.cs" />
     <Compile Include="Participant.cs" />
     <Compile Include="Pawn.cs" />
-    <Compile Include="PGN.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="PieceRepresentation.cs" />
     <Compile Include="Player.cs" />

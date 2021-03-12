@@ -79,6 +79,11 @@ namespace NewChessProject
         {
             squareWidth = canvas.ActualWidth / Board.boardWidth;
             squareHeight = canvas.ActualHeight / Board.boardHeight;
+
+            if (squareHeight < squareWidth)
+                squareWidth = squareHeight;
+            else
+                squareHeight = squareWidth;
         }
 
         private void DrawGame()
@@ -187,7 +192,7 @@ namespace NewChessProject
         {
             if(OnWindowClicked != null)
             {
-      //          OnWindowClicked(this, EventArgs.Empty);
+              //  OnWindowClicked(this, EventArgs.Empty);
             }
         }
 

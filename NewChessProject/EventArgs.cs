@@ -60,4 +60,14 @@ namespace NewChessProject
 
         public PieceType SelectedPieceType { get; set; }
     }
+
+    class RequestMadeEventArgs : EventArgs
+    {
+        public Request Request { get; set; }
+
+        public RequestMadeEventArgs(Request request)
+        {
+            Request = request;
+        }
+    }
 }

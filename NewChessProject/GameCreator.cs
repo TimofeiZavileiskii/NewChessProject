@@ -44,7 +44,10 @@ namespace NewChessProject
             guiBoard.PieceSelected += player.PieceSelected;
             
             game.GameEnded += player.GameEnded;
+            game.RequestMade += player.RequestSend;
 
+            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[0]).Click += player.RequestTakeback;
+            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[1]).Click += player.RequestDraw;
             ((Button)((WrapPanel)inGameInterface.Children[2]).Children[2]).Click += player.Resign;
 
             return player;

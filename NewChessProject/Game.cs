@@ -48,19 +48,16 @@ namespace NewChessProject
         Mate,
         Stalemate,
         MoveRepetition,
-        Resignation
+        Resignation,
+        Draw
     }
-
-
-
-
-
 
     class Game
     {
         const int maxPositionRepetition = 3;
         public event EventHandler<MadeMoveEventArgs> MoveMade;
         public event EventHandler<GameEndedEventArgs> GameEnded;
+        public event EventHandler<RequestMadeEventArgs> RequestMade;
         GameState gameState;
         Board board;
         List<Piece>[] takenPieces;
@@ -228,24 +225,29 @@ namespace NewChessProject
             GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.Resignation, board.ReverseColour(IdentifyPlayersColour(gameState))));
         }
 
+        private void MakeRequest(Request request)
+        {
+            RequestMade?.Invoke(this, new RequestMadeEventArgs(request));
+        }
+
         public void OfferDraw(PlayerColour colour)
         {
-
+            Request request = new Request(RequestType.OfferDraw, "Agree to the draw?");
+            MakeRequest(request);
+            PlayerColour colour = PlayerColour.Black;
+            if (request.Agreed)
+                GameEnded.Invoke?(this, new GameEndedEventArgs(MoveResult.Draw, colour));
         }
 
-        public void Draw()
+
+        public void TakeBack(PlayerColour colour)
         {
-
-        }
-
-        public void TakeBack()
-        {
-
-        }
-
-        public void Surrender(PlayerColour colour)
-        {
-            MoveMade?.Invoke(this, new MadeMoveEventArgs(MoveResult.MoveRepetition));
+            Request request = new Request(RequestType.ProposeTakeback, "Accept takeback from " + colour.ToString() + " player");
+            MakeRequest(request);
+            if (request.Agreed)
+            {
+                
+            }
         }
 
         protected virtual void OnMadeMove()

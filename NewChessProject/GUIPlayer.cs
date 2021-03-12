@@ -20,6 +20,7 @@ namespace NewChessProject
         SelectMove,
         SelectPiece,
         SlectPawnTransformation,
+        WaitForRequestAnswer,
         WaitForMove
     }
 
@@ -65,6 +66,10 @@ namespace NewChessProject
             stateMachine[(int)State.SlectPawnTransformation, (int)Input.ClickNothing] = (null, State.SlectPawnTransformation);
             stateMachine[(int)State.SlectPawnTransformation, (int)Input.ClickYourPiece] = (null, State.SlectPawnTransformation);
             stateMachine[(int)State.SlectPawnTransformation, (int)Input.ClickValidMove] = (null, State.SlectPawnTransformation);
+
+            stateMachine[(int)State.WaitForRequestAnswer, (int)Input.ClickNothing] = (null, State.WaitForRequestAnswer);
+            stateMachine[(int)State.WaitForRequestAnswer, (int)Input.ClickYourPiece] = (null, State.WaitForRequestAnswer);
+            stateMachine[(int)State.WaitForRequestAnswer, (int)Input.ClickValidMove] = (null, State.WaitForRequestAnswer);
 
             stateMachine[(int)State.WaitForMove, (int)Input.ClickNothing] = (null, State.WaitForMove);
             stateMachine[(int)State.WaitForMove, (int)Input.ClickYourPiece] = (null, State.WaitForMove);
@@ -154,20 +159,21 @@ namespace NewChessProject
         {
             if (state != State.WaitForMove)
             {
-                game.Resign(Colour);
+                game.OfferDraw(Colour);
             }
         }
 
-        public void TakeBackProposed(object sender, EventArgs e)
+        public void RequestSend(object sender, RequestMadeEventArgs e)
         {
-
+            if(state == State.WaitForMove)
+                guiBoard.MakeRequest(e.Request);
         }
 
         public void RequestTakeback(object sender, EventArgs e)
         {
             if (state != State.WaitForMove)
             {
-                game.Resign(Colour);
+                game.TakeBack(Colour);
             }
         }
 
