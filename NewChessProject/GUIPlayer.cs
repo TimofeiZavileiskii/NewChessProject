@@ -38,6 +38,7 @@ namespace NewChessProject
         {
             allowedPositions = new List<Vector>();
             this.guiBoard = guiBoard;
+            check = new Vector(-1, -1);
             CreateStateMachine();
             if(colour == PlayerColour.White)
             { 
@@ -131,16 +132,20 @@ namespace NewChessProject
 
         override public void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
+            check = new Vector(-1, -1);
             if (state == State.WaitForMove)
             {
                 state = State.SelectPiece;
-                GameRepresentationUpdated();
-
-                if (e.Result == MoveResult.Check)
+                if(e.Result == MoveResult.Check)
+                {
                     check = game.GetKingsPosition(Colour);
+                }
+
+                GameRepresentationUpdated();
             }
             else
             {
+                
                 state = State.WaitForMove;
             }
         }
@@ -221,6 +226,8 @@ namespace NewChessProject
 
             if (selectedPiece != new Vector(-1, -1))
                 output.Add(new BoardIndicator(selectedPiece, Color.FromRgb(50, 230, 50)));
+            if (check != new Vector(-1, -1))
+                output.Add(new BoardIndicator(check, Color.FromRgb(180, 40, 40)));
 
             return output;
         }
