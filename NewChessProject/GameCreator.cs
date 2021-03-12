@@ -37,7 +37,7 @@ namespace NewChessProject
 
         Player CreateGUIPlayer(PlayerColour colour)
         {
-            GUIPlayer player = new GUIPlayer(colour, game);
+            GUIPlayer player = new GUIPlayer(colour, game, guiBoard);
 
             guiBoard.OnBoardClicked += player.OnBoardClicked;
             guiBoard.OnWindowClicked += player.OnWindowClicked;
@@ -46,8 +46,7 @@ namespace NewChessProject
             
 
             player.OnGameEnded += guiBoard.EndGame;
-            player.OnPawnNeedsTransforemation += guiBoard.PreparePieceSelection;
-            player.OnGameRepresentationUpdated += guiBoard.Update;
+
 
             game.GameEnded += player.GameEnded;
 
@@ -138,7 +137,7 @@ namespace NewChessProject
 
             board = new Board();
             board.SetDefaultBoardPosition();
-            guiBoard.Update(null, new GUIBoardUpdateEventArgs(new GameRepresentation(board.OutputPieces())));
+            guiBoard.Update(new GameRepresentation(board.OutputPieces()));
             ReadGameSettings();
 
             CreatePlayerFunctions = new Dictionary<string, CreatePlayer>();

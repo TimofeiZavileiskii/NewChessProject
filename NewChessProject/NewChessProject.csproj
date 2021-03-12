@@ -92,6 +92,7 @@
     <Compile Include="PieceRepresentation.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Queen.cs" />
+    <Compile Include="Request.cs" />
     <Compile Include="Rook.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

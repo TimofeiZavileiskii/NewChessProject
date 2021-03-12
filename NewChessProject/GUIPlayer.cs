@@ -29,7 +29,7 @@ namespace NewChessProject
         List<Vector> allowedPositions;
         State state;
         Vector check;
-
+        GUIBoard guiBoard;
 
         delegate void StateTransition(Vector position);
         (StateTransition, State)[,] stateMachine;
@@ -38,9 +38,10 @@ namespace NewChessProject
         public event EventHandler OnPawnNeedsTransforemation;
         public event EventHandler<GameEndedEventArgs> OnGameEnded;
 
-        public GUIPlayer(PlayerColour colour, Game game) : base(colour, game)
+        public GUIPlayer(PlayerColour colour, Game game, GUIBoard guiBoard) : base(colour, game)
         {
             allowedPositions = new List<Vector>();
+            this.guiBoard = guiBoard;
             CreateStateMachine();
             if(colour == PlayerColour.White)
             { 
@@ -92,7 +93,7 @@ namespace NewChessProject
             if (result == EnterResult.WaitForPawnSlection)
             {
                 state = State.SlectPawnTransformation;
-                PawnNeedsTransformation();
+                guiBoard.ShowPieceSelection(Colour);
             }
 
             ResetMove();
@@ -148,6 +149,27 @@ namespace NewChessProject
             }
         }
 
+        public void RequestDraw(object sender, EventArgs e)
+        {
+            if (state != State.WaitForMove)
+            {
+                game.Resign(Colour);
+            }
+        }
+
+        public void TakeBackProposed(object sender, EventArgs e)
+        {
+
+        }
+
+        public void RequestTakeback(object sender, EventArgs e)
+        {
+            if (state != State.WaitForMove)
+            {
+                game.Resign(Colour);
+            }
+        }
+
         public void GameEnded(object sender, GameEndedEventArgs e)
         {
             if (state == State.WaitForMove)
@@ -155,7 +177,7 @@ namespace NewChessProject
                 ResetMove();
                 GameRepresentationUpdated();
 
-                OnGameEnded?.Invoke(this, e);
+                guiBoard.EndGame(this, e);
             }
             else
             {
@@ -194,8 +216,7 @@ namespace NewChessProject
         {
             GameRepresentation gr = new GameRepresentation(game.GetPieceRepresentations(), GenerateMoveTiles(), GenerateBoardHilights());
 
-            if (OnGameRepresentationUpdated != null)
-                OnGameRepresentationUpdated(this, new GUIBoardUpdateEventArgs(gr));
+            guiBoard.Update(gr);
         }
 
         private List<BoardIndicator> GenerateBoardHilights()
@@ -207,13 +228,6 @@ namespace NewChessProject
 
             return output;
         }
-
-        private void PawnNeedsTransformation()
-        {
-            if (OnPawnNeedsTransforemation != null)
-                OnPawnNeedsTransforemation(this, EventArgs.Empty);
-        }
-
         public void OnWindowClicked(object sender, EventArgs e)
         {
             InputAction(new Vector(0,0), Input.ClickNothing);

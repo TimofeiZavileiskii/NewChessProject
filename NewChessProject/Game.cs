@@ -233,7 +233,15 @@ namespace NewChessProject
 
         }
 
-        
+        public void Draw()
+        {
+
+        }
+
+        public void TakeBack()
+        {
+
+        }
 
         public void Surrender(PlayerColour colour)
         {

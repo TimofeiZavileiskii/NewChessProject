@@ -171,9 +171,9 @@ namespace NewChessProject
                 OnBoardClicked(this, new BoardClickedEventArgs(position));
         }
 
-        public void Update(object sender, GUIBoardUpdateEventArgs e)
+        public void Update(GameRepresentation gr)
         {
-            gr = e.GR;
+            this.gr = gr;
             DrawGame();
         }
 
@@ -223,12 +223,7 @@ namespace NewChessProject
             pieceSelection.Visibility = Visibility.Hidden;
         }
 
-        public void PreparePieceSelection(object sender, EventArgs e)
-        {
-            ShowPieceSelection(((Player)sender).Colour);
-        }
-
-        private void ShowPieceSelection(PlayerColour colour)
+        public void ShowPieceSelection(PlayerColour colour)
         {
             pieceSelection.Visibility = Visibility.Visible;
 
@@ -252,24 +247,36 @@ namespace NewChessProject
 
         public void EndGame(object sender, GameEndedEventArgs e)
         {
-            string text = "";
-            switch(e.Reason)
+            try
             {
-                case MoveResult.Stalemate:
-                    text = "The game ended in a tie: stalemate";
-                    break;
-                case MoveResult.Mate:
-                    text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory by checkmate";
-                    break;
-                case MoveResult.Resignation:
-                    text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory, as other player resigned";
-                    break;
-                case MoveResult.MoveRepetition:
-                    text = "The game ended in a tie: 3 position repetition";
-                    break;
-            }
+                string text = "";
+                switch (e.Reason)
+                {
+                    case MoveResult.Stalemate:
+                        text = "The game ended in a tie: stalemate";
+                        break;
+                    case MoveResult.Mate:
+                        text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory by checkmate";
+                        break;
+                    case MoveResult.Resignation:
+                        text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory, as other player resigned";
+                        break;
+                    case MoveResult.MoveRepetition:
+                        text = "The game ended in a tie: 3 position repetition";
+                        break;
+                }
 
-            ShowMessage(text);
+                ShowMessage(text);
+            }
+            catch (System.InvalidCastException)
+            {
+
+            }
+        }
+
+        public void MakeRequest(Request request)
+        {
+            request.Agreed = MessageBox.Show(request.Text, request.Title, MessageBoxButton.YesNo) == MessageBoxResult.Yes;
         }
 
         private void ShowMessage(string text)
