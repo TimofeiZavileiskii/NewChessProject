@@ -167,10 +167,17 @@ namespace NewChessProject
             inGameInterface.DataContext = game;
             Label whiteTime = (Label)((WrapPanel)inGameInterface.Children[0]).Children[1];
             Label blackTime = (Label)((WrapPanel)inGameInterface.Children[3]).Children[1];
-            whiteTime.SetBinding(ContentControl.ContentProperty, new Binding("WhiteTime"));
-            blackTime.SetBinding(ContentControl.ContentProperty, new Binding("BlackTime"));
+
+            Binding whiteBinding = new Binding("WhiteTime");
+            whiteBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+            whiteTime.SetBinding(ContentControl.ContentProperty, whiteBinding);
+
+            Binding blackBinding = new Binding("BlackTime");
+            blackBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            blackTime.SetBinding(ContentControl.ContentProperty, blackBinding);
         }
-       
+
         private void ReadGameSettings()
         {
             if (File.Exists(@"GameSettings.txt"))

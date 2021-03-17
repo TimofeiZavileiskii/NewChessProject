@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Linq;
 using System.Text;
@@ -52,7 +54,7 @@ namespace NewChessProject
         Draw
     }
 
-    class Game
+    class Game : INotifyPropertyChanged
     {
         const int maxPositionRepetition = 3;
 
@@ -60,7 +62,7 @@ namespace NewChessProject
         public event EventHandler<MadeMoveEventArgs> MoveMade;
         public event EventHandler<GameEndedEventArgs> GameEnded;
         public event EventHandler<RequestMadeEventArgs> RequestMade;
-
+        public event PropertyChangedEventHandler PropertyChanged;
 
         GameState gameState;
         Board board;
@@ -92,7 +94,7 @@ namespace NewChessProject
             const double minuteLength = 60;
 
             double seconds;
-            double minutes = Math.Round(totalTime / minuteLength);
+            int minutes = (int)Math.Floor(totalTime / minuteLength);
             if (totalTime < decimalThreshold)
             {
                 seconds = Math.Round(totalTime - minuteLength * minutes, 1);
@@ -141,7 +143,15 @@ namespace NewChessProject
         private void UpdateTime(object sender, EventArgs e)
         {
             timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
+            NotifyPropertyChanged("WhiteTime");
+            NotifyPropertyChanged("BlackTime");
         }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private void GenerateMoves()
         {
             board.GenerateMoves(board.ReverseColour(IdentifyPlayersColour(gameState)));
