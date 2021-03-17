@@ -55,31 +55,93 @@ namespace NewChessProject
     class Game
     {
         const int maxPositionRepetition = 3;
+
+
         public event EventHandler<MadeMoveEventArgs> MoveMade;
         public event EventHandler<GameEndedEventArgs> GameEnded;
         public event EventHandler<RequestMadeEventArgs> RequestMade;
+
+
         GameState gameState;
         Board board;
         List<Piece>[] takenPieces;
+        Timer[] timers;
+        double[] timesPerPlayer;
+        double timePerTurn;
         GameHistory gameHistory;
 
-        public Game(Board board)
+        public string BlackTime
         {
+            get
+            {
+                return TurnTimeToMinutes(timers[(int)PlayerColour.Black].TimeLeft);
+            }
+        }
+
+        public string WhiteTime
+        {
+            get
+            {
+                return TurnTimeToMinutes(timers[(int)PlayerColour.White].TimeLeft);
+            }
+        }
+
+        private string TurnTimeToMinutes(double totalTime)
+        {
+            const double decimalThreshold = 20;
+            const double minuteLength = 60;
+
+            double seconds;
+            double minutes = Math.Round(totalTime / minuteLength);
+            if (totalTime < decimalThreshold)
+            {
+                seconds = Math.Round(totalTime - minuteLength * minutes, 1);
+            }
+            else
+            {
+                seconds = Math.Round(totalTime - minuteLength * minutes, 0);
+            }
+            string output = seconds.ToString();
+            if (minutes != 0)
+                output = minutes.ToString() + ":" + output;
+
+            return output;
+        }
+
+        public Game(Board board, double timePerPlayer, double timePerTurn)
+        {
+            const double reportTime = 0.1;
             gameState = GameState.WhiteMove;
             gameHistory = new GameHistory();
+            this.timePerTurn = timePerTurn;
 
+            timers = new Timer[Enum.GetValues(typeof(PlayerColour)).Length];
             takenPieces = new List<Piece>[Enum.GetValues(typeof(PlayerColour)).Length];
+            timesPerPlayer = new double[Enum.GetValues(typeof(PlayerColour)).Length];
+
             foreach (PlayerColour colour in Enum.GetValues(typeof(PlayerColour)))
             {
                 takenPieces[(int)colour] = new List<Piece>();
             }
+
+            foreach (PlayerColour colour in Enum.GetValues(typeof(PlayerColour)))
+            {
+                timers[(int)colour] = new Timer(reportTime, timePerPlayer, colour);
+                timers[(int)colour].TimePassed += UpdateTime;
+            }
+            timers[(int)PlayerColour.White].Start();
+
             this.board = board;
 
-            gameHistory.Add(board.OutputPieces());
+            gameHistory.Add(board.Copy());
 
             GenerateMoves();
         }
 
+        private void UpdateTime(object sender, EventArgs e)
+        {
+            timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
+        }
         private void GenerateMoves()
         {
             board.GenerateMoves(board.ReverseColour(IdentifyPlayersColour(gameState)));
@@ -149,6 +211,9 @@ namespace NewChessProject
             {
                 gameState = GameState.BlackMove;
             }
+            timers[(int)board.ReverseColour(IdentifyPlayersColour(gameState))].Stop();
+            timers[(int)IdentifyPlayersColour(gameState)].Start();
+            timers[(int)IdentifyPlayersColour(gameState)].Add(timePerTurn);
         }
 
         public bool PiecePresent(PlayerColour colour, Vector vector)
@@ -234,9 +299,8 @@ namespace NewChessProject
         {
             Request request = new Request(RequestType.OfferDraw, "Agree to the draw?");
             MakeRequest(request);
-            PlayerColour colour = PlayerColour.Black;
             if (request.Agreed)
-                GameEnded.Invoke?(this, new GameEndedEventArgs(MoveResult.Draw, colour));
+                GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.Draw, colour));
         }
 
 
@@ -246,13 +310,15 @@ namespace NewChessProject
             MakeRequest(request);
             if (request.Agreed)
             {
+                board = gameHistory.ReverseMove();
+                GenerateMoves();
                 
             }
         }
 
         protected virtual void OnMadeMove()
         {
-            gameHistory.Add(board.OutputPieces());
+            gameHistory.Add(board.Copy());
 
             SwitchPlayers();
             GenerateMoves();

@@ -261,13 +261,16 @@ namespace NewChessProject
                         text = "The game ended in a tie: stalemate";
                         break;
                     case MoveResult.Mate:
-                        text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory by checkmate";
+                        text = "The game ended in a " + e.Winner.ToString() + " player's victory by checkmate";
                         break;
                     case MoveResult.Resignation:
-                        text = "The game ended in a " + ((Player)sender).Colour.ToString() + " player's victory, as other player resigned";
+                        text = "The game ended in a " + e.Winner.ToString() + " player's victory, as other player resigned";
                         break;
                     case MoveResult.MoveRepetition:
                         text = "The game ended in a tie: 3 position repetition";
+                        break;
+                    case MoveResult.Draw:
+                        text = "The game ended in a draw";
                         break;
                 }
 

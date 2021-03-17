@@ -1,6 +1,7 @@
-﻿   using System;
+﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Windows.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +43,8 @@ namespace NewChessProject
             guiBoard.OnBoardClicked += player.OnBoardClicked;
             guiBoard.OnWindowClicked += player.OnWindowClicked;
             guiBoard.PieceSelected += player.PieceSelected;
-            
+
+
             game.GameEnded += player.GameEnded;
             game.RequestMade += player.RequestSend;
 
@@ -148,9 +150,9 @@ namespace NewChessProject
         public void StartGame()
         {
             WriteGameSettings();
-
-
-            game = new Game(board);
+            
+            game = new Game(board, initialTime, timePerTurn);
+            BindTimersWithInterface();
 
             playerWhite = CreatePlayerFunctions[playerWhiteType](PlayerColour.White);
             playerBlack = CreatePlayerFunctions[playerBlackType](PlayerColour.Black);
@@ -160,6 +162,14 @@ namespace NewChessProject
             game.GameEnded += guiBoard.EndGame;
         }
 
+        private void BindTimersWithInterface()
+        {
+            inGameInterface.DataContext = game;
+            Label whiteTime = (Label)((WrapPanel)inGameInterface.Children[0]).Children[1];
+            Label blackTime = (Label)((WrapPanel)inGameInterface.Children[3]).Children[1];
+            whiteTime.SetBinding(ContentControl.ContentProperty, new Binding("WhiteTime"));
+            blackTime.SetBinding(ContentControl.ContentProperty, new Binding("BlackTime"));
+        }
        
         private void ReadGameSettings()
         {

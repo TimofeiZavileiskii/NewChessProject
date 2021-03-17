@@ -29,8 +29,6 @@ namespace NewChessProject
             guiBoard = new GUIBoard(Screen, PieceSelection, this);
             gc = new GameCreator(game, guiBoard, InGameInterface);
             DataContext = gc;
-
-
         }
 
         private void Start(object sender, RoutedEventArgs e)

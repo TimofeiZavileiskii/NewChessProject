@@ -150,7 +150,6 @@ namespace NewChessProject
             }
             else
             {
-                
                 state = State.WaitForMove;
             }
         }
@@ -174,6 +173,7 @@ namespace NewChessProject
             if (state != State.WaitForMove)
             {
                 game.TakeBack(Colour);
+                GameRepresentationUpdated();
             }
         }
 
@@ -183,8 +183,6 @@ namespace NewChessProject
             {
                 ResetMove();
                 GameRepresentationUpdated();
-
-                guiBoard.EndGame(this, e);
             }
             else
             {

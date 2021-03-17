@@ -26,6 +26,7 @@ namespace NewChessProject
 
         }
 
+
         public PlayerColour ReverseColour(PlayerColour colour)
         {
             PlayerColour output = PlayerColour.Black;
@@ -269,6 +270,35 @@ namespace NewChessProject
                             pieces.Add(new PieceRepresentation(new Vector(i, ii), field[i, ii].Type, field[i, ii].Colour));
 
             return pieces;
+        }
+
+        public static bool operator ==(Board b1, Board b2)
+        {
+            bool output = true;
+            for (int i = 0; i < boardWidth && output; i++)
+            {
+                for (int ii = 0; ii < boardHeight && output; ii++)
+                {
+                    if (b1[i, ii] != null && b2[i, ii] != null)
+                    {
+                        if (b1[i, ii].Colour != b2[i, ii].Colour || b1[i, ii].Type != b2[i, ii].Type)
+                        {
+                            output = false;
+                        }
+                    }
+                    else if(!(b1[i, ii] == null && b2[i, ii] == null))
+                    {
+                        output = false;
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        public static bool operator !=(Board b1, Board b2)
+        {
+            return !(b1 == b2);
         }
 
         public Board Copy()

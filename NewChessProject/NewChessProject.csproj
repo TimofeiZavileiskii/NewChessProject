@@ -93,6 +93,7 @@
     <Compile Include="Queen.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Rook.cs" />
+    <Compile Include="Timer.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
