@@ -51,13 +51,14 @@ namespace NewChessProject
         Stalemate,
         MoveRepetition,
         Resignation,
+        TimeOut,
         Draw
     }
 
     class Game : INotifyPropertyChanged
     {
         const int maxPositionRepetition = 3;
-
+        const double minuteLength = 60;
 
         public event EventHandler<MadeMoveEventArgs> MoveMade;
         public event EventHandler<GameEndedEventArgs> GameEnded;
@@ -91,7 +92,7 @@ namespace NewChessProject
         private string TurnTimeToMinutes(double totalTime)
         {
             const double decimalThreshold = 20;
-            const double minuteLength = 60;
+
 
             double seconds;
             int minutes = (int)Math.Floor(totalTime / minuteLength);
@@ -104,6 +105,10 @@ namespace NewChessProject
                 seconds = Math.Round(totalTime - minuteLength * minutes, 0);
             }
             string output = seconds.ToString();
+
+            if (output == "0")
+                output = "00";
+
             if (minutes != 0)
                 output = minutes.ToString() + ":" + output;
 
@@ -128,7 +133,7 @@ namespace NewChessProject
 
             foreach (PlayerColour colour in Enum.GetValues(typeof(PlayerColour)))
             {
-                timers[(int)colour] = new Timer(reportTime, timePerPlayer, colour);
+                timers[(int)colour] = new Timer(reportTime, timePerPlayer * minuteLength, colour);
                 timers[(int)colour].TimePassed += UpdateTime;
             }
             timers[(int)PlayerColour.White].Start();
@@ -145,6 +150,12 @@ namespace NewChessProject
             timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
             NotifyPropertyChanged("WhiteTime");
             NotifyPropertyChanged("BlackTime");
+
+            if (((Timer)sender).TimeLeft < 0.05)
+            {
+                ((Timer)sender).Stop();
+                GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.TimeOut, IdentifyPlayersColour(gameState)));
+            }
         }
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")

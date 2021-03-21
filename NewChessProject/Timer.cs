@@ -6,11 +6,12 @@ namespace NewChessProject
 {
     class Timer
     {
+        double timeStarted;
+        double timeOfLastReport;
+        double totalTime;
+        double reportPeriod;
+
         PlayerColour owningPlayer;
-        double timeLeft;
-        double timeSpanLength;
-        double lastTime;
-        double passedTime;
         bool working;
         Thread timingThread;
 
@@ -21,8 +22,16 @@ namespace NewChessProject
         {
             get
             {
-                return timeLeft / TimeSpan.TicksPerSecond;
+                double output = totalTime;
+                if (working)
+                    output -= PassedTime();
+                return output / TimeSpan.TicksPerSecond;
             }
+        }
+
+        private double PassedTime()
+        {
+            return DateTime.Now.Ticks - timeStarted;
         }
 
         public PlayerColour Owner
@@ -33,13 +42,13 @@ namespace NewChessProject
             }
         }
 
-        public Timer(double time, double totalTime, PlayerColour colour)
+        public Timer(double reportPeriod, double totalTime, PlayerColour colour)
         {
-            timeSpanLength = time;
             working = false;
-            lastTime = DateTime.Now.Ticks;
-            timeLeft = totalTime * TimeSpan.TicksPerMinute;
+            this.totalTime = totalTime * TimeSpan.TicksPerSecond;
             owningPlayer = colour;
+            this.reportPeriod = reportPeriod;
+            timeOfLastReport = DateTime.Now.Ticks;
 
             timingThread = new Thread(TrackTime);
             timingThread.Start();
@@ -52,33 +61,30 @@ namespace NewChessProject
 
         public void Add(double addedTime)
         {
-            timeLeft += addedTime;
+            totalTime += addedTime * TimeSpan.TicksPerSecond;
         }
 
         public void Start()
         {
-            lastTime = DateTime.Now.Ticks;
+            timeStarted = DateTime.Now.Ticks;
             working = true;
         }
 
         public void Stop()
         {
             working = false;
+            totalTime = totalTime - PassedTime();
         }
 
         private void TrackTime()
         {
-            while (true)
+            while(true)
             {
                 if (working)
                 {
-                    passedTime += (DateTime.Now.Ticks - lastTime);
-                    timeLeft -= (DateTime.Now.Ticks - lastTime);
-                    lastTime = DateTime.Now.Ticks;
-
-                    if (passedTime > timeSpanLength * TimeSpan.TicksPerSecond)
+                    if(DateTime.Now.Ticks - timeOfLastReport > reportPeriod)
                     {
-                        passedTime = 0;
+                        timeOfLastReport = DateTime.Now.Ticks;
                         TimePassed(this, EventArgs.Empty);
                     }
                 }

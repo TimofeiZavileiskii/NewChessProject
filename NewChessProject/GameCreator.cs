@@ -165,8 +165,8 @@ namespace NewChessProject
         private void BindTimersWithInterface()
         {
             inGameInterface.DataContext = game;
-            Label whiteTime = (Label)((WrapPanel)inGameInterface.Children[0]).Children[1];
-            Label blackTime = (Label)((WrapPanel)inGameInterface.Children[3]).Children[1];
+            Label blackTime = (Label)((WrapPanel)inGameInterface.Children[0]).Children[1];
+            Label whiteTime = (Label)((WrapPanel)inGameInterface.Children[3]).Children[1];
 
             Binding whiteBinding = new Binding("WhiteTime");
             whiteBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
