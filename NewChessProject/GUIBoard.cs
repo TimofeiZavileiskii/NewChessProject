@@ -272,6 +272,9 @@ namespace NewChessProject
                     case MoveResult.Draw:
                         text = "The game ended in a draw";
                         break;
+                    case MoveResult.TimeOut:
+                        text = "The game ended in a " + e.Winner.ToString() + " player's victory, as other player run out of time";
+                        break;
                 }
 
                 ShowMessage(text);

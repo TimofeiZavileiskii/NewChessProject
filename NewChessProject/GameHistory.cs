@@ -8,13 +8,13 @@ namespace NewChessProject
 {
     class GameHistory
     {
-        Stack<Board> previousPositions;
+        Stack<string> previousPositions;
         public GameHistory()
         {
-            previousPositions = new Stack<Board>();
+            previousPositions = new Stack<string>();
         }
 
-        public void Add(Board addedPosition)
+        public void Add(String addedPosition)
         {
             previousPositions.Push(addedPosition);
         }
@@ -22,8 +22,8 @@ namespace NewChessProject
         public bool CheckPositionRepetition(int maxPositions)
         {
             int repetitions = 0;
-            Board currentPosition = previousPositions.Peek();
-            foreach(Board previousPosition in previousPositions)
+            string currentPosition = previousPositions.Peek();
+            foreach(string previousPosition in previousPositions)
             {
                 if (previousPosition == currentPosition)
                     repetitions++;
@@ -32,7 +32,7 @@ namespace NewChessProject
             return !(repetitions < maxPositions);
         }
 
-        public Board ReverseMove()
+        public string ReverseMove()
         {
             previousPositions.Pop();
             previousPositions.Pop();

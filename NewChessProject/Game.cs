@@ -134,7 +134,7 @@ namespace NewChessProject
             foreach (PlayerColour colour in Enum.GetValues(typeof(PlayerColour)))
             {
                 timers[(int)colour] = new Timer(reportTime, timePerPlayer * minuteLength, colour);
-                timers[(int)colour].TimePassed += UpdateTime;
+                timers[(int)colour].OnTimePassed += UpdateTime;
             }
             timers[(int)PlayerColour.White].Start();
 
@@ -154,7 +154,7 @@ namespace NewChessProject
             if (((Timer)sender).TimeLeft < 0.05)
             {
                 ((Timer)sender).Stop();
-                GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.TimeOut, IdentifyPlayersColour(gameState)));
+                    GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.TimeOut, board.ReverseColour(IdentifyPlayersColour(gameState))));
             }
         }
 

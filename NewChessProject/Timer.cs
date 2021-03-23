@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Threading;
 using System.Threading.Tasks;
 
 namespace NewChessProject
@@ -11,12 +12,14 @@ namespace NewChessProject
         double totalTime;
         double reportPeriod;
 
+        
         PlayerColour owningPlayer;
         bool working;
         Thread timingThread;
+        Dispatcher reportCaller;
 
         //Event will be called when time specified in constructor will pass
-        public event EventHandler TimePassed;
+        public event EventHandler OnTimePassed;
 
         public double TimeLeft
         {
@@ -27,6 +30,12 @@ namespace NewChessProject
                     output -= PassedTime();
                 return output / TimeSpan.TicksPerSecond;
             }
+        }
+        
+        private void TimePassed()
+        {
+            if(OnTimePassed != null)
+                OnTimePassed(this, EventArgs.Empty);
         }
 
         private double PassedTime()
@@ -44,6 +53,7 @@ namespace NewChessProject
 
         public Timer(double reportPeriod, double totalTime, PlayerColour colour)
         {
+            reportCaller = Dispatcher.CurrentDispatcher;
             working = false;
             this.totalTime = totalTime * TimeSpan.TicksPerSecond;
             owningPlayer = colour;
@@ -53,6 +63,8 @@ namespace NewChessProject
             timingThread = new Thread(TrackTime);
             timingThread.Start();
         }
+
+
 
         ~Timer()
         {
@@ -85,7 +97,10 @@ namespace NewChessProject
                     if(DateTime.Now.Ticks - timeOfLastReport > reportPeriod)
                     {
                         timeOfLastReport = DateTime.Now.Ticks;
-                        TimePassed(this, EventArgs.Empty);
+                        reportCaller.Invoke(() =>
+                        {
+                            TimePassed();
+                        });               
                     }
                 }
             }
