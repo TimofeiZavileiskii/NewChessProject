@@ -199,6 +199,54 @@ namespace NewChessProject
                            field[i, ii].FilterPositionsByCheck(this, new Vector(i, ii));
         }
 
+        public string GetFENInformation()
+        {
+            string output = "";
+            int emptySpaces = 0;
+
+
+            //The algorithm creates the positions for the FEN
+            for (int i = boardHeight; i > 0; i--)
+            {
+                for(int ii = boardWidth; ii > 0; ii--)
+                {
+                    Piece piece = this[ii, i];
+                    if (piece != null)
+                    {
+                        if (emptySpaces != 0)
+                        {
+                            output = output + emptySpaces.ToString();
+                            emptySpaces = 0;
+                        }
+
+                        string letter = piece.Type.ToString()[0].ToString();
+                        if(piece.Colour == PlayerColour.White)
+                        {
+                            letter = letter.ToUpper();
+                        }
+                        else
+                        {
+                            letter = letter.ToLower();
+                        }
+                        output = output + letter;
+                    }
+                    else
+                    {
+                        emptySpaces++;
+                    }
+                }
+
+                if(i != 0)
+                    output = output + "/";
+
+            }
+
+
+
+            return output;
+        }
+
+
         public bool IsThereThreat(Vector vector, PlayerColour colour)
         {
             bool output = false;

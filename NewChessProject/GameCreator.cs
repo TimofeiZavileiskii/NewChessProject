@@ -45,7 +45,7 @@ namespace NewChessProject
             guiBoard.PieceSelected += player.PieceSelected;
 
 
-            game.GameEnded += player.GameEnded;
+            game.OnGameEnded += player.GameEnded;
             game.RequestMade += player.RequestSend;
 
             ((Button)((WrapPanel)inGameInterface.Children[2]).Children[0]).Click += player.RequestTakeback;
@@ -159,7 +159,7 @@ namespace NewChessProject
 
             game.MoveMade += playerWhite.OnMadeMove;
             game.MoveMade += playerBlack.OnMadeMove;
-            game.GameEnded += guiBoard.EndGame;
+            game.OnGameEnded += guiBoard.EndGame;
         }
 
         private void BindTimersWithInterface()

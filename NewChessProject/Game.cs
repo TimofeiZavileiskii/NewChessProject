@@ -61,7 +61,7 @@ namespace NewChessProject
         const double minuteLength = 60;
 
         public event EventHandler<MadeMoveEventArgs> MoveMade;
-        public event EventHandler<GameEndedEventArgs> GameEnded;
+        public event EventHandler<GameEndedEventArgs> OnGameEnded;
         public event EventHandler<RequestMadeEventArgs> RequestMade;
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -106,8 +106,9 @@ namespace NewChessProject
             }
             string output = seconds.ToString();
 
-            if (output == "0")
-                output = "00";
+            if (output.Length == 1)
+                output = "0" + output;
+                
 
             if (minutes != 0)
                 output = minutes.ToString() + ":" + output;
@@ -145,6 +146,15 @@ namespace NewChessProject
             GenerateMoves();
         }
 
+        private void GameEnded(MoveResult endReason, PlayerColour winner)
+        {
+            foreach (Timer timer in timers)
+                timer.Stop();
+
+
+            OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
+        }
+
         private void UpdateTime(object sender, EventArgs e)
         {
             timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
@@ -154,7 +164,7 @@ namespace NewChessProject
             if (((Timer)sender).TimeLeft < 0.05)
             {
                 ((Timer)sender).Stop();
-                    GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.TimeOut, board.ReverseColour(IdentifyPlayersColour(gameState))));
+                GameEnded(MoveResult.TimeOut, board.ReverseColour(IdentifyPlayersColour(gameState)));
             }
         }
 
@@ -308,7 +318,7 @@ namespace NewChessProject
 
         public void Resign(PlayerColour colour)
         {
-            GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.Resignation, board.ReverseColour(IdentifyPlayersColour(gameState))));
+            GameEnded(MoveResult.Resignation, board.ReverseColour(IdentifyPlayersColour(gameState)));
         }
 
         private void MakeRequest(Request request)
@@ -321,7 +331,7 @@ namespace NewChessProject
             Request request = new Request(RequestType.OfferDraw, "Agree to the draw?");
             MakeRequest(request);
             if (request.Agreed)
-                GameEnded?.Invoke(this, new GameEndedEventArgs(MoveResult.Draw, colour));
+                GameEnded(MoveResult.Draw, PlayerColour.White);
         }
 
 
@@ -352,7 +362,7 @@ namespace NewChessProject
             }
             else
             {
-                GameEnded?.Invoke(this, new GameEndedEventArgs(result, board.ReverseColour(IdentifyPlayersColour(gameState))));
+                GameEnded(result, board.ReverseColour(IdentifyPlayersColour(gameState)));
             }
         }
     }
