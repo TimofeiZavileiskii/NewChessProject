@@ -73,6 +73,8 @@ namespace NewChessProject
         double timePerTurn;
         GameHistory gameHistory;
 
+        Vector enPassantePawn;
+
         public string BlackTime
         {
             get
@@ -163,7 +165,6 @@ namespace NewChessProject
 
             if (((Timer)sender).TimeLeft < 0.05)
             {
-                ((Timer)sender).Stop();
                 GameEnded(MoveResult.TimeOut, board.ReverseColour(IdentifyPlayersColour(gameState)));
             }
         }
@@ -346,6 +347,16 @@ namespace NewChessProject
                 
             }
         }
+
+        private FENPosition GenerateFENPosition()
+        {
+            FENPosition output = new FENPosition();
+
+            output = board.GetFENInformation();
+
+            return output;
+        }
+
 
         protected virtual void OnMadeMove()
         {

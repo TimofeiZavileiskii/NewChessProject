@@ -18,7 +18,7 @@ namespace NewChessProject
 
     class GameEndedEventArgs : EventArgs
     {
-        public PlayerColour Winner
+        public PlayerColour? Winner
         {
             get;
             set;
@@ -30,7 +30,7 @@ namespace NewChessProject
             set;
         }
 
-        public GameEndedEventArgs(MoveResult reason, PlayerColour winner)
+        public GameEndedEventArgs(MoveResult reason, PlayerColour? winner)
         {
             Reason = reason;
             Winner = winner;

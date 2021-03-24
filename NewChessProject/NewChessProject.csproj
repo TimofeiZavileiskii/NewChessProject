@@ -67,6 +67,7 @@
     <Compile Include="Bishop.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="EventArgs.cs" />
+    <Compile Include="FENPosition.cs" />
     <Compile Include="GameHistory.cs" />
     <Compile Include="GameRecorder.cs" />
     <Compile Include="GUIBoard.cs" />

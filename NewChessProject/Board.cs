@@ -9,9 +9,8 @@ namespace NewChessProject
     class Board
     {
         Piece[,] field;
-
         Vector[] kingPositions;
-
+        Vector enPassantePiece;
 
 
         public const int boardHeight = 8;
@@ -20,7 +19,7 @@ namespace NewChessProject
         public Board()
         {
             field = new Piece[boardHeight, boardWidth];
-
+            enPassantePiece = new Vector(-1, -1);
             int numberOfColours = Enum.GetValues(typeof(PlayerColour)).Length;
             kingPositions = new Vector[numberOfColours];
 
@@ -129,11 +128,9 @@ namespace NewChessProject
 
         public void RemoveEnPassante()
         {
-            for (int i = 0; i < boardWidth; i++)
-                for (int ii = 0; ii < boardHeight; ii++)
-                    if (field[i, ii] != null)
-                        if (field[i, ii].Type == PieceType.Pawn)
-                            ((Pawn)field[i, ii]).VulnurableToEnPassante = false;
+            if(enPassantePiece != new Vector(-1, -1))
+                ((Pawn)this[enPassantePiece]).VulnurableToEnPassante = false;
+                enPassantePiece = new Vector(-1, -1);
         }
 
         public Piece MovePiece(Vector piecePosition, Vector targetPosition)
@@ -148,6 +145,7 @@ namespace NewChessProject
             {
                 case SpecialMove.DoubleFoward:
                     ((Pawn)this[piecePosition]).VulnurableToEnPassante = true;
+                    enPassantePiece = targetPosition;
                     break;
                 case SpecialMove.CastleLeft:
                     Vector leftRookPos = new Vector(0, piecePosition.Y);
@@ -199,9 +197,10 @@ namespace NewChessProject
                            field[i, ii].FilterPositionsByCheck(this, new Vector(i, ii));
         }
 
-        public string GetFENInformation()
+        public FENPosition GetFENInformation()
         {
-            string output = "";
+            FENPosition output = new FENPosition();
+            string position = "";
             int emptySpaces = 0;
 
 
@@ -215,7 +214,7 @@ namespace NewChessProject
                     {
                         if (emptySpaces != 0)
                         {
-                            output = output + emptySpaces.ToString();
+                            position = position + emptySpaces.ToString();
                             emptySpaces = 0;
                         }
 
@@ -228,7 +227,7 @@ namespace NewChessProject
                         {
                             letter = letter.ToLower();
                         }
-                        output = output + letter;
+                        position = position + letter;
                     }
                     else
                     {
@@ -236,12 +235,12 @@ namespace NewChessProject
                     }
                 }
 
-                if(i != 0)
-                    output = output + "/";
-
+                if (i != 0)
+                    position = position + "/";
             }
+            output.Position = position;
 
-
+            
 
             return output;
         }
