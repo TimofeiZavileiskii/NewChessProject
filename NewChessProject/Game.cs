@@ -52,13 +52,15 @@ namespace NewChessProject
         MoveRepetition,
         Resignation,
         TimeOut,
-        Draw
+        Draw,
+        move50Rule
     }
 
     class Game : INotifyPropertyChanged
     {
         const int maxPositionRepetition = 3;
         const double minuteLength = 60;
+        const int max50MoveRule = 2;
 
         public event EventHandler<MadeMoveEventArgs> MoveMade;
         public event EventHandler<GameEndedEventArgs> OnGameEnded;
@@ -72,8 +74,6 @@ namespace NewChessProject
         double[] timesPerPlayer;
         double timePerTurn;
         GameHistory gameHistory;
-
-        Vector enPassantePawn;
 
         public string BlackTime
         {
@@ -89,6 +89,11 @@ namespace NewChessProject
             {
                 return TurnTimeToMinutes(timers[(int)PlayerColour.White].TimeLeft);
             }
+        }
+
+        public void UploadFENPosition(string FENPosition)
+        {
+
         }
 
         private string TurnTimeToMinutes(double totalTime)
@@ -148,7 +153,7 @@ namespace NewChessProject
             GenerateMoves();
         }
 
-        private void GameEnded(MoveResult endReason, PlayerColour winner)
+        private void GameEnded(MoveResult endReason, PlayerColour? winner)
         {
             foreach (Timer timer in timers)
                 timer.Stop();
@@ -156,6 +161,7 @@ namespace NewChessProject
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
         }
+
 
         private void UpdateTime(object sender, EventArgs e)
         {
@@ -332,7 +338,7 @@ namespace NewChessProject
             Request request = new Request(RequestType.OfferDraw, "Agree to the draw?");
             MakeRequest(request);
             if (request.Agreed)
-                GameEnded(MoveResult.Draw, PlayerColour.White);
+                GameEnded(MoveResult.Draw, null);
         }
 
 
@@ -350,9 +356,8 @@ namespace NewChessProject
 
         private FENPosition GenerateFENPosition()
         {
-            FENPosition output = new FENPosition();
-
-            output = board.GetFENInformation();
+            FENPosition output = board.GetFENInformation();
+            output.CurrentPlayer = IdentifyPlayersColour(gameState).ToString().ToLower()[0].ToString();
 
             return output;
         }
@@ -369,7 +374,10 @@ namespace NewChessProject
 
             if (result == MoveResult.Check || result == MoveResult.Continue)
             {
-                MoveMade?.Invoke(this, new MadeMoveEventArgs(result));
+                if (board.Rule50Counter >= max50MoveRule)
+                    GameEnded(MoveResult.move50Rule, null);
+                else
+                    MoveMade?.Invoke(this, new MadeMoveEventArgs(result));
             }
             else
             {

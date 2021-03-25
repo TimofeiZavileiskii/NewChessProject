@@ -275,6 +275,9 @@ namespace NewChessProject
                     case MoveResult.TimeOut:
                         text = "The game ended in a " + e.Winner.ToString() + " player's victory, as other player run out of time";
                         break;
+                    case MoveResult.move50Rule:
+                        text = "The game ended in a tie: 50 moves were made without pawn advancing or piece taken";
+                        break;
                 }
 
                 ShowMessage(text);

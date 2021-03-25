@@ -16,13 +16,23 @@ namespace NewChessProject
         public const int boardHeight = 8;
         public const int boardWidth = 8;
 
+        int rule50Counter;
+        
+        public int Rule50Counter
+        {
+            get
+            {
+                return rule50Counter;
+            }
+        }
+
         public Board()
         {
             field = new Piece[boardHeight, boardWidth];
             enPassantePiece = new Vector(-1, -1);
             int numberOfColours = Enum.GetValues(typeof(PlayerColour)).Length;
             kingPositions = new Vector[numberOfColours];
-
+            rule50Counter = 0;
         }
 
 
@@ -136,11 +146,13 @@ namespace NewChessProject
         public Piece MovePiece(Vector piecePosition, Vector targetPosition)
         {
             Piece takenPiece = this[targetPosition];
-
-            if(this[piecePosition].Type == PieceType.King)
+            Piece movedPiece = this[piecePosition];
+            rule50Counter++;
+            if (this[piecePosition].Type == PieceType.King)
                     kingPositions[(int)this[piecePosition].Colour] = targetPosition;
 
             
+
             switch (targetPosition.SpecialMove)
             {
                 case SpecialMove.DoubleFoward:
@@ -148,10 +160,12 @@ namespace NewChessProject
                     enPassantePiece = targetPosition;
                     break;
                 case SpecialMove.CastleLeft:
+                    rule50Counter--;
                     Vector leftRookPos = new Vector(0, piecePosition.Y);
                     MovePiece(leftRookPos, new Vector(targetPosition.X + 1, targetPosition.Y));
                     break;
                 case SpecialMove.CastleRight:
+                    rule50Counter--;
                     Vector rightRookPos = new Vector(boardWidth - 1, piecePosition.Y);
                     MovePiece(rightRookPos, new Vector(targetPosition.X - 1, targetPosition.Y));
                     break;
@@ -160,14 +174,16 @@ namespace NewChessProject
                     takenPiece = this[takenPiecePosition];
                     this[takenPiecePosition] = null;
                     break;
+
+                
             }
-
-
-
             this[piecePosition].HasMoved = true;
             this[targetPosition] = this[piecePosition];
             this[piecePosition] = null;
-   
+
+            //Here algorithms determines the 50MoveRule
+            if (movedPiece.Type == PieceType.Pawn || takenPiece != null)
+                rule50Counter = 0;
 
             return takenPiece;
         }
@@ -240,8 +256,31 @@ namespace NewChessProject
             }
             output.Position = position;
 
-            
+            output.EnPassante = VectorToPosition(enPassantePiece);
 
+            //Now algorithm determines castling rights
+
+            string castlingRights = "";
+            if (!this[0, 7].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
+                castlingRights += "K";
+            if (!this[0, 0].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
+                castlingRights += "Q";
+            if (!this[7, 7].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
+                castlingRights += "k";
+            if (!this[7, 0].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
+                castlingRights += "q";
+
+            output.Castling = castlingRights;
+
+
+            return output;
+        }
+
+        private string VectorToPosition(Vector vector)
+        {
+            string output = "";
+            if (vector != new Vector(-1, -1))
+                output = ('a' + vector.X.ToString()) + vector.Y.ToString();
             return output;
         }
 
