@@ -8,31 +8,38 @@ namespace NewChessProject
 {
     class GameHistory
     {
-        Stack<Board> previousPositions;
+        Stack<FENPosition> previousPositions;
         public GameHistory()
         {
-            previousPositions = new Stack<Board>();
+            previousPositions = new Stack<FENPosition>();
         }
 
-        public void Add(Board addedPosition)
+        public void Add(FENPosition addedPosition)
         {
             previousPositions.Push(addedPosition);
+        }
+
+        private bool CompareFENPositions(FENPosition p1, FENPosition p2)
+        {
+            if (p1.Position == p2.Position && p1.Castling == p2.Castling && p1.EnPassante == p2.EnPassante)
+                return true;
+            return false;
         }
 
         public bool CheckPositionRepetition(int maxPositions)
         {
             int repetitions = 0;
-            Board currentPosition = previousPositions.Peek();
-            foreach(Board previousPosition in previousPositions)
+            FENPosition currentPosition = previousPositions.Peek();
+            foreach(FENPosition previousPosition in previousPositions)
             {
-                if (previousPosition == currentPosition)
+                if (CompareFENPositions(previousPosition, currentPosition))
                     repetitions++;
             }
             Console.WriteLine(repetitions);
             return !(repetitions < maxPositions);
         }
 
-        public Board ReverseMove()
+        public FENPosition ReverseMove()
         {
             previousPositions.Pop();
             previousPositions.Pop();

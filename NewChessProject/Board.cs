@@ -213,6 +213,19 @@ namespace NewChessProject
                            field[i, ii].FilterPositionsByCheck(this, new Vector(i, ii));
         }
 
+        public void UploadFENPosition(FENPosition fenPos)
+        {
+            int positionCounter = boardHeight * boardWidth - 1;
+
+            foreach (char c in fenPos.Position)
+            {
+
+
+            }
+            
+            rule50Counter = Convert.ToInt32(fenPos.HalfMoveTimer);
+        }
+
         public FENPosition GetFENInformation()
         {
             FENPosition output = new FENPosition();
@@ -221,9 +234,9 @@ namespace NewChessProject
 
 
             //The algorithm creates the positions for the FEN
-            for (int i = boardHeight; i > 0; i--)
+            for (int i = boardHeight - 1; i >= 0; i--)
             {
-                for(int ii = boardWidth; ii > 0; ii--)
+                for(int ii = boardWidth - 1; ii >= 0; ii--)
                 {
                     Piece piece = this[ii, i];
                     if (piece != null)
@@ -251,6 +264,12 @@ namespace NewChessProject
                     }
                 }
 
+                if (emptySpaces != 0)
+                {
+                    position = position + emptySpaces.ToString();
+                    emptySpaces = 0;
+                }
+
                 if (i != 0)
                     position = position + "/";
             }
@@ -263,22 +282,31 @@ namespace NewChessProject
             string castlingRights = "";
             if (!this[0, 7].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
                 castlingRights += "K";
+            else
+                castlingRights += "-";
             if (!this[0, 0].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
                 castlingRights += "Q";
+            else
+                castlingRights += "-";
             if (!this[7, 7].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
                 castlingRights += "k";
+            else
+                castlingRights += "-";
             if (!this[7, 0].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
                 castlingRights += "q";
+            else
+                castlingRights += "-";
 
             output.Castling = castlingRights;
 
+            output.HalfMoveTimer = rule50Counter.ToString();
 
             return output;
         }
 
         private string VectorToPosition(Vector vector)
         {
-            string output = "";
+            string output = "-";
             if (vector != new Vector(-1, -1))
                 output = ('a' + vector.X.ToString()) + vector.Y.ToString();
             return output;

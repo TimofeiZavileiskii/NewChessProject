@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewChessProject
 {
@@ -60,7 +56,7 @@ namespace NewChessProject
     {
         const int maxPositionRepetition = 3;
         const double minuteLength = 60;
-        const int max50MoveRule = 2;
+        const int max50MoveRule = 50;
 
         public event EventHandler<MadeMoveEventArgs> MoveMade;
         public event EventHandler<GameEndedEventArgs> OnGameEnded;
@@ -74,6 +70,7 @@ namespace NewChessProject
         double[] timesPerPlayer;
         double timePerTurn;
         GameHistory gameHistory;
+        int fullMovesMade;
 
         public string BlackTime
         {
@@ -148,8 +145,8 @@ namespace NewChessProject
 
             this.board = board;
 
-            gameHistory.Add(board.Copy());
-
+            gameHistory.Add(GenerateFENPosition());
+            fullMovesMade = 1;
             GenerateMoves();
         }
 
@@ -161,7 +158,6 @@ namespace NewChessProject
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
         }
-
 
         private void UpdateTime(object sender, EventArgs e)
         {
@@ -313,9 +309,15 @@ namespace NewChessProject
             return result;
         }
 
-        public void ImportGame()
+        public void ImportGame(FENPosition fenPosition)
         {
+            if(fenPosition.CurrentPlayer == "b")
+                gameState = GameState.BlackMove;
+            else
+                gameState = GameState.WhiteMove;
 
+            fullMovesMade = Convert.ToInt32(fenPosition.HalfMoveTimer);
+            
         }
 
         public Vector GetKingsPosition(PlayerColour colour)
@@ -348,7 +350,8 @@ namespace NewChessProject
             MakeRequest(request);
             if (request.Agreed)
             {
-                board = gameHistory.ReverseMove();
+                //Change later
+                gameHistory.ReverseMove();
                 GenerateMoves();
                 
             }
@@ -358,16 +361,18 @@ namespace NewChessProject
         {
             FENPosition output = board.GetFENInformation();
             output.CurrentPlayer = IdentifyPlayersColour(gameState).ToString().ToLower()[0].ToString();
+            output.TotalMoves = fullMovesMade.ToString();
 
             return output;
         }
 
-
         protected virtual void OnMadeMove()
         {
-            gameHistory.Add(board.Copy());
-
+            if (IdentifyPlayersColour(gameState) == PlayerColour.Black)
+                fullMovesMade++;
             SwitchPlayers();
+
+            gameHistory.Add(GenerateFENPosition());
             GenerateMoves();
 
             MoveResult result = DetermineMoveResult();

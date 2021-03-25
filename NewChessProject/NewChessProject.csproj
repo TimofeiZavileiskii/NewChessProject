@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="ManyStepPiece.cs" />
     <Compile Include="BoardIndicator.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="OneStepPiece.cs" />
     <Compile Include="Participant.cs" />
     <Compile Include="Pawn.cs" />

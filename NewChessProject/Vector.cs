@@ -20,7 +20,6 @@ namespace NewChessProject
         private int x;
         private int y;
         SpecialMove specialMove;  //Special move is a flag for vectors representing a move which affects more than one piece of the player
-        
 
         public SpecialMove SpecialMove
         {
