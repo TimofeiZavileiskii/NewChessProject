@@ -11,7 +11,7 @@ namespace NewChessProject
         Piece[,] field;
         Vector[] kingPositions;
         Vector enPassantePiece;
-
+        static Map<char, PieceType> pieceFENRepresentations;
 
         public const int boardHeight = 8;
         public const int boardWidth = 8;
@@ -24,6 +24,17 @@ namespace NewChessProject
             {
                 return rule50Counter;
             }
+        }
+
+        static public void FillFENRepresentations()
+        {
+            pieceFENRepresentations = new Map<char, PieceType>();
+            pieceFENRepresentations.Add('p', PieceType.Pawn);
+            pieceFENRepresentations.Add('n', PieceType.Knight);
+            pieceFENRepresentations.Add('k', PieceType.King);
+            pieceFENRepresentations.Add('r', PieceType.Rook);
+            pieceFENRepresentations.Add('b', PieceType.Bishop);
+            pieceFENRepresentations.Add('q', PieceType.Queen);
         }
 
         public Board()
@@ -97,14 +108,14 @@ namespace NewChessProject
             AddPiece(new King(PlayerColour.White), new Vector(4, 0));
             AddPiece(new King(PlayerColour.Black), new Vector(4, boardHeight - 1));
 
-            for (int i = 0; i < Board.boardWidth; i++)
+            for (int i = 0; i < boardWidth; i++)
             {
                 AddPiece(new Pawn(PlayerColour.White), new Vector(i, 1));
             }
 
-            for (int i = 0; i < Board.boardWidth; i++)
+            for (int i = 0; i < boardWidth; i++)
             {
-                AddPiece(new Pawn(PlayerColour.Black), new Vector(i, Board.boardWidth - 2));
+                AddPiece(new Pawn(PlayerColour.Black), new Vector(i, boardWidth - 2));
             }
         }
 
@@ -219,10 +230,67 @@ namespace NewChessProject
 
             foreach (char c in fenPos.Position)
             {
+                if (c != '/')
+                {
+                    if (pieceFENRepresentations.Contains(c))
+                    {
+                        Vector currentPosition = new Vector(positionCounter % boardWidth, positionCounter / boardHeight);
+                        PieceType pieceType = pieceFENRepresentations[c];
 
+                        PlayerColour pieceColour = PlayerColour.Black;
+                        if (c < 'a')
+                            pieceColour = PlayerColour.White;
 
+                        bool hasMoved = false;
+                        switch (pieceFENRepresentations[c])
+                        {
+                            case PieceType.Pawn:
+                                if (pieceColour == PlayerColour.Black)
+                                {
+                                    if (currentPosition.Y != boardWidth - 2)
+                                        hasMoved = true;
+                                }
+                                else
+                                {
+                                    hasMoved = currentPosition.Y != 2;
+                                }
+                                break;
+                            case PieceType.Rook:
+                                int y = 0;
+                                if (pieceColour == PlayerColour.Black)
+                                    y = boardHeight - 1;
+
+                                int x = 0;
+                                if (fenPos.Castling.Contains('K') || fenPos.Castling.Contains('k'))
+                                    x = boardWidth - 1;
+
+                                hasMoved = currentPosition == new Vector(x, y);
+                                break;
+                            case PieceType.King:
+                                if (pieceColour == PlayerColour.White)
+                                {
+                                    hasMoved = (fenPos.Castling.Contains('K') || fenPos.Castling.Contains('Q'));  
+                                }
+                                else
+                                {
+                                    hasMoved = (fenPos.Castling.Contains('k') || fenPos.Castling.Contains('q'));
+                                }
+                                break;
+                        }
+
+                        this[currentPosition] = MakePiece(pieceType, pieceColour, hasMoved);
+                        positionCounter--;
+                    }
+                    else
+                    {
+                        positionCounter -= Convert.ToInt32(c);
+                    }
+                }
             }
-            
+
+            if(fenPos.EnPassante.Length == 2)
+                enPassantePiece = new Vector(fenPos.EnPassante[0] - 'a', Convert.ToInt32(fenPos.EnPassante[1]));
+
             rule50Counter = Convert.ToInt32(fenPos.HalfMoveTimer);
         }
 
@@ -236,7 +304,7 @@ namespace NewChessProject
             //The algorithm creates the positions for the FEN
             for (int i = boardHeight - 1; i >= 0; i--)
             {
-                for(int ii = boardWidth - 1; ii >= 0; ii--)
+                for(int ii = 0; ii < boardWidth; ii++)
                 {
                     Piece piece = this[ii, i];
                     if (piece != null)
@@ -247,7 +315,7 @@ namespace NewChessProject
                             emptySpaces = 0;
                         }
 
-                        string letter = piece.Type.ToString()[0].ToString();
+                        string letter = pieceFENRepresentations[piece.Type].ToString();
                         if(piece.Colour == PlayerColour.White)
                         {
                             letter = letter.ToUpper();
@@ -425,18 +493,6 @@ namespace NewChessProject
                         Vector pieceCopyPosition = new Vector(i, ii);
                         output.AddPiece(MakePiece(field[i, ii].Type, field[i, ii].Colour, field[i, ii].HasMoved), pieceCopyPosition);
                     }
-            return output;
-        }
-
-        public int CountPawnsWithEnPassante()
-        {
-            int output = 0;
-            for (int i = 0; i < boardWidth; i++)
-                for (int ii = 0; ii < boardHeight; ii++)
-                    if (field[i, ii] != null)
-                        if (field[i, ii].Type == PieceType.Pawn)
-                            if (((Pawn)field[i, ii]).VulnurableToEnPassante)
-                                output++;
             return output;
         }
     }

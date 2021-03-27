@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace NewChessProject
 {
-    public class Map<T1, T2>
+    class Map<T1, T2>
     {
-        private Dictionary<T1, T2> forward;
-        private Dictionary<T2, T1> reverse;
+        Dictionary<T1, T2> forward;
+        Dictionary<T2, T1> reverse;
 
         public Map()
         {
@@ -22,6 +22,17 @@ namespace NewChessProject
             forward.Add(t1, t2);
             reverse.Add(t2, t1);
         }
+
+        public bool Contains(T1 t1)
+        {
+            return forward.ContainsKey(t1);
+        }
+
+        public bool Contains(T2 t2)
+        {
+            return reverse.ContainsKey(t2);
+        }
+
         public T2 this[T1 t1]
         {
             get

@@ -89,9 +89,23 @@ namespace NewChessProject
             {
                 return position + " " + currentPlayer + " " + castling + " " + enPassante + " " + halfMoveTimer + " " + totalMoves;
             }
+            set
+            {
+                string[] values = value.Split(' ');
+                position = values[0];
+                currentPlayer = values[1];
+                castling = values[2];
+                enPassante = values[3];
+                halfMoveTimer = values[4];
+                totalMoves = values[5];
+            }
 
         }
 
+        public FENPosition(string fenString)
+        {
+            FENString = fenString;
+        }
 
         public FENPosition()
         {

@@ -88,9 +88,9 @@ namespace NewChessProject
             }
         }
 
-        public void UploadFENPosition(string FENPosition)
+        public bool ValidateFENString(string fenString)
         {
-
+            return true;
         }
 
         private string TurnTimeToMinutes(double totalTime)
@@ -123,6 +123,7 @@ namespace NewChessProject
         public Game(Board board, double timePerPlayer, double timePerTurn)
         {
             const double reportTime = 0.1;
+            //fullMovesMade = 1;
             gameState = GameState.WhiteMove;
             gameHistory = new GameHistory();
             this.timePerTurn = timePerTurn;
@@ -145,8 +146,13 @@ namespace NewChessProject
 
             this.board = board;
 
+            ImportGame(new FENPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+
+
+
             gameHistory.Add(GenerateFENPosition());
-            fullMovesMade = 1;
+
+
             GenerateMoves();
         }
 
@@ -311,13 +317,20 @@ namespace NewChessProject
 
         public void ImportGame(FENPosition fenPosition)
         {
-            if(fenPosition.CurrentPlayer == "b")
+            if (!ValidateFENString(fenPosition.FENString))
+            {
+                throw new ArgumentException("Invalid FEN string");
+                return;
+            }
+
+            fullMovesMade = Convert.ToInt32(fenPosition.TotalMoves);
+
+            if (fenPosition.CurrentPlayer == "b")
                 gameState = GameState.BlackMove;
             else
                 gameState = GameState.WhiteMove;
 
-            fullMovesMade = Convert.ToInt32(fenPosition.HalfMoveTimer);
-            
+            board.UploadFENPosition(fenPosition);
         }
 
         public Vector GetKingsPosition(PlayerColour colour)
