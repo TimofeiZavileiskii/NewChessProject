@@ -283,7 +283,7 @@ namespace NewChessProject
                     output = board[movedPiece].AvailableMoves;
             return output;
         }
-
+          
         private MoveResult DetermineMoveResult()
         {
             MoveResult result = MoveResult.Continue;
@@ -355,7 +355,6 @@ namespace NewChessProject
             if (request.Agreed)
                 GameEnded(MoveResult.Draw, null);
         }
-
 
         public void TakeBack(PlayerColour colour)
         {

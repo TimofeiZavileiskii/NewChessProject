@@ -46,7 +46,6 @@ namespace NewChessProject
             rule50Counter = 0;
         }
 
-
         public PlayerColour ReverseColour(PlayerColour colour)
         {
             PlayerColour output = PlayerColour.Black;
@@ -146,7 +145,6 @@ namespace NewChessProject
             return output;
         }
 
-
         public void RemoveEnPassante()
         {
             if(enPassantePiece != new Vector(-1, -1))
@@ -232,17 +230,17 @@ namespace NewChessProject
             {
                 if (c != '/')
                 {
-                    if (pieceFENRepresentations.Contains(c))
+                    if (pieceFENRepresentations.Contains(GetLowerChar(c)))
                     {
-                        Vector currentPosition = new Vector(positionCounter % boardWidth, positionCounter / boardHeight);
-                        PieceType pieceType = pieceFENRepresentations[c];
+                        Vector currentPosition = new Vector(boardWidth - positionCounter % boardWidth - 1, positionCounter / boardHeight);
+                        PieceType pieceType = pieceFENRepresentations[GetLowerChar(c)];
 
                         PlayerColour pieceColour = PlayerColour.Black;
                         if (c < 'a')
                             pieceColour = PlayerColour.White;
 
                         bool hasMoved = false;
-                        switch (pieceFENRepresentations[c])
+                        switch (pieceType)
                         {
                             case PieceType.Pawn:
                                 if (pieceColour == PlayerColour.Black)
@@ -252,19 +250,18 @@ namespace NewChessProject
                                 }
                                 else
                                 {
-                                    hasMoved = currentPosition.Y != 2;
+                                    hasMoved = currentPosition.Y != 1;
                                 }
                                 break;
                             case PieceType.Rook:
-                                int y = 0;
-                                if (pieceColour == PlayerColour.Black)
-                                    y = boardHeight - 1;
-
-                                int x = 0;
-                                if (fenPos.Castling.Contains('K') || fenPos.Castling.Contains('k'))
-                                    x = boardWidth - 1;
-
-                                hasMoved = currentPosition == new Vector(x, y);
+                                string checkedLetter = " ";
+                                if (currentPosition.X == 0)
+                                    checkedLetter = "q";
+                                else if (currentPosition.X == boardWidth - 1)
+                                    checkedLetter = "k";
+                                if (pieceColour == PlayerColour.White)
+                                    checkedLetter = checkedLetter.ToUpper();
+                                hasMoved = !fenPos.Castling.Contains(checkedLetter);
                                 break;
                             case PieceType.King:
                                 if (pieceColour == PlayerColour.White)
@@ -283,15 +280,22 @@ namespace NewChessProject
                     }
                     else
                     {
-                        positionCounter -= Convert.ToInt32(c);
+                        positionCounter -= (int)Char.GetNumericValue((c));
                     }
                 }
             }
+
+
 
             if(fenPos.EnPassante.Length == 2)
                 enPassantePiece = new Vector(fenPos.EnPassante[0] - 'a', Convert.ToInt32(fenPos.EnPassante[1]));
 
             rule50Counter = Convert.ToInt32(fenPos.HalfMoveTimer);
+        }
+
+        private char GetLowerChar(char c)
+        {
+            return c.ToString().ToLower()[0];
         }
 
         public FENPosition GetFENInformation()
@@ -347,25 +351,25 @@ namespace NewChessProject
 
             //Now algorithm determines castling rights
 
-            string castlingRights = "";
-            if (!this[0, 7].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
-                castlingRights += "K";
-            else
-                castlingRights += "-";
-            if (!this[0, 0].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
-                castlingRights += "Q";
-            else
-                castlingRights += "-";
-            if (!this[7, 7].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
-                castlingRights += "k";
-            else
-                castlingRights += "-";
-            if (!this[7, 0].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
-                castlingRights += "q";
-            else
-                castlingRights += "-";
+            char[] castlingRights = {'-', '-', '-', '-'};
+            if(this[0, 7] != null)
+                if (!this[0, 7].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
+                    castlingRights[0] = 'K';
 
-            output.Castling = castlingRights;
+            if (this[0, 0] != null)
+                if (!this[0, 0].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
+                    castlingRights[1] = 'Q';
+
+            if (this[7, 7] != null)
+                if (!this[7, 7].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
+                    castlingRights[2] = 'k';
+
+            if (this[7, 0] != null)
+                if (!this[7, 0].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
+                    castlingRights[3] = 'q';
+
+
+            output.Castling = castlingRights.ToString();
 
             output.HalfMoveTimer = rule50Counter.ToString();
 
@@ -379,7 +383,6 @@ namespace NewChessProject
                 output = ('a' + vector.X.ToString()) + vector.Y.ToString();
             return output;
         }
-
 
         public bool IsThereThreat(Vector vector, PlayerColour colour)
         {
@@ -400,7 +403,6 @@ namespace NewChessProject
         {    
             return IsThereThreat(kingPositions[(int)colour], colour);
         }
-
 
         public Vector GetKingPosition(PlayerColour colour)
         {

@@ -40,24 +40,26 @@ namespace NewChessProject
                 if (leftPiece != null)
                 {
                     bool free = true;
-                    if (!leftPiece.HasMoved)
-                    {
-                        //Check that there are no pieces between the king and the rook
-                        for (int i = position.X - 1; i > leftPiecePos.X && free; i--)
-                        {
-                            Vector checkedPosition = new Vector(i, position.Y);
-                            if (board[checkedPosition] != null)
-                                free = false;
-                        }
 
-                        //Check that there are no threats between the king and its final position
-                        for (int i = position.X - 1; i >= position.X - CastleDistance && free; i--)
-                        {
-                            Vector checkedPosition = new Vector(i, position.Y);
-                            if (board.IsThereThreat(checkedPosition, Colour))
-                                free = false;
-                        }
+                    if (leftPiece.HasMoved)
+                        free = false;
+                    
+                    //Check that there are no pieces between the king and the rook
+                    for (int i = position.X - 1; i > leftPiecePos.X && free; i--)
+                    {
+                        Vector checkedPosition = new Vector(i, position.Y);
+                        if (board[checkedPosition] != null)
+                            free = false;
                     }
+
+                    //Check that there are no threats between the king and its final position
+                    for (int i = position.X - 1; i >= position.X - CastleDistance && free; i--)
+                    {
+                        Vector checkedPosition = new Vector(i, position.Y);
+                        if (board.IsThereThreat(checkedPosition, Colour))
+                            free = false;
+                    }
+                    
                     if (free)
                         availableMoves.Add(new Vector(position.X - CastleDistance, position.Y, SpecialMove.CastleLeft));
                 }
@@ -66,22 +68,23 @@ namespace NewChessProject
                 if (rightPiece != null)
                 {
                     bool free = true;
-                    if (!rightPiece.HasMoved)
+                    if (rightPiece.HasMoved)
+                        free = false;
+                    
+                    for (int i = position.X + 1; i < rightPiecePos.X && free; i++)
                     {
-                        for (int i = position.X + 1; i < rightPiecePos.X && free; i++)
-                        {
-                            Vector checkedPosition = new Vector(i, position.Y);
-                            if (board[checkedPosition] != null)
-                                free = false;
-                        }
-
-                        for (int i = position.X + 1; i <= position.X + CastleDistance && free; i++)
-                        {
-                            Vector checkedPosition = new Vector(i, position.Y);
-                            if (board.IsThereThreat(checkedPosition, Colour))
-                                free = false;
-                        }
+                        Vector checkedPosition = new Vector(i, position.Y);
+                        if (board[checkedPosition] != null)
+                            free = false;
                     }
+
+                    for (int i = position.X + 1; i <= position.X + CastleDistance && free; i++)
+                    {
+                        Vector checkedPosition = new Vector(i, position.Y);
+                        if (board.IsThereThreat(checkedPosition, Colour))
+                            free = false;
+                    }
+                    
                     if (free)
                         availableMoves.Add(new Vector(position.X + CastleDistance, position.Y, SpecialMove.CastleRight));
                 }
