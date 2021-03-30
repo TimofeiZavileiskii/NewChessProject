@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace NewChessProject
 {
@@ -86,11 +87,6 @@ namespace NewChessProject
             {
                 return TurnTimeToMinutes(timers[(int)PlayerColour.White].TimeLeft);
             }
-        }
-
-        public bool ValidateFENString(string fenString)
-        {
-            return true;
         }
 
         private string TurnTimeToMinutes(double totalTime)
@@ -317,12 +313,6 @@ namespace NewChessProject
 
         public void ImportGame(FENPosition fenPosition)
         {
-            if (!ValidateFENString(fenPosition.FENString))
-            {
-                throw new ArgumentException("Invalid FEN string");
-                return;
-            }
-
             fullMovesMade = Convert.ToInt32(fenPosition.TotalMoves);
 
             if (fenPosition.CurrentPlayer == "b")
@@ -362,10 +352,8 @@ namespace NewChessProject
             MakeRequest(request);
             if (request.Agreed)
             {
-                //Change later
-                gameHistory.ReverseMove();
+                ImportGame(gameHistory.ReverseMove());
                 GenerateMoves();
-                
             }
         }
 

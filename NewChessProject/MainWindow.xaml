@@ -17,7 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="InGameInterface" Grid.Column ="2" Orientation="Vertical" Visibility="Visible">
+        <StackPanel x:Name="InGameInterface" Grid.Column ="2" Orientation="Vertical" Visibility="Hidden">
             <StackPanel.Resources>
                 <DataTemplate x:Key="DataTemplateFromTime">
                     <Label Content="{Binding Path=TimeLeft}"/>
@@ -42,7 +42,7 @@
             </WrapPanel>
         </StackPanel>
 
-        <StackPanel x:Name="Settings" Orientation="Horizontal" Grid.Column="2" Visibility ="Hidden">
+        <StackPanel x:Name="Settings" Orientation="Horizontal" Grid.Column="2" Visibility ="Visible">
             <StackPanel x:Name="SettingsTitles" Orientation="Vertical" Visibility="Visible">
                 <Button HorizontalAlignment="Center" Margin="20" Width="120" Height="25" FontSize="15" Foreground="Black" Click="Start">Start</Button>
                 <Label Content="White player:" HorizontalAlignment="Right" FontSize="15"></Label>
@@ -77,6 +77,7 @@
             <Button x:Name="KnightChoice" Width="48" Height="45" Margin="10,0,0,0"/>
         </WrapPanel>
         <Button Grid.Column ="2" Content="Settings" Height="30" Width="30" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" MouseLeftButtonDown="Click_Settings"/>
-        <Button x:Name="ImportButton" Grid.Column="0" Grid.Row="1" Content="Import" Height="27" Width="160" FontSize="17" Click="Clicked" Grid.ColumnSpan="2" Margin="113,20"/>
+        <Label Grid.Column="0" Content="Import FEN string" Grid.Row="1" Height="27" Width="160" FontSize="17" Grid.ColumnSpan="2" Margin="113,20"/>
+        <TextBlock x:Name="ImportButton" Grid.Column="0" Grid.Row="1" Height="27" Width="160" FontSize="17" Grid.ColumnSpan="2" Margin="113,20"/>
     </Grid>
 </Window>

@@ -25,6 +25,8 @@ namespace NewChessProject
 
         Dictionary<string, CreatePlayer> CreatePlayerFunctions;
 
+        const string stockFishAddress = "stockfish_13_win_x64_bmi2/stockfish_13_win_x64_bmi2";
+
         string playerWhiteType;
         string playerBlackType;
         double initialTime;
@@ -57,7 +59,7 @@ namespace NewChessProject
 
         Player CreateAIPlayer(PlayerColour colour)
         {
-            return new AIPlayer(colour, game);
+            return new AIPlayer(colour, new ChessEngine("StockFish", stockFishAddress), game);
         }
 
         public double InitialTime

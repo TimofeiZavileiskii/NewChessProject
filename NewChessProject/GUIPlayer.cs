@@ -24,7 +24,7 @@ namespace NewChessProject
         WaitForMove
     }
 
-    class GUIPlayer : Player
+    class GUIPlayer : HumanPlayer
     {
         Vector selectedPiece;
         List<Vector> allowedPositions;

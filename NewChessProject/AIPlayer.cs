@@ -8,9 +8,11 @@ namespace NewChessProject
 {
     class AIPlayer : Player
     {
-        public AIPlayer(PlayerColour colour, Game game) : base(colour, game)
-        {
+        ChessEngine engine;
 
+        public AIPlayer(PlayerColour colour, ChessEngine engine, Game game) : base(colour, game)
+        {
+            this.engine = engine;
         }
 
     }

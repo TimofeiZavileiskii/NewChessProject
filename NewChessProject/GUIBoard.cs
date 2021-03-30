@@ -184,8 +184,20 @@ namespace NewChessProject
 
         public void Clicked(object sender, MouseButtonEventArgs e)
         {
-            BoardClicked(new Vector((int)Math.Floor((double)e.GetPosition(canvas).X / squareWidth), 
-                (int)Math.Floor(Board.boardHeight - ((double)e.GetPosition(canvas).Y / squareHeight))));
+            int x = (int)Math.Floor((double)e.GetPosition(canvas).X / squareWidth);
+            int y = (int)Math.Floor(Board.boardHeight - ((double)e.GetPosition(canvas).Y / squareHeight));
+
+            if (x > 7)
+                x = 7;
+            else if (x < 0)
+                x = 0;
+
+            if (y > 7)
+                y = 7;
+            else if (y < 0)
+                y = 0;
+
+            BoardClicked(new Vector(x , y));
         }
 
         public void WindowClicked(object sender, EventArgs e)

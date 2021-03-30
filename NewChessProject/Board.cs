@@ -224,6 +224,8 @@ namespace NewChessProject
 
         public void UploadFENPosition(FENPosition fenPos)
         {
+            Array.Clear(field, 0, field.Length);
+
             int positionCounter = boardHeight * boardWidth - 1;
 
             foreach (char c in fenPos.Position)
