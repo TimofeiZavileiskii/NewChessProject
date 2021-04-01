@@ -371,7 +371,7 @@ namespace NewChessProject
                     castlingRights[3] = 'q';
 
 
-            output.Castling = castlingRights.ToString();
+            output.Castling = new String(castlingRights);
 
             output.HalfMoveTimer = rule50Counter.ToString();
 

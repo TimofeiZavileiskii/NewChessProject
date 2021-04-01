@@ -60,6 +60,7 @@ namespace NewChessProject
         const int max50MoveRule = 50;
 
         public event EventHandler<MadeMoveEventArgs> MoveMade;
+        public event EventHandler GameStarted;
         public event EventHandler<GameEndedEventArgs> OnGameEnded;
         public event EventHandler<RequestMadeEventArgs> RequestMade;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -144,12 +145,14 @@ namespace NewChessProject
 
             ImportGame(new FENPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
 
-
-
             gameHistory.Add(GenerateFENPosition());
 
-
             GenerateMoves();
+        }
+
+        public void StartGame()
+        {
+            GameStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void GameEnded(MoveResult endReason, PlayerColour? winner)
@@ -382,7 +385,7 @@ namespace NewChessProject
                 if (board.Rule50Counter >= max50MoveRule)
                     GameEnded(MoveResult.move50Rule, null);
                 else
-                    MoveMade?.Invoke(this, new MadeMoveEventArgs(result));
+                    MoveMade?.Invoke(this, new MadeMoveEventArgs(result, IdentifyPlayersColour(gameState)));
             }
             else
             {

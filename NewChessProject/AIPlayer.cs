@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +18,28 @@ namespace NewChessProject
             this.difficulty = difficulty;
         }
 
+        private void ListList(List<AiMove> moves)
+        {
+            foreach(AiMove move in moves)
+            {
+                Console.WriteLine(move.Quality);
+            }
+        }
         
         AiMove ChooseMove(List<AiMove> moves)
         {
-            moves.OrderBy(x => x.Quality);
+            AiMove output = new AiMove();
+
+            int factor = -1;
+            if (colour == PlayerColour.Black)
+                factor = 1;
+
+
+            moves = moves.OrderBy(x => (x.Quality * factor)).ToList();
             double random = moves.Count() / difficulty;
 
-            return new AiMove();
+
+            return output;
         }
 
         List<AiMove> GenerateMoves()
@@ -31,6 +47,7 @@ namespace NewChessProject
             List<AiMove> output = new List<AiMove>();
 
             List<PieceRepresentation> pieces = game.GetPieceRepresentations();
+            
 
             foreach (PieceRepresentation piece in pieces)
             {
@@ -39,19 +56,43 @@ namespace NewChessProject
                     List<Vector> moves = game.GetAllowedPositions(Colour, piece.Position);
                     foreach (Vector move in moves)
                     {
-                        output.Add(engine.EvaluateMove(piece.Position, move));
+                        AiMove mov = engine.EvaluateMove(piece.Position, move);
+                        output.Add(mov);
                     }
                 }
             }
+            
+
             return output;
+        }
+
+        public void GameStarted(object sender, EventArgs eventArgs)
+        {
+            if(colour == PlayerColour.White)
+                MakeMove();
+        }
+
+        private void MakeMove()
+        {
+            engine.UploadPosition(game.GenerateFENPosition().FENString);
+            AiMove chosenMove;
+            
+            if (difficulty == 1)
+            {
+                chosenMove = engine.GetBestMove();
+            }
+            else
+            {
+                chosenMove = ChooseMove(GenerateMoves());
+
+            }
+            game.EnterMove(colour, chosenMove.Move.Item1, chosenMove.Move.Item2);
         }
 
         public override void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
-            AiMove chosenMove = ChooseMove(GenerateMoves());
-
-            game.EnterMove(colour, chosenMove.Move.Item1, chosenMove.Move.Item2);
-
+            if(e.PlayerToMove == colour)
+                MakeMove();
         }
 
     }

@@ -8,12 +8,14 @@ namespace NewChessProject
 {
     class MadeMoveEventArgs : EventArgs
     {
-        public MadeMoveEventArgs(MoveResult result) : base()
+        public MadeMoveEventArgs(MoveResult result, PlayerColour colour) : base()
         {
             Result = result;
+            PlayerToMove = colour;
         }
 
         public MoveResult Result { get; set; }
+        public PlayerColour PlayerToMove { get; set; }
     }
 
     class GameEndedEventArgs : EventArgs

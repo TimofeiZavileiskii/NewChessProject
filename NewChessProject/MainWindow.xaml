@@ -52,13 +52,14 @@
                 <Label Content="Touch rule:" Margin="0,30,0,0" HorizontalAlignment="Right" FontSize="15"></Label>
                 <Label Content="Drag pieces:" HorizontalAlignment="Right" FontSize="15"></Label>
             </StackPanel>
+            
             <StackPanel x:Name="SettingsSelection" Orientation="Vertical" Visibility="Visible">
-                <ComboBox Margin="5,68,0,0" Width="100" Height="25">
+                <ComboBox Margin="5,68,0,0" Width="100" Height="25" Name ="WhitePlayerSelection">
                     <ComboBoxItem>This computer</ComboBoxItem>
                     <ComboBoxItem>AI</ComboBoxItem>
                     <ComboBoxItem>Online</ComboBoxItem>
                 </ComboBox>
-                <ComboBox Margin="5,7,0,0" Width="100" Height="25">
+                <ComboBox Margin="5,7,0,0" Width="100" Height="25" Name ="BlackPlayerSelection">
                     <ComboBoxItem>This computer</ComboBoxItem>
                     <ComboBoxItem>AI</ComboBoxItem>
                     <ComboBoxItem>Online</ComboBoxItem>
