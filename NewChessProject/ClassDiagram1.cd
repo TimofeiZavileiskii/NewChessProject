@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NewChessProject.AIPlayer" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CABAAAABAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>AIPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.App" Collapsed="true">
+    <Position X="7" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Bishop" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Bishop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Board" Collapsed="true">
+    <Position X="5.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIGAQkgAgCAgBACAiIAQCCAAEgAIAwAACAACAQAAAqI=</HashCode>
+      <FileName>Board.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.ChessEngine" Collapsed="true">
+    <Position X="0.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAEAAABAAAAAAAAIgFEAAAEAAAAAAAAIAQAAAA=</HashCode>
+      <FileName>ChessEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.MadeMoveEventArgs" Collapsed="true">
+    <Position X="6.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.GameEndedEventArgs" Collapsed="true">
+    <Position X="14" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.BoardClickedEventArgs" Collapsed="true">
+    <Position X="14" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.PieceSelectedEventArgs" Collapsed="true">
+    <Position X="10.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.RequestMadeEventArgs" Collapsed="true">
+    <Position X="14" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.FENPosition" Collapsed="true">
+    <Position X="17.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIEAAAABAAAAAgAAAAIIAAAAiACACAAAgAgAAACAA=</HashCode>
+      <FileName>FENPosition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Game" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQAAQBBIAEAAagBRAAEAkAAkCAGIYQAICQgAiADARA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Bottom" Position="1.3" />
+  </Class>
+  <Class Name="NewChessProject.GameCreator" Collapsed="true">
+    <Position X="12.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICAAAABIEAIQQAACIAAQAYAgADEKAAAIMIgAAACgAAA=</HashCode>
+      <FileName>GameCreator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.GameHistory" Collapsed="true">
+    <Position X="15.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAACAAAAAAAAAAAAAAAAACAAAIAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>GameHistory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.GameRepresentation" Collapsed="true">
+    <Position X="10.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAgABAAIAAQAAA=</HashCode>
+      <FileName>GameRepresentation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.GUIBoard" Collapsed="true">
+    <Position X="12.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>goQCBBgYABACAAgAAAAACEACIAEEAKAgAQAABAFQkAA=</HashCode>
+      <FileName>GUIBoard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.GUIPlayer" Collapsed="true">
+    <Position X="2.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CkACAAAAAAKJAAoAAAAEABEAAACCQzAEAAgACAACgAA=</HashCode>
+      <FileName>GUIPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.HumanPlayer" Collapsed="true">
+    <Position X="3.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HumanPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.King" Collapsed="true">
+    <Position X="12" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>King.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Knight" Collapsed="true">
+    <Position X="9.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Knight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="15.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEEACIABABAAAAAAAAAAAAAACAIAAAAAAAAAAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NewChessProject.ManyStepPiece" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ManyStepPiece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Map&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="17.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAgAAAAAAAAAACAAAAAAAAAAAAAIAAAAAAAAQAAA=</HashCode>
+      <FileName>Map.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.NetworkPlayer" Collapsed="true">
+    <Position X="5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NetworkPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.OneStepPiece" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OneStepPiece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Participant" Collapsed="true">
+    <Position X="2.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Participant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Pawn" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAACEAAgAAEAAAAAIAAAACAIAAAAA=</HashCode>
+      <FileName>Pawn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Piece" Collapsed="true">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAABAAAAAAAAAAAAAAABAAAAEBAFAAAAAQAEABAABCA=</HashCode>
+      <FileName>Piece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Player" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAABAAAAA=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Queen" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Queen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Request" Collapsed="true">
+    <Position X="12.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAEAAAAAAAAAAAAARAAAIAAAACAAAAAA=</HashCode>
+      <FileName>Request.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Rook" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Rook.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Timer" Collapsed="true">
+    <Position X="7" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAgACAASgAAAACAABAAAAAAQAABAQgICAAAAEACAA=</HashCode>
+      <FileName>Timer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Properties.Resources" Collapsed="true">
+    <Position X="15.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NewChessProject.Properties.Settings" Collapsed="true">
+    <Position X="17.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="NewChessProject.BoardIndicator" Collapsed="true">
+    <Position X="15.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAgAAAAAAAAAAAAQAAAAAAAABAAAAA=</HashCode>
+      <FileName>BoardIndicator.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NewChessProject.PieceRepresentation" Collapsed="true">
+    <Position X="17.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAgAAAAAAAAAAABQAAAAQAAABAAAAA=</HashCode>
+      <FileName>PieceRepresentation.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NewChessProject.Vector" Collapsed="true">
+    <Position X="19.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAwAEAAAAAAAAAAIgAAABoAAAAYiA=</HashCode>
+      <FileName>Vector.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="NewChessProject.PlayerColour" Collapsed="true">
+    <Position X="11" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.PieceType" Collapsed="true">
+    <Position X="18" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAEggAAAAEAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.GameState" Collapsed="true">
+    <Position X="12.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAIAAAAAAEIQAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.EnterResult" Collapsed="true">
+    <Position X="11" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAIAAAAAAAAAAAAAAAAAAEAAAABAAAACAAAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.MoveResult" Collapsed="true">
+    <Position X="16.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAgAAAAAAgKAABAAAAAAAAAkAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.Input" Collapsed="true">
+    <Position X="14.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIQAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GUIPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.State" Collapsed="true">
+    <Position X="16.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAhAAAAAAAAAAAAAACAAAAAAAAAAkAA=</HashCode>
+      <FileName>GUIPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.RequestType" Collapsed="true">
+    <Position X="12.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Request.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NewChessProject.SpecialMove" Collapsed="true">
+    <Position X="14.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAgAAAAAAAAAAAAAAACAAAAAAAAAAAAAAgAAAAACAA=</HashCode>
+      <FileName>Vector.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

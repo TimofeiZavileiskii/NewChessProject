@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AiMove.cs" />
     <Compile Include="AIPlayer.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -70,7 +71,6 @@
     <Compile Include="EventArgs.cs" />
     <Compile Include="FENPosition.cs" />
     <Compile Include="GameHistory.cs" />
-    <Compile Include="GameRecorder.cs" />
     <Compile Include="GUIBoard.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameCreator.cs" />
@@ -117,6 +117,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

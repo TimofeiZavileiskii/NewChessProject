@@ -357,7 +357,7 @@ namespace NewChessProject
             }
         }
 
-        private FENPosition GenerateFENPosition()
+        public FENPosition GenerateFENPosition()
         {
             FENPosition output = board.GetFENInformation();
             output.CurrentPlayer = IdentifyPlayersColour(gameState).ToString().ToLower()[0].ToString();
