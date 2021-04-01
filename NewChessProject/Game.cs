@@ -360,6 +360,11 @@ namespace NewChessProject
             }
         }
 
+        public PieceType GetPieceType(Vector location)
+        {
+            return board[location].Type;
+        }
+
         public FENPosition GenerateFENPosition()
         {
             FENPosition output = board.GetFENInformation();

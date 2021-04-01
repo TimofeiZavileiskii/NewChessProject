@@ -58,7 +58,7 @@ namespace NewChessProject
 
         Player CreateAIPlayer(PlayerColour colour)
         {
-            AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish"), game, 1);
+            AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", 2), game);
             game.GameStarted += player.GameStarted;
             return player;
         }

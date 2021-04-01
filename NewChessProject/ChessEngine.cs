@@ -13,9 +13,10 @@ namespace NewChessProject
         Process engine;
         string name;
         string position;
+        int difficulty;
         int maxumumDepth;
         int maximumTime; //Variable signifies the maximum time the engine can think, if -1, it will take as much time as needed
-        public ChessEngine(string address, string name, int maximumTime = -1)
+        public ChessEngine(string address, string name, int difficulty = 20, int maximumTime = -1)
         {
             engine = new Process();
             this.name = name;
@@ -30,6 +31,7 @@ namespace NewChessProject
             engine.Start();
             engine.StandardInput.WriteLine("isready");
             engine.StandardInput.WriteLine("uci");
+            engine.StandardInput.WriteLine("setoption name Skill Level value " + difficulty.ToString());
         }
 
         public void UploadPosition(string fenString)
