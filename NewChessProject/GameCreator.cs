@@ -22,7 +22,6 @@ namespace NewChessProject
 
     class GameCreator
     {
-        Board board;
         Player playerWhite;
         Player playerBlack;
         GUIBoard guiBoard;
@@ -33,6 +32,7 @@ namespace NewChessProject
 
         const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
 
+        string importFENString;
         double initialTime;
         double timePerTurn;
         bool touchRule;
@@ -115,50 +115,83 @@ namespace NewChessProject
                 carryPieces = value;
             }
         }
+        public string ImportedFENString
+        {
+            get
+            {
+                return importFENString;
+            }
+            set
+            {
+                importFENString = value;
+            }
+        }
 
         public PlayerType WhitePlayerType
         {
             get { return whitePlayerType; }
-            set { whitePlayerType = value; }
+            set 
+            {
+                whitePlayerType = value;
+                SetAdditionalSettings();
+            }
         }
 
         public PlayerType BlackPlayerType
         {
             get { return blackPlayerType; }
-            set { blackPlayerType = value; }
+            set 
+            {
+                blackPlayerType = value;
+                SetAdditionalSettings();
+            }
         }
+
+        public void ImportFENString()
+        {
+            bool output = game.SetFENString(ImportedFENString);
+            if (!output)
+            {
+                ImportedFENString = "";
+                MessageBox.Show("FEN input was invalid");
+            }
+            
+
+            guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
+        }
+
         public List<PlayerType> PossiblePlayerTypes
         {
             get { return possiblePlayerTypes; }
         }
 
-        public GameCreator(Game game, GUIBoard guiBoard, StackPanel inGameInterface)
+        public GameCreator(GUIBoard guiBoard, StackPanel inGameInterface)
         {
             Board.FillFENRepresentations();
-            this.game = game;
+
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
 
             possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
 
-            board = new Board();
-            board.SetDefaultBoardPosition();
-            guiBoard.Update(new GameRepresentation(board.OutputPieces()));
-            ReadGameSettings();
 
+            game = new Game(new Board());
+            guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
+
+            ReadGameSettings();
             CreatePlayerFunctions = new Dictionary<PlayerType, CreatePlayer>();
             CreatePlayerFunctions.Add(PlayerType.GUIPlayer, CreateGUIPlayer);
             CreatePlayerFunctions.Add(PlayerType.AIPlayer, CreateAIPlayer); 
         }
         
-        
+        private void SetAdditionalSettings()
+        {
+            
+        }
 
         public void StartGame()
         {
             WriteGameSettings();
-
-            game = new Game(board, initialTime, timePerTurn);
-            BindTimersWithInterface();
 
             playerWhite = CreatePlayerFunctions[whitePlayerType](PlayerColour.White);
             playerBlack = CreatePlayerFunctions[blackPlayerType](PlayerColour.Black);
@@ -167,7 +200,8 @@ namespace NewChessProject
             game.MoveMade += playerBlack.OnMadeMove;
             game.OnGameEnded += guiBoard.EndGame;
 
-            game.StartGame();
+            game.StartGame(initialTime, timePerTurn);
+            BindTimersWithInterface();
         }
 
         private void BindTimersWithInterface()

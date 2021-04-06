@@ -16,7 +16,6 @@ namespace NewChessProject
     public partial class MainWindow : Window
     {
         GameCreator gc;
-        Game game;
         GUIBoard guiBoard;
         public MainWindow()
         {
@@ -27,7 +26,7 @@ namespace NewChessProject
             ImportButton.Visibility = Visibility.Visible;
 
             guiBoard = new GUIBoard(Screen, PieceSelection, this);
-            gc = new GameCreator(game, guiBoard, InGameInterface);
+            gc = new GameCreator(guiBoard, InGameInterface);
             DataContext = gc;
         }
 
@@ -37,6 +36,11 @@ namespace NewChessProject
             InGameInterface.Visibility = Visibility.Visible;
             Settings.Visibility = Visibility.Hidden;
             ImportButton.Visibility = Visibility.Hidden;
+        }
+
+        private void ImportFen(object sender, RoutedEventArgs e)
+        {
+            gc.ImportFENString();
         }
 
         private void Clicked(object sender, RoutedEventArgs e)

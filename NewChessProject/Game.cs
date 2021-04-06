@@ -117,13 +117,21 @@ namespace NewChessProject
             return output;
         }
 
-        public Game(Board board, double timePerPlayer, double timePerTurn)
+        public Game(Board board)
+        {
+            this.board = board;
+            board.SetDefaultBoardPosition();
+
+            gameState = GameState.WhiteMove;
+            gameHistory = new GameHistory();
+        }
+
+        public void StartGame(double timePerPlayer, double timePerTurn)
         {
             const double reportTime = 0.1;
             //fullMovesMade = 1;
-            gameState = GameState.WhiteMove;
-            gameHistory = new GameHistory();
-            this.addedTimePerTurn = timePerTurn;
+
+            addedTimePerTurn = timePerTurn;
 
             timers = new Timer[Enum.GetValues(typeof(PlayerColour)).Length];
             takenPieces = new List<Piece>[Enum.GetValues(typeof(PlayerColour)).Length];
@@ -141,17 +149,10 @@ namespace NewChessProject
             }
             timers[(int)PlayerColour.White].Start();
 
-            this.board = board;
-
-            ImportGame(new FENPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
-
             gameHistory.Add(GenerateFENPosition());
 
             GenerateMoves();
-        }
 
-        public void StartGame()
-        {
             GameStarted?.Invoke(this, EventArgs.Empty);
         }
 
@@ -314,7 +315,30 @@ namespace NewChessProject
             return result;
         }
 
-        public void ImportGame(FENPosition fenPosition)
+        public bool SetFENString(string FenString)
+        {
+            if (!VerifyFENString(FenString))
+            {
+                return false;
+            }
+            FENPosition fenPos = new FENPosition(FenString);
+            ImportGame(fenPos);
+
+            return true;
+        }
+
+        private bool VerifyFENString(string fenString)
+        {
+            bool output = true;
+
+            output = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (K|-)(Q|-)(k|-)(q|-) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
+
+            
+
+            return output;
+        }
+
+        private void ImportGame(FENPosition fenPosition)
         {
             fullMovesMade = Convert.ToInt32(fenPosition.TotalMoves);
 
