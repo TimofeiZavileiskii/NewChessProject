@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:NewChessProject"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="13*"/>
@@ -54,16 +57,8 @@
             </StackPanel>
 
             <StackPanel x:Name="SettingsSelection" Orientation="Vertical" Visibility="Visible">
-                <ComboBox Margin="5,68,0,0" Width="100" Height="25" Name ="WhitePlayerSelection">
-                    <ComboBoxItem>This computer</ComboBoxItem>
-                    <ComboBoxItem>AI</ComboBoxItem>
-                    <ComboBoxItem>Online</ComboBoxItem>
-                </ComboBox>
-                <ComboBox Margin="5,7,0,0" Width="100" Height="25" Name ="BlackPlayerSelection">
-                    <ComboBoxItem>This computer</ComboBoxItem>
-                    <ComboBoxItem>AI</ComboBoxItem>
-                    <ComboBoxItem>Online</ComboBoxItem>
-                </ComboBox>
+                <ComboBox Margin="5,68,0,0" Width="100" Height="25" Name ="WhitePlayerSelection" ItemsSource="{Binding PossiblePlayerTypes}" SelectedItem="{Binding WhitePlayerType}"/>
+                <ComboBox Margin="5,7,0,0" Width="100" Height="25" Name ="BlackPlayerSelection" ItemsSource="{Binding PossiblePlayerTypes}" SelectedItem="{Binding BlackPlayerType}"/>
                 <TextBox x:Name="InitialTimeBox" Margin="5,28,0,0" Text="{Binding InitialTime, Mode = TwoWay}"/>
                 <TextBox x:Name="TimePerTurnBox" Margin="5,12,0,0" Text="{Binding TimePerTurn, Mode = TwoWay}"/>
                 <CheckBox x:Name="TouchRuleBox" Margin="5,43,0,0"  IsChecked="{Binding TouchRule, Mode = TwoWay}"/>

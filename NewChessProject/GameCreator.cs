@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace NewChessProject
 {
-    enum PlayerTyper
+    enum PlayerType
     {
         GUIPlayer,
         AIPlayer
@@ -28,18 +28,19 @@ namespace NewChessProject
         GUIBoard guiBoard;
         Game game;
         StackPanel inGameInterface;
-        ComboBox[] playerTypeSelection;
 
-        Dictionary<string, CreatePlayer> CreatePlayerFunctions;
+        Dictionary<PlayerType, CreatePlayer> CreatePlayerFunctions;
 
         const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
 
-        string playerWhiteType;
-        string playerBlackType;
         double initialTime;
         double timePerTurn;
         bool touchRule;
         bool carryPieces;
+
+        List<PlayerType> possiblePlayerTypes;
+        PlayerType whitePlayerType;
+        PlayerType blackPlayerType;
 
         delegate Player CreatePlayer(PlayerColour colour);
 
@@ -114,50 +115,40 @@ namespace NewChessProject
                 carryPieces = value;
             }
         }
-        public string PlayerWhiteType
+
+        public PlayerType WhitePlayerType
         {
-            get
-            {
-                return playerWhiteType;
-            }
-            set
-            {
-                playerWhiteType = value;
-            }
-        }
-        public string PlayerBlackType
-        {
-            get
-            {
-                return playerBlackType;
-            }
-            set
-            {
-                playerBlackType = value;
-            }
+            get { return whitePlayerType; }
+            set { whitePlayerType = value; }
         }
 
-        public GameCreator(Game game, GUIBoard guiBoard, StackPanel inGameInterface, ComboBox whitePl, ComboBox blackPl)
+        public PlayerType BlackPlayerType
+        {
+            get { return blackPlayerType; }
+            set { blackPlayerType = value; }
+        }
+        public List<PlayerType> PossiblePlayerTypes
+        {
+            get { return possiblePlayerTypes; }
+        }
+
+        public GameCreator(Game game, GUIBoard guiBoard, StackPanel inGameInterface)
         {
             Board.FillFENRepresentations();
             this.game = game;
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
 
-            playerTypeSelection = new ComboBox[Enum.GetValues(typeof(PlayerColour)).Length];
-            playerTypeSelection[(int)PlayerColour.White] = whitePl;
-            playerTypeSelection[(int)PlayerColour.Black] = blackPl;
-
-
+            possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
 
             board = new Board();
             board.SetDefaultBoardPosition();
             guiBoard.Update(new GameRepresentation(board.OutputPieces()));
             ReadGameSettings();
 
-            CreatePlayerFunctions = new Dictionary<string, CreatePlayer>();
-            CreatePlayerFunctions.Add("This computer", CreateGUIPlayer);
-            CreatePlayerFunctions.Add("AI", CreateAIPlayer); 
+            CreatePlayerFunctions = new Dictionary<PlayerType, CreatePlayer>();
+            CreatePlayerFunctions.Add(PlayerType.GUIPlayer, CreateGUIPlayer);
+            CreatePlayerFunctions.Add(PlayerType.AIPlayer, CreateAIPlayer); 
         }
         
         
@@ -166,17 +157,11 @@ namespace NewChessProject
         {
             WriteGameSettings();
 
-            playerWhiteType = playerTypeSelection[(int)PlayerColour.White].Text;
-            playerBlackType = playerTypeSelection[(int)PlayerColour.Black].Text;
-
             game = new Game(board, initialTime, timePerTurn);
             BindTimersWithInterface();
 
-            Console.WriteLine(playerWhiteType);
-            Console.WriteLine(playerBlackType);
-
-            playerWhite = CreatePlayerFunctions[playerWhiteType](PlayerColour.White);
-            playerBlack = CreatePlayerFunctions[playerBlackType](PlayerColour.Black);
+            playerWhite = CreatePlayerFunctions[whitePlayerType](PlayerColour.White);
+            playerBlack = CreatePlayerFunctions[blackPlayerType](PlayerColour.Black);
 
             game.MoveMade += playerWhite.OnMadeMove;
             game.MoveMade += playerBlack.OnMadeMove;
@@ -206,8 +191,8 @@ namespace NewChessProject
             if (File.Exists(@"GameSettings.txt"))
             {
                 StreamReader file = new StreamReader(@"GameSettings.txt");
-                playerWhiteType = file.ReadLine();
-                playerBlackType = file.ReadLine();
+                whitePlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
+                blackPlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
                 initialTime = Convert.ToDouble(file.ReadLine());
                 timePerTurn = Convert.ToDouble(file.ReadLine());
                 touchRule = Convert.ToBoolean(file.ReadLine());
@@ -217,22 +202,20 @@ namespace NewChessProject
             }
             else
             {
-                playerWhiteType = "GUI Player";
-                playerBlackType = "GUI Player";
+                whitePlayerType = PlayerType.GUIPlayer;
+                blackPlayerType = PlayerType.GUIPlayer;
                 initialTime = 30;
                 timePerTurn = 0;
                 touchRule = false;
                 carryPieces = false;
             }
-            playerTypeSelection[(int)PlayerColour.White].SelectedIndex = 0;
-            playerTypeSelection[(int)PlayerColour.Black].SelectedIndex = 0;
         }
 
         private void WriteGameSettings()
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(@"GameSettings.txt");
-            file.WriteLine(playerWhiteType);
-            file.WriteLine(playerBlackType);
+            file.WriteLine(whitePlayerType);
+            file.WriteLine(blackPlayerType);
             file.WriteLine(initialTime);
             file.WriteLine(timePerTurn);
             file.WriteLine(touchRule);

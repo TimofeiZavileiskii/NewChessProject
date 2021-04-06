@@ -27,7 +27,7 @@ namespace NewChessProject
             ImportButton.Visibility = Visibility.Visible;
 
             guiBoard = new GUIBoard(Screen, PieceSelection, this);
-            gc = new GameCreator(game, guiBoard, InGameInterface, WhitePlayerSelection, BlackPlayerSelection);
+            gc = new GameCreator(game, guiBoard, InGameInterface);
             DataContext = gc;
         }
 
