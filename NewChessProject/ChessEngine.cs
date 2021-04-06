@@ -10,24 +10,28 @@ namespace NewChessProject
 {
     class ChessEngine
     {
+
         Process engine;
         string name;
         string position;
         int difficulty;
         int maxumumDepth;
         int maximumTime; //Variable signifies the maximum time the engine can think, if -1, it will take as much time as needed
+
         public ChessEngine(string address, string name, int difficulty = 20, int maximumTime = -1)
         {
             engine = new Process();
             this.name = name;
             this.maximumTime = maximumTime;
-            maxumumDepth = 14;
+            maxumumDepth = 18;
+
             engine.EnableRaisingEvents = true;
             engine.StartInfo.UseShellExecute = false;
             engine.StartInfo.RedirectStandardInput = true;
             engine.StartInfo.RedirectStandardOutput = true;
             engine.StartInfo.CreateNoWindow = true;
             engine.StartInfo.FileName = address;
+
             engine.Start();
             engine.StandardInput.WriteLine("isready");
             engine.StandardInput.WriteLine("uci");
@@ -55,7 +59,18 @@ namespace NewChessProject
 
             string move = currLine.Split(' ')[1];
 
-            return new AiMove(0, (new Vector(move[0] - 'a', Convert.ToInt32(move[1].ToString()) - 1), new Vector(move[2] - 'a', Convert.ToInt32(move[3].ToString()) - 1)));
+            Vector pieceToMove = new Vector(move[0] - 'a', Convert.ToInt32(move[1].ToString()) - 1);
+            Vector placeToMove = new Vector(move[2] - 'a', Convert.ToInt32(move[3].ToString()) - 1);
+            PieceType? pawnTransformation = null;
+            if(move.Length == 5)
+            {
+                pawnTransformation = Board.GetTypeFromFENNotation(move[4]);
+            }
+
+
+            AiMove output = new AiMove((pieceToMove, placeToMove), pawnTransformation);
+
+            return output;
         }
 
         private string GetBoundary()
@@ -75,11 +90,9 @@ namespace NewChessProject
             return ((char)('a' + vec.X)).ToString() + (vec.Y + 1).ToString();
         }
 
-        public AiMove EvaluateMove(Vector piece, Vector target)
+        public int EvaluatePosition()
         {
-            string moveString = TurnVectorToString(piece) + TurnVectorToString(target);
-
-            engine.StandardInput.WriteLine("position fen " + position + " moves " + moveString);
+            engine.StandardInput.WriteLine("position fen " + position);
             engine.StandardInput.WriteLine("go " + GetBoundary());
 
             string previousLine = "";
@@ -90,12 +103,9 @@ namespace NewChessProject
                 Console.WriteLine(currLine);
             } while (currLine.Split(' ')[0] != "bestmove") ;
 
-            if (currLine.Split(' ')[1] == "(none)")
-                return new AiMove();
-
             int posEvaluation = Convert.ToInt32(previousLine.Split(' ')[9]);
 
-            return new AiMove(posEvaluation, (piece, target));
+            return posEvaluation;
         }
     }
 }

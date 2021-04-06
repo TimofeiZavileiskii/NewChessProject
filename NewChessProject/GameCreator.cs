@@ -14,6 +14,12 @@ using System.Windows.Input;
 
 namespace NewChessProject
 {
+    enum PlayerTyper
+    {
+        GUIPlayer,
+        AIPlayer
+    }
+
     class GameCreator
     {
         Board board;
@@ -60,6 +66,7 @@ namespace NewChessProject
         {
             AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", 2), game);
             game.GameStarted += player.GameStarted;
+            game.RequestMade += player.RequestSend;
             return player;
         }
 

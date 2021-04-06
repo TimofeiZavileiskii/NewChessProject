@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows.Threading;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,15 @@ namespace NewChessProject
     class AIPlayer : Player
     {
         ChessEngine engine;
-        int difficulty; // Should range from 1 to 10 - it will define the accuracy with which the moves will be chosen by the player
+
+        Dispatcher mainThreadDispatcher;
+        bool analysing;
 
         public AIPlayer(PlayerColour colour, ChessEngine engine, Game game) : base(colour, game)
         {
             this.engine = engine;
+            mainThreadDispatcher = Dispatcher.CurrentDispatcher;
+            analysing = false;
         }
         
 
@@ -27,15 +32,59 @@ namespace NewChessProject
         private void MakeMove()
         {
             engine.UploadPosition(game.GenerateFENPosition().FENString);
-            AiMove chosenMove = engine.GetBestMove();
 
-            game.EnterMove(colour, chosenMove.Move.Item1, IdentifySpecialMove(chosenMove.Move.Item1, chosenMove.Move.Item2));
+            Thread thread = new Thread(() =>
+            {
+                AiMove chosenMove = engine.GetBestMove();
+
+                mainThreadDispatcher.Invoke(() =>
+                {
+                    EnterResult result = game.EnterMove(colour, chosenMove.Move.Item1, game.GetAllowedPositions(colour, chosenMove.Move.Item1).Find(x => x == chosenMove.Move.Item2));
+                    if (result == EnterResult.WaitForPawnSlection)
+                    {
+                        game.ChoosePawnTransformation(colour, (PieceType)chosenMove.ChosenPawnTransformation);
+                    }
+                });
+            });
+            thread.Start();
         }
+
+
 
         public override void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
             if(e.PlayerToMove == colour)
                 MakeMove();
+        }
+
+        public override void RequestSend(object sender, RequestMadeEventArgs e)
+        {
+            switch (e.Request.Type)
+            {
+                case(RequestType.ProposeTakeback):
+                    e.Request.Agreed = true;
+                    break;
+                case (RequestType.OfferDraw):
+                    e.Request.Agreed = EvaluateDraw();
+                    break;
+            }
+        }
+
+        private bool EvaluateDraw()
+        {
+            bool output = false;
+            engine.UploadPosition(game.GenerateFENPosition().FENString);
+            int assesment = engine.EvaluatePosition();
+
+            int factor = 1;
+            if (colour == PlayerColour.Black)
+                factor = -1;
+
+            if (assesment * factor < -2)
+            {
+                output = true;
+            }
+            return output;
         }
 
         private Vector IdentifySpecialMove(Vector piece, Vector target)

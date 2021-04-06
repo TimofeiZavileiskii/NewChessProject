@@ -58,7 +58,7 @@ namespace NewChessProject
             {
                 Board testingBoard = board.Copy();
                 testingBoard.MovePiece(currentLocation, move);
-                testingBoard.GenerateMoves(board.ReverseColour(colour));
+                testingBoard.GenerateMoves(Board.ReverseColour(colour));
 
                 if (!testingBoard.IsChecked(colour))
                     filteredMoves.Add(move);

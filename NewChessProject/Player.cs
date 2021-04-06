@@ -25,7 +25,9 @@ namespace NewChessProject
             }
         }
 
-        override public void OnMadeMove(object sender, MadeMoveEventArgs e)
+        public abstract void RequestSend(object sender, RequestMadeEventArgs e);
+
+        public virtual void GameEnded(object sender, GameEndedEventArgs e)
         {
 
         }

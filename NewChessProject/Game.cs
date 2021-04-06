@@ -70,7 +70,7 @@ namespace NewChessProject
         List<Piece>[] takenPieces;
         Timer[] timers;
         double[] timesPerPlayer;
-        double timePerTurn;
+        double addedTimePerTurn;
         GameHistory gameHistory;
         int fullMovesMade;
 
@@ -123,7 +123,7 @@ namespace NewChessProject
             //fullMovesMade = 1;
             gameState = GameState.WhiteMove;
             gameHistory = new GameHistory();
-            this.timePerTurn = timePerTurn;
+            this.addedTimePerTurn = timePerTurn;
 
             timers = new Timer[Enum.GetValues(typeof(PlayerColour)).Length];
             takenPieces = new List<Piece>[Enum.GetValues(typeof(PlayerColour)).Length];
@@ -172,7 +172,7 @@ namespace NewChessProject
 
             if (((Timer)sender).TimeLeft < 0.05)
             {
-                GameEnded(MoveResult.TimeOut, board.ReverseColour(IdentifyPlayersColour(gameState)));
+                GameEnded(MoveResult.TimeOut, Board.ReverseColour(IdentifyPlayersColour(gameState)));
             }
         }
 
@@ -183,7 +183,7 @@ namespace NewChessProject
 
         private void GenerateMoves()
         {
-            board.GenerateMoves(board.ReverseColour(IdentifyPlayersColour(gameState)));
+            board.GenerateMoves(Board.ReverseColour(IdentifyPlayersColour(gameState)));
             board.GenerateMoves(IdentifyPlayersColour(gameState));
             board.FilterMovesByCheck(IdentifyPlayersColour(gameState));
             board.RemoveEnPassante();
@@ -209,7 +209,7 @@ namespace NewChessProject
 
             if(board.IsPawnTransformationNeeded(colour))
             {
-                gameState = TurnSelectPieceState(gameState);
+                gameState = TurnSelectPawnState(gameState);
                 return EnterResult.WaitForPawnSlection;
             }
             else
@@ -220,7 +220,7 @@ namespace NewChessProject
             }
         }
 
-        private GameState TurnSelectPieceState(GameState gm)
+        private GameState TurnSelectPawnState(GameState gm)
         {
             GameState result = GameState.BlackPawnSelection;
             if(gm == GameState.WhiteMove)
@@ -250,9 +250,9 @@ namespace NewChessProject
             {
                 gameState = GameState.BlackMove;
             }
-            timers[(int)board.ReverseColour(IdentifyPlayersColour(gameState))].Stop();
+            timers[(int)Board.ReverseColour(IdentifyPlayersColour(gameState))].Stop();
             timers[(int)IdentifyPlayersColour(gameState)].Start();
-            timers[(int)IdentifyPlayersColour(gameState)].Add(timePerTurn);
+            timers[(int)IdentifyPlayersColour(gameState)].Add(addedTimePerTurn);
         }
 
         public bool PiecePresent(PlayerColour colour, Vector vector)
@@ -333,7 +333,7 @@ namespace NewChessProject
 
         public void Resign(PlayerColour colour)
         {
-            GameEnded(MoveResult.Resignation, board.ReverseColour(IdentifyPlayersColour(gameState)));
+            GameEnded(MoveResult.Resignation, Board.ReverseColour(IdentifyPlayersColour(gameState)));
         }
 
         private void MakeRequest(Request request)
@@ -374,7 +374,7 @@ namespace NewChessProject
             return output;
         }
 
-        protected virtual void OnMadeMove()
+        private void OnMadeMove()
         {
             if (IdentifyPlayersColour(gameState) == PlayerColour.Black)
                 fullMovesMade++;
@@ -394,7 +394,7 @@ namespace NewChessProject
             }
             else
             {
-                GameEnded(result, board.ReverseColour(IdentifyPlayersColour(gameState)));
+                GameEnded(result, Board.ReverseColour(IdentifyPlayersColour(gameState)));
             }
         }
     }

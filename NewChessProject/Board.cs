@@ -17,7 +17,7 @@ namespace NewChessProject
         public const int boardWidth = 8;
 
         int rule50Counter;
-        
+
         public int Rule50Counter
         {
             get
@@ -26,6 +26,7 @@ namespace NewChessProject
             }
         }
 
+        //Fills the static map 
         static public void FillFENRepresentations()
         {
             pieceFENRepresentations = new Map<char, PieceType>();
@@ -46,12 +47,21 @@ namespace NewChessProject
             rule50Counter = 0;
         }
 
-        public PlayerColour ReverseColour(PlayerColour colour)
+        static public PlayerColour ReverseColour(PlayerColour colour)
         {
             PlayerColour output = PlayerColour.Black;
-            if(colour == PlayerColour.Black)
+            if (colour == PlayerColour.Black)
                 output = PlayerColour.White;
             return output;
+        }
+
+        public static char GetFENNotationFromType(PieceType type)
+        {
+            return pieceFENRepresentations[type];
+        }
+        public static PieceType GetTypeFromFENNotation(char c)
+        {
+            return pieceFENRepresentations[c];
         }
 
         public void TransformPawn(PlayerColour colour, PieceType piece)
@@ -59,6 +69,7 @@ namespace NewChessProject
             this[LocatePawnNeedingTransformation(colour)] = MakePiece(piece, colour, true);
         }
 
+        //Returns true if there is a pawn needed to be transformed
         public bool IsPawnTransformationNeeded(PlayerColour colour)
         {
             bool output = false;
@@ -68,6 +79,7 @@ namespace NewChessProject
             return output;
         }
 
+        //Returns the position of the pawn, which needs to be transformed
         private Vector LocatePawnNeedingTransformation(PlayerColour colour)
         {
             int y = 0;
@@ -152,6 +164,8 @@ namespace NewChessProject
                 enPassantePiece = new Vector(-1, -1);
         }
 
+        //Moves the piece at given position to the targetPosition
+        //Returns the taken piece, (null if no piece was taken)
         public Piece MovePiece(Vector piecePosition, Vector targetPosition)
         {
             Piece takenPiece = this[targetPosition];
@@ -204,6 +218,8 @@ namespace NewChessProject
                 kingPositions[(int)piece.Colour] = position;
         }
 
+        //Generates all the moves in the pieces of given colour,
+        //according to chess rules, except checks
         public void GenerateMoves(PlayerColour colour)
         {
             for(int i = 0; i < boardWidth; i++)
@@ -213,6 +229,7 @@ namespace NewChessProject
                             field[i, ii].GenerateMoves(this, new Vector(i, ii));
         }
 
+        //Removes all the moves in the pieces of the given player, if they result in a check
         public void FilterMovesByCheck(PlayerColour colour)
         {
             for (int i = 0; i < boardWidth; i++)
@@ -222,6 +239,7 @@ namespace NewChessProject
                            field[i, ii].FilterPositionsByCheck(this, new Vector(i, ii));
         }
 
+        //Sets fenPosition specified in the parameters
         public void UploadFENPosition(FENPosition fenPos)
         {
             Array.Clear(field, 0, field.Length);
@@ -300,6 +318,9 @@ namespace NewChessProject
             return c.ToString().ToLower()[0];
         }
 
+
+
+        //Returns all the information on the board
         public FENPosition GetFENInformation()
         {
             FENPosition output = new FENPosition();
@@ -349,7 +370,7 @@ namespace NewChessProject
             }
             output.Position = position;
 
-            output.EnPassante = VectorToPosition(enPassantePiece);
+            output.EnPassante = VectorToStringPosition(enPassantePiece);
 
             //Now algorithm determines castling rights
 
@@ -378,7 +399,8 @@ namespace NewChessProject
             return output;
         }
 
-        private string VectorToPosition(Vector vector)
+        //Converts vector to string position (ex. a5)
+        private string VectorToStringPosition(Vector vector)
         {
             string output = "-";
             if (vector != new Vector(-1, -1))
@@ -386,6 +408,8 @@ namespace NewChessProject
             return output;
         }
 
+        //Returns if there is a threat for the player specified by 
+        //the colour parameter in the square specified by the vector parameter
         public bool IsThereThreat(Vector vector, PlayerColour colour)
         {
             bool output = false;
@@ -401,16 +425,19 @@ namespace NewChessProject
             return output;
         }
 
+        //Identifies wheather the player given by the colour parameter is in check
         public bool IsChecked(PlayerColour colour)
         {    
             return IsThereThreat(kingPositions[(int)colour], colour);
         }
 
+        //Returns kings position as a Vector owned by the player specified by the colour parameter
         public Vector GetKingPosition(PlayerColour colour)
         {
             return kingPositions[(int)colour];
         }
 
+        //Checks if there are any available moves for the player given with colour parameter
         public bool IsTherePossibleMoves(PlayerColour colour)
         {
             for (int i = 0; i < boardWidth; i++)
@@ -447,6 +474,7 @@ namespace NewChessProject
             }
         }
 
+        //Converts the current position on the board to the list with PieceRepresentations
         public List<PieceRepresentation> OutputPieces()
         {
             List<PieceRepresentation> pieces = new List<PieceRepresentation>();
@@ -487,6 +515,8 @@ namespace NewChessProject
             return !(b1 == b2);
         }
 
+
+        //The method returns the deep copy of the board
         public Board Copy()
         {
             Board output = new Board();

@@ -3,7 +3,7 @@
   <Class Name="NewChessProject.AIPlayer" Collapsed="true">
     <Position X="0.5" Y="7.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CABAAAABAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAQAAAA=</HashCode>
+      <HashCode>CAAAAAABAAAAAAAAAAAAAAABAAAAAgAAAAAAAAQAAAE=</HashCode>
       <FileName>AIPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -24,21 +24,21 @@
   <Class Name="NewChessProject.Board" Collapsed="true">
     <Position X="5.75" Y="6.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CIGAQkgAgCAgBACAiIAQCCAAEgAIAwAACAACAQAAAqI=</HashCode>
+      <HashCode>CICAQkgAgCAgBACAiIAQCKAAEgAIAwAACAACAQAAAqI=</HashCode>
       <FileName>Board.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NewChessProject.ChessEngine" Collapsed="true">
     <Position X="0.5" Y="10" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAIAAEAAABAAAAAAAAIgFEAAAEAAAAAAAAIAQAAAA=</HashCode>
+      <HashCode>AAAAIAABAAABAAAAAAAAIgFEAAAEAAAAAAAAIAQAAAA=</HashCode>
       <FileName>ChessEngine.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NewChessProject.MadeMoveEventArgs" Collapsed="true">
     <Position X="6.75" Y="11" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>EventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -78,9 +78,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="NewChessProject.Game" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="5.75" Y="5.75" Width="1.5" />
+    <Position X="8.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAQAAQBBIAEAAagBRAAEAkAAkCAGIYQAICQgAiADARA=</HashCode>
+      <HashCode>CAQAAQARIAEAAagBRAAEAkAgkCBGIYRAICQgACADARE=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
     <Lollipop Orientation="Bottom" Position="1.3" />
@@ -88,7 +88,7 @@
   <Class Name="NewChessProject.GameCreator" Collapsed="true">
     <Position X="12.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ICAAAABIEAIQQAACIAAQAYAgADEKAAAIMIgAAACgAAA=</HashCode>
+      <HashCode>ICAAAABIEAIQQAACIAAQAYAgADEKAAAoMIgAAACgAAA=</HashCode>
       <FileName>GameCreator.cs</FileName>
     </TypeIdentifier>
   </Class>

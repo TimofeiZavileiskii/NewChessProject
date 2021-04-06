@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NewChessProject
 {
-    class OneStepPiece : Piece
+    abstract class OneStepPiece : Piece
     {
         public OneStepPiece(PlayerColour colour, bool hasMoved = false) : base(colour)
         {

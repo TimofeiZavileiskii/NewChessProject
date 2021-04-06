@@ -162,7 +162,7 @@ namespace NewChessProject
             }
         }
 
-        public void RequestSend(object sender, RequestMadeEventArgs e)
+        public override void RequestSend(object sender, RequestMadeEventArgs e)
         {
             if(state == State.WaitForMove)
                 guiBoard.MakeRequest(e.Request);
@@ -177,7 +177,7 @@ namespace NewChessProject
             }
         }
 
-        public void GameEnded(object sender, GameEndedEventArgs e)
+        override public void GameEnded(object sender, GameEndedEventArgs e)
         {
             if (state == State.WaitForMove)
             {

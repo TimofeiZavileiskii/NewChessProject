@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NewChessProject
 {
-    class HumanPlayer : Player
+    abstract class HumanPlayer : Player
     {
 
         public HumanPlayer(PlayerColour colour, Game game) : base(colour, game)

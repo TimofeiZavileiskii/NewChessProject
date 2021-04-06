@@ -28,6 +28,11 @@ namespace NewChessProject
             get { return title; }
         }
 
+        public RequestType Type
+        {
+            get { return type; }
+        }
+
         public Request(RequestType type, string text, string title = "")
         {
             this.text = text;

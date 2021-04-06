@@ -8,16 +8,8 @@ namespace NewChessProject
 {
     struct AiMove
     {
-        private int quality;
+        private PieceType? chosenPawnTransformation;
         private (Vector, Vector) move;
-
-        public int Quality
-        {
-            get
-            {
-                return quality;
-            }
-        }
 
         public (Vector, Vector) Move
         {
@@ -27,9 +19,17 @@ namespace NewChessProject
             }
         }
 
-        public AiMove(int quality, (Vector, Vector) move)
+        public PieceType? ChosenPawnTransformation
         {
-            this.quality = quality;
+            get
+            {
+                return chosenPawnTransformation;
+            }
+        }
+
+        public AiMove((Vector, Vector) move, PieceType? choosePieceType = null)
+        {
+            chosenPawnTransformation = choosePieceType;
             this.move = move;
         }
 
