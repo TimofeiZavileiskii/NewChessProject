@@ -41,7 +41,7 @@ namespace NewChessProject
         public Board()
         {
             field = new Piece[boardHeight, boardWidth];
-            enPassantePiece = new Vector(-1, -1);
+            enPassantePiece =Vector.NullVector;
             int numberOfColours = Enum.GetValues(typeof(PlayerColour)).Length;
             kingPositions = new Vector[numberOfColours];
             rule50Counter = 0;
@@ -73,7 +73,7 @@ namespace NewChessProject
         public bool IsPawnTransformationNeeded(PlayerColour colour)
         {
             bool output = false;
-            if (LocatePawnNeedingTransformation(colour) != new Vector(-1, -1))
+            if (LocatePawnNeedingTransformation(colour) != Vector.NullVector)
                 output = true;
 
             return output;
@@ -90,7 +90,7 @@ namespace NewChessProject
                 if (field[i, y] != null)
                     if (field[i, y].Type == PieceType.Pawn)
                         return new Vector(i, y);
-            return new Vector(-1, -1);
+            return Vector.NullVector;
         }
 
         public void SetDefaultBoardPosition()
@@ -159,9 +159,9 @@ namespace NewChessProject
 
         public void RemoveEnPassante()
         {
-            if(enPassantePiece != new Vector(-1, -1))
+            if(enPassantePiece != Vector.NullVector)
                 ((Pawn)this[enPassantePiece]).VulnurableToEnPassante = false;
-                enPassantePiece = new Vector(-1, -1);
+                enPassantePiece = Vector.NullVector;
         }
 
         //Moves the piece at given position to the targetPosition
@@ -403,7 +403,7 @@ namespace NewChessProject
         private string VectorToStringPosition(Vector vector)
         {
             string output = "-";
-            if (vector != new Vector(-1, -1))
+            if (vector != Vector.NullVector)
                 output = ('a' + vector.X.ToString()) + vector.Y.ToString();
             return output;
         }

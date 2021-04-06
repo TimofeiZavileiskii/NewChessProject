@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Shapes;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows;
-using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace NewChessProject
 {
@@ -51,7 +50,7 @@ namespace NewChessProject
 
         private void AddFunctionToButtonEvents()
         {
-            foreach(object obj in pieceSelection.Children)
+            foreach (object obj in pieceSelection.Children)
             {
                 ((Button)obj).Click += InputPawnSelection;
             }
@@ -129,7 +128,7 @@ namespace NewChessProject
                 Fill = new SolidColorBrush(colour),
             };
             Canvas.SetLeft(positionImage, x * squareWidth + 0.25 * squareWidth);
-            Canvas.SetTop(positionImage, (Board.boardHeight - y -1) * squareHeight + 0.25 * squareHeight);
+            Canvas.SetTop(positionImage, (Board.boardHeight - y - 1) * squareHeight + 0.25 * squareHeight);
 
             canvas.Children.Add(positionImage);
         }
@@ -197,14 +196,14 @@ namespace NewChessProject
             else if (y < 0)
                 y = 0;
 
-            BoardClicked(new Vector(x , y));
+            BoardClicked(new Vector(x, y));
         }
 
         public void WindowClicked(object sender, EventArgs e)
         {
-            if(OnWindowClicked != null)
+            if (OnWindowClicked != null)
             {
-              //  OnWindowClicked(this, EventArgs.Empty);
+                //  OnWindowClicked(this, EventArgs.Empty);
             }
         }
 
@@ -234,7 +233,7 @@ namespace NewChessProject
 
             PieceSelected?.Invoke(this, new PieceSelectedEventArgs(selectedPice));
         }
-        
+
         private void HidePieceSelection()
         {
             pieceSelection.Visibility = Visibility.Hidden;

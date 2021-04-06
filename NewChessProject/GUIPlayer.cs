@@ -78,7 +78,7 @@ namespace NewChessProject
 
         private void DiselectPiece(Vector vec)
         {
-            selectedPiece = new Vector(-1, -1);
+            selectedPiece = Vector.NullVector;
             allowedPositions.Clear();
             GameRepresentationUpdated();
         }
@@ -86,7 +86,7 @@ namespace NewChessProject
         private void ResetMove()
         {
             allowedPositions.Clear();
-            selectedPiece = new Vector(-1, -1);
+            selectedPiece = Vector.NullVector;
         }
 
         private void MakeMove(Vector vec)
@@ -137,7 +137,7 @@ namespace NewChessProject
 
         override public void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
-            check = new Vector(-1, -1);
+            check = Vector.NullVector;
             if (state == State.WaitForMove)
             {
                 state = State.SelectPiece;
@@ -228,9 +228,9 @@ namespace NewChessProject
         {
             List<BoardIndicator> output = new List<BoardIndicator>();
 
-            if (selectedPiece != new Vector(-1, -1))
+            if (selectedPiece != Vector.NullVector)
                 output.Add(new BoardIndicator(selectedPiece, Color.FromRgb(50, 230, 50)));
-            if (check != new Vector(-1, -1))
+            if (check != Vector.NullVector)
                 output.Add(new BoardIndicator(check, Color.FromRgb(180, 40, 40)));
 
             return output;
