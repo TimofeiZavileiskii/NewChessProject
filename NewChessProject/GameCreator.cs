@@ -167,7 +167,6 @@ namespace NewChessProject
 
         public GameCreator(GUIBoard guiBoard, StackPanel inGameInterface)
         {
-            Board.FillFENRepresentations();
 
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;

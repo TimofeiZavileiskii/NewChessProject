@@ -27,7 +27,7 @@ namespace NewChessProject
         }
 
         //Fills the static map 
-        static public void FillFENRepresentations()
+        static Board()
         {
             pieceFENRepresentations = new Map<char, PieceType>();
             pieceFENRepresentations.Add('p', PieceType.Pawn);

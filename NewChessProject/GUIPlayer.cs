@@ -39,7 +39,8 @@ namespace NewChessProject
         {
             allowedPositions = new List<Vector>();
             this.guiBoard = guiBoard;
-            check = new Vector(-1, -1);
+            check = Vector.NullVector;
+            selectedPiece = Vector.NullVector;
             CreateStateMachine();
             if(colour == PlayerColour.White)
             { 
@@ -97,9 +98,7 @@ namespace NewChessProject
                 state = State.SlectPawnTransformation;
                 guiBoard.ShowPieceSelection(Colour);
             }
-
             ResetMove();
-            GameRepresentationUpdated();
         }
 
         private void ThrowException(Vector vec)
@@ -145,13 +144,13 @@ namespace NewChessProject
                 {
                     check = game.GetKingsPosition(Colour);
                 }
-
-                GameRepresentationUpdated();
             }
             else
             {
                 state = State.WaitForMove;
             }
+            ResetMove();
+            GameRepresentationUpdated();
         }
 
         public void RequestDraw(object sender, EventArgs e)
@@ -179,15 +178,12 @@ namespace NewChessProject
 
         override public void GameEnded(object sender, GameEndedEventArgs e)
         {
-            if (state == State.WaitForMove)
-            {
-                ResetMove();
-                GameRepresentationUpdated();
-            }
-            else
+            if(state != State.WaitForMove)
             {
                 state = State.WaitForMove;
             }
+            ResetMove();
+            GameRepresentationUpdated();
         }
 
         public void OnBoardClicked(object sender, BoardClickedEventArgs e)
@@ -237,7 +233,7 @@ namespace NewChessProject
         }
         public void OnWindowClicked(object sender, EventArgs e)
         {
-            InputAction(new Vector(0,0), Input.ClickNothing);
+            InputAction(Vector.NullVector, Input.ClickNothing);
         }
 
         public void PieceSelected(object sender, PieceSelectedEventArgs e)

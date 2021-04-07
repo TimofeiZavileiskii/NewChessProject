@@ -331,7 +331,7 @@ namespace NewChessProject
         {
             bool output = true;
 
-            output = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (K|-)(Q|-)(k|-)(q|-) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
+            output = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (-|(K?Q?k?q?)) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
 
             
 
