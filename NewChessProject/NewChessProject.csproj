@@ -59,6 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AdditionalSettings.cs" />
     <Compile Include="AiMove.cs" />
     <Compile Include="AIPlayer.cs" />
     <Compile Include="App.xaml.cs">
@@ -95,6 +96,7 @@
     <Compile Include="Piece.cs" />
     <Compile Include="PieceRepresentation.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerCreator.cs" />
     <Compile Include="Queen.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Rook.cs" />

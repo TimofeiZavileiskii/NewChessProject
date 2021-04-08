@@ -8,7 +8,7 @@ namespace NewChessProject
 {
     abstract class OneStepPiece : Piece
     {
-        public OneStepPiece(PlayerColour colour, bool hasMoved = false) : base(colour)
+        public OneStepPiece(PlayerColour colour, bool hasMoved = false) : base(colour, hasMoved)
         {
 
         }

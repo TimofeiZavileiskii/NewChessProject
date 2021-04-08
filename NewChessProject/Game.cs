@@ -161,9 +161,18 @@ namespace NewChessProject
         {
             foreach (Timer timer in timers)
                 timer.Stop();
+                //timer.Terminate();
 
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
+        }
+
+        public void EndImmediatly()
+        {
+            foreach (Timer timer in timers)
+                timer.Terminate();
+
+            gameState = GameState.EndGame;
         }
 
         private void UpdateTime(object sender, EventArgs e)

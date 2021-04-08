@@ -17,6 +17,7 @@ namespace NewChessProject
     {
         GameCreator gc;
         GUIBoard guiBoard;
+        Game game;
         public MainWindow()
         {
             InitializeComponent();
@@ -27,6 +28,7 @@ namespace NewChessProject
 
             guiBoard = new GUIBoard(Screen, PieceSelection, this);
             gc = new GameCreator(guiBoard, InGameInterface);
+            game = gc.GetGame();
             DataContext = gc;
         }
 
@@ -43,29 +45,14 @@ namespace NewChessProject
             gc.ImportFENString();
         }
 
-        private void Clicked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Screen_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-
-        }
-
         private void Click_Settings(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
         
         }
 
-        private void Board_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void WindowClosed(object sender, EventArgs e)
         {
-
-        }
-
-        private void WindowClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-
+            game.EndImmediatly();
         }
     }
 }

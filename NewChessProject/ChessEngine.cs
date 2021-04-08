@@ -52,6 +52,11 @@ namespace NewChessProject
             do
             {
                 currLine = engine.StandardOutput.ReadLine();
+                if(currLine == null)
+                {
+                    continue;
+                }
+                Console.WriteLine(currLine);
             } while (currLine.Split(' ')[0] != "bestmove");
 
             if (currLine.Split(' ')[1] == "(none)")

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.IO;               
 using System.Collections.Generic;
 using System.Windows.Data;
 using System.Linq;
@@ -174,6 +174,11 @@ namespace NewChessProject
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
         }
 
+        public Game GetGame()
+        {
+            return game;
+        }
+
         public List<PlayerType> PossiblePlayerTypes
         {
             get { return possiblePlayerTypes; }
@@ -185,7 +190,6 @@ namespace NewChessProject
             this.inGameInterface = inGameInterface;
 
             possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
-
             game = new Game(new Board());
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
 

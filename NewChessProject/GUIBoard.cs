@@ -27,6 +27,15 @@ namespace NewChessProject
 
         double squareWidth;
         double squareHeight;
+        bool flipBoard;
+
+        public bool FlipBoard
+        {
+            set
+            {
+                flipBoard = value;
+            }
+        }
 
         public GameRepresentation GameData
         {
@@ -43,6 +52,8 @@ namespace NewChessProject
             window.MouseLeftButtonDown += WindowClicked;
             canvas.SizeChanged += ChangeDimensions;
             canvas.MouseLeftButtonDown += Clicked;
+            flipBoard = false;
+
             GetPieceTiles();
             Resize();
             AddFunctionToButtonEvents();
@@ -91,7 +102,7 @@ namespace NewChessProject
             DrawBoard();
             foreach (BoardIndicator highlight in gr.PieceHilights)
             {
-                DrawSquare(highlight.Position.X, Board.boardHeight - 1 - highlight.Position.Y, highlight.Colour);
+                DrawSquare(highlight.Position.X, GetYCoordinate(highlight.Position.Y), highlight.Colour);
             }
             foreach (PieceRepresentation piece in gr.Pieces)
             {
@@ -99,7 +110,7 @@ namespace NewChessProject
             }
             foreach (BoardIndicator move in gr.Moves)
             {
-                DrawPosition(move.Position.X, move.Position.Y, move.Colour);
+                DrawPosition(move.Position.X, GetYCoordinate(move.Position.Y), move.Colour);
             }
         }
 
@@ -114,12 +125,26 @@ namespace NewChessProject
                     {
                         colour = Color.FromRgb(180, 200, 180);
                     }
-                    DrawSquare(i, ii, colour);
+                    DrawSquare(i, GetYCoordinate(ii), colour);
                 }
             }
         }
 
-        private void DrawPosition(double x, double y, Color colour)
+        private int GetYCoordinate(int y)
+        {
+            int output;
+            if (!flipBoard)
+            {
+                output = Board.boardHeight - y - 1;
+            }
+            else
+            {
+                output = y;
+            }
+            return output;
+        }
+
+        private void DrawPosition(int x, int y, Color colour)
         {
             Ellipse positionImage = new Ellipse
             {
@@ -128,7 +153,7 @@ namespace NewChessProject
                 Fill = new SolidColorBrush(colour),
             };
             Canvas.SetLeft(positionImage, x * squareWidth + 0.25 * squareWidth);
-            Canvas.SetTop(positionImage, (Board.boardHeight - y - 1) * squareHeight + 0.25 * squareHeight);
+            Canvas.SetTop(positionImage, y * squareHeight + 0.25 * squareHeight);
 
             canvas.Children.Add(positionImage);
         }
@@ -143,7 +168,7 @@ namespace NewChessProject
                 IsHitTestVisible = false,
             };
             Canvas.SetLeft(pieceImage, piece.Position.X * squareWidth);
-            Canvas.SetTop(pieceImage, (Board.boardHeight - piece.Position.Y - 1) * squareHeight);
+            Canvas.SetTop(pieceImage, GetYCoordinate(piece.Position.Y) * squareHeight);
 
             canvas.Children.Add(pieceImage);
         }
@@ -184,7 +209,7 @@ namespace NewChessProject
         public void Clicked(object sender, MouseButtonEventArgs e)
         {
             int x = (int)Math.Floor((double)e.GetPosition(canvas).X / squareWidth);
-            int y = (int)Math.Floor(Board.boardHeight - ((double)e.GetPosition(canvas).Y / squareHeight));
+            int y = (int)Math.Floor((double)e.GetPosition(canvas).Y / squareHeight);
 
             if (x > 7)
                 x = 7;
@@ -196,7 +221,7 @@ namespace NewChessProject
             else if (y < 0)
                 y = 0;
 
-            BoardClicked(new Vector(x, y));
+            BoardClicked(new Vector(x, GetYCoordinate(y)));
         }
 
         public void WindowClicked(object sender, EventArgs e)
@@ -266,28 +291,30 @@ namespace NewChessProject
             try
             {
                 string text = "";
+                string drawMessage = "The game ended in a draw:";
+                string victoryMessage = "The game ended in a " + e.Winner.ToString() + " player's victory";
                 switch (e.Reason)
                 {
                     case MoveResult.Stalemate:
-                        text = "The game ended in a tie: stalemate";
+                        text = drawMessage + " stalemate";
                         break;
                     case MoveResult.Mate:
-                        text = "The game ended in a " + e.Winner.ToString() + " player's victory by checkmate";
+                        text = victoryMessage + " by checkmate";
                         break;
                     case MoveResult.Resignation:
-                        text = "The game ended in a " + e.Winner.ToString() + " player's victory, as other player resigned";
+                        text = victoryMessage + ", as other player resigned";
                         break;
                     case MoveResult.MoveRepetition:
-                        text = "The game ended in a tie: 3 position repetition";
+                        text = drawMessage + " 3 position repetition";
                         break;
                     case MoveResult.Draw:
-                        text = "The game ended in a draw";
+                        text = drawMessage + " agreed draw";
                         break;
                     case MoveResult.TimeOut:
-                        text = "The game ended in a " + e.Winner.ToString() + " player's victory, as other player run out of time";
+                        text = victoryMessage + ", as other player run out of time";
                         break;
                     case MoveResult.move50Rule:
-                        text = "The game ended in a tie: 50 moves were made without pawn advancing or piece taken";
+                        text = drawMessage + " 50 moves were made without pawn advancing or piece taken";
                         break;
                 }
 

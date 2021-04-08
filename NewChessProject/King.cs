@@ -9,6 +9,10 @@ namespace NewChessProject
     class King : OneStepPiece
     {
         const int CastleDistance = 2;
+
+
+
+
         public King(PlayerColour color, bool hasMoved = false) : base(color, hasMoved)
         {
             Type = PieceType.King;

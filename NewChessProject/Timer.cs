@@ -64,13 +64,6 @@ namespace NewChessProject
             timingThread.Start();
         }
 
-
-
-        ~Timer()
-        {
-            timingThread.Abort();
-        }
-
         public void Add(double addedTime)
         {
             totalTime += addedTime * TimeSpan.TicksPerSecond;
@@ -86,6 +79,11 @@ namespace NewChessProject
         {
             working = false;
             totalTime = totalTime - PassedTime();
+        }
+
+        public void Terminate()
+        {
+            timingThread.Abort();
         }
 
         private void TrackTime()

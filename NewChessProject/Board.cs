@@ -160,7 +160,7 @@ namespace NewChessProject
             }
         }
 
-        private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = false)
+        private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = true)
         {
             return PieceFactory.ProducePiece(type, colour, hasMoved);
         }
@@ -294,21 +294,21 @@ namespace NewChessProject
                             case PieceType.King:
                                 if (pieceColour == PlayerColour.White)
                                 {
-                                    hasMoved = (fenPos.Castling.Contains('K') || fenPos.Castling.Contains('Q'));  
+                                    hasMoved = !(fenPos.Castling.Contains('K') || fenPos.Castling.Contains('Q'));  
                                 }
                                 else
                                 {
-                                    hasMoved = (fenPos.Castling.Contains('k') || fenPos.Castling.Contains('q'));
+                                    hasMoved = !(fenPos.Castling.Contains('k') || fenPos.Castling.Contains('q'));
                                 }
                                 break;
                         }
 
-                        this[currentPosition] = MakePiece(pieceType, pieceColour, hasMoved);
+                        AddPiece(MakePiece(pieceType, pieceColour, hasMoved), currentPosition);
                         positionCounter--;
                     }
                     else
                     {
-                        positionCounter -= (int)Char.GetNumericValue((c));
+                        positionCounter -= (int)Char.GetNumericValue(c );
                     }
                 }
             }
@@ -325,7 +325,6 @@ namespace NewChessProject
         {
             return c.ToString().ToLower()[0];
         }
-
 
 
         //Returns all the information on the board
