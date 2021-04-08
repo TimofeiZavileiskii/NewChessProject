@@ -55,6 +55,7 @@ namespace NewChessProject
 
     class Game : INotifyPropertyChanged
     {
+
         const int maxPositionRepetition = 3;
         const double minuteLength = 60;
         const int max50MoveRule = 50;

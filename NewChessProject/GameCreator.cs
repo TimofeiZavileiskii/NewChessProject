@@ -22,15 +22,60 @@ namespace NewChessProject
 
     class GameCreator
     {
+        static private class PlayerFactory
+        {
+            static readonly Dictionary<PlayerType, CreatePlayerDel> CreatePlayerFunctions;
+            const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
+
+            delegate Player CreatePlayerDel(PlayerColour colour, GameCreator gc);
+
+            static Player CreateGUIPlayer(PlayerColour colour, GameCreator gc)
+            {
+                GUIPlayer player = new GUIPlayer(colour, gc.game, gc.guiBoard);
+
+                gc.guiBoard.OnBoardClicked += player.OnBoardClicked;
+                gc.guiBoard.OnWindowClicked += player.OnWindowClicked;
+                gc.guiBoard.PieceSelected += player.PieceSelected;
+
+
+                gc.game.OnGameEnded += player.GameEnded;
+                gc.game.RequestMade += player.RequestSend;
+
+                ((Button)((WrapPanel)gc.inGameInterface.Children[2]).Children[0]).Click += player.RequestTakeback;
+                ((Button)((WrapPanel)gc.inGameInterface.Children[2]).Children[1]).Click += player.RequestDraw;
+                ((Button)((WrapPanel)gc.inGameInterface.Children[2]).Children[2]).Click += player.Resign;
+
+                return player;
+            }
+
+            static Player CreateAIPlayer(PlayerColour colour, GameCreator gc)
+            {
+                AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", 20), gc.game);
+
+                gc.game.GameStarted += player.GameStarted;
+                gc.game.RequestMade += player.RequestSend;
+                return player;
+            }
+
+            public static Player CreatePlayer(PlayerType type, PlayerColour colour, GameCreator gc)
+            {
+                return CreatePlayerFunctions[type](colour, gc);
+            }
+
+            static PlayerFactory()
+            {
+                CreatePlayerFunctions = new Dictionary<PlayerType, CreatePlayerDel>();
+                CreatePlayerFunctions.Add(PlayerType.GUIPlayer, CreateGUIPlayer);
+                CreatePlayerFunctions.Add(PlayerType.AIPlayer, CreateAIPlayer);
+            }
+
+        }
+
         Player playerWhite;
         Player playerBlack;
         GUIBoard guiBoard;
         Game game;
         StackPanel inGameInterface;
-
-        Dictionary<PlayerType, CreatePlayer> CreatePlayerFunctions;
-
-        const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
 
         string importFENString;
         double initialTime;
@@ -41,35 +86,6 @@ namespace NewChessProject
         List<PlayerType> possiblePlayerTypes;
         PlayerType whitePlayerType;
         PlayerType blackPlayerType;
-
-        delegate Player CreatePlayer(PlayerColour colour);
-
-        Player CreateGUIPlayer(PlayerColour colour)
-        {
-            GUIPlayer player = new GUIPlayer(colour, game, guiBoard);
-
-            guiBoard.OnBoardClicked += player.OnBoardClicked;
-            guiBoard.OnWindowClicked += player.OnWindowClicked;
-            guiBoard.PieceSelected += player.PieceSelected;
-
-
-            game.OnGameEnded += player.GameEnded;
-            game.RequestMade += player.RequestSend;
-
-            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[0]).Click += player.RequestTakeback;
-            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[1]).Click += player.RequestDraw;
-            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[2]).Click += player.Resign;
-
-            return player;
-        }
-
-        Player CreateAIPlayer(PlayerColour colour)
-        {
-            AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", 2), game);
-            game.GameStarted += player.GameStarted;
-            game.RequestMade += player.RequestSend;
-            return player;
-        }
 
         public double InitialTime
         {
@@ -126,7 +142,6 @@ namespace NewChessProject
                 importFENString = value;
             }
         }
-
         public PlayerType WhitePlayerType
         {
             get { return whitePlayerType; }
@@ -136,7 +151,6 @@ namespace NewChessProject
                 SetAdditionalSettings();
             }
         }
-
         public PlayerType BlackPlayerType
         {
             get { return blackPlayerType; }
@@ -167,20 +181,15 @@ namespace NewChessProject
 
         public GameCreator(GUIBoard guiBoard, StackPanel inGameInterface)
         {
-
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
 
             possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
 
-
             game = new Game(new Board());
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
 
             ReadGameSettings();
-            CreatePlayerFunctions = new Dictionary<PlayerType, CreatePlayer>();
-            CreatePlayerFunctions.Add(PlayerType.GUIPlayer, CreateGUIPlayer);
-            CreatePlayerFunctions.Add(PlayerType.AIPlayer, CreateAIPlayer); 
         }
         
         private void SetAdditionalSettings()
@@ -192,8 +201,8 @@ namespace NewChessProject
         {
             WriteGameSettings();
 
-            playerWhite = CreatePlayerFunctions[whitePlayerType](PlayerColour.White);
-            playerBlack = CreatePlayerFunctions[blackPlayerType](PlayerColour.Black);
+            playerWhite = PlayerFactory.CreatePlayer(whitePlayerType, PlayerColour.White, this);
+            playerBlack = PlayerFactory.CreatePlayer(BlackPlayerType, PlayerColour.Black, this);
 
             game.MoveMade += playerWhite.OnMadeMove;
             game.MoveMade += playerBlack.OnMadeMove;
