@@ -8,6 +8,36 @@ namespace NewChessProject
 {
     class Board
     {
+        static private class PieceFactory
+        {
+            public static Piece ProducePiece(PieceType type, PlayerColour colour, bool hasMoved)
+            {
+                Piece output = null;
+                switch (type)
+                {
+                    case PieceType.Pawn:
+                        output = new Pawn(colour, hasMoved);
+                        break;
+                    case PieceType.Knight:
+                        output = new Knight(colour, hasMoved);
+                        break;
+                    case PieceType.Bishop:
+                        output = new Bishop(colour, hasMoved);
+                        break;
+                    case PieceType.Rook:
+                        output = new Rook(colour, hasMoved);
+                        break;
+                    case PieceType.Queen:
+                        output = new Queen(colour, hasMoved);
+                        break;
+                    case PieceType.King:
+                        output = new King(colour, hasMoved);
+                        break;
+                }
+                return output;
+            }
+        }
+
         Piece[,] field;
         Vector[] kingPositions;
         Vector enPassantePiece;
@@ -132,29 +162,7 @@ namespace NewChessProject
 
         private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = false)
         {
-            Piece output = null;
-            switch (type)
-            {
-                case PieceType.Pawn:
-                    output = new Pawn(colour, hasMoved);
-                    break;
-                case PieceType.Knight:
-                    output = new Knight(colour, hasMoved);
-                    break;
-                case PieceType.Bishop:
-                    output = new Bishop(colour, hasMoved);
-                    break;
-                case PieceType.Rook:
-                    output = new Rook(colour, hasMoved);
-                    break;
-                case PieceType.Queen:
-                    output = new Queen(colour, hasMoved);
-                    break;
-                case PieceType.King:
-                    output = new King(colour, hasMoved);
-                    break;
-            }
-            return output;
+            return PieceFactory.ProducePiece(type, colour, hasMoved);
         }
 
         public void RemoveEnPassante()
