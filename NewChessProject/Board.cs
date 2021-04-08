@@ -377,7 +377,14 @@ namespace NewChessProject
             }
             output.Position = position;
 
-            output.EnPassante = VectorToStringPosition(enPassantePiece);
+            if (enPassantePiece != Vector.NullVector)
+            {
+                output.EnPassante = VectorToStringPosition(enPassantePiece);
+            }
+            else
+            {
+                output.EnPassante = "-";
+            }
 
             //Now algorithm determines castling rights
 
@@ -400,7 +407,7 @@ namespace NewChessProject
 
             if (castlingRights.Count != 0)
             {
-                output.Castling = castlingRights.ToString();
+                output.Castling = new String(castlingRights.ToArray());
             }
             else
             {
@@ -417,7 +424,7 @@ namespace NewChessProject
         {
             string output = "-";
             if (vector != Vector.NullVector)
-                output = ('a' + vector.X.ToString()) + vector.Y.ToString();
+                output = Convert.ToString((char)('a' + vector.X)) + vector.Y.ToString();
             return output;
         }
 

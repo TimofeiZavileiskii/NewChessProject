@@ -67,6 +67,7 @@ namespace NewChessProject
         public event PropertyChangedEventHandler PropertyChanged;
 
         GameState gameState;
+        FENPosition currentFENPosition;
         Board board;
         List<Piece>[] takenPieces;
         Timer[] timers;
@@ -150,9 +151,11 @@ namespace NewChessProject
             }
             timers[(int)PlayerColour.White].Start();
 
-            gameHistory.Add(GenerateFENPosition());
-
             GenerateMoves();
+
+            currentFENPosition = GenerateFENPosition();
+
+            gameHistory.Add(GetFENPosition());
 
             GameStarted?.Invoke(this, EventArgs.Empty);
         }
@@ -200,13 +203,13 @@ namespace NewChessProject
             board.RemoveEnPassante();
         }
 
-        public EnterResult EnterMove(PlayerColour colour, Vector movedPiece, Vector targetPosition)
+        public EnterResult EnterMove(PlayerColour sendersColour, Vector movedPiece, Vector targetPosition)
         {
-            if(IdentifyPlayersColour(gameState) != colour)
+            if(IdentifyPlayersColour(gameState) != sendersColour)
             {
                 return EnterResult.NotPlayersMove;
             }
-            if(board[movedPiece] == null || board[movedPiece].Colour != colour)
+            if(board[movedPiece] == null || board[movedPiece].Colour != sendersColour)
             {
                 return EnterResult.WrongSquareSelected;
             }
@@ -218,14 +221,14 @@ namespace NewChessProject
             board.MovePiece(movedPiece, targetPosition);
 
 
-            if(board.IsPawnTransformationNeeded(colour))
+            if(board.IsPawnTransformationNeeded(sendersColour))
             {
                 gameState = TurnSelectPawnState(gameState);
                 return EnterResult.WaitForPawnSlection;
             }
             else
             {
-                OnMadeMove();
+                OnMadeMove(sendersColour);
 
                 return EnterResult.Done;
             }
@@ -273,11 +276,12 @@ namespace NewChessProject
             return false;
         }
 
-        public void ChoosePawnTransformation(PlayerColour colour, PieceType type)
+        public void ChoosePawnTransformation(PlayerColour sendersColour, PieceType type)
         {
-            board.TransformPawn(colour, type);
+            if(IdentifyPlayersColour(gameState) == sendersColour)
+                board.TransformPawn(sendersColour, type);
 
-            OnMadeMove();
+            OnMadeMove(sendersColour);
         }
 
         public List<PieceRepresentation> GetPieceRepresentations()
@@ -350,6 +354,7 @@ namespace NewChessProject
 
         private void ImportGame(FENPosition fenPosition)
         {
+            currentFENPosition = fenPosition;
             fullMovesMade = Convert.ToInt32(fenPosition.TotalMoves);
 
             if (fenPosition.CurrentPlayer == "b")
@@ -399,22 +404,30 @@ namespace NewChessProject
             return board[location].Type;
         }
 
-        public FENPosition GenerateFENPosition()
+        public FENPosition GetFENPosition()
+        {
+            return currentFENPosition;
+        }
+
+        private FENPosition GenerateFENPosition()
         {
             FENPosition output = board.GetFENInformation();
             output.CurrentPlayer = IdentifyPlayersColour(gameState).ToString().ToLower()[0].ToString();
             output.TotalMoves = fullMovesMade.ToString();
 
+            Console.WriteLine(output.FENString);
             return output;
         }
 
-        private void OnMadeMove()
+        private void OnMadeMove(PlayerColour playerMadeMove)
         {
             if (IdentifyPlayersColour(gameState) == PlayerColour.Black)
                 fullMovesMade++;
             SwitchPlayers();
 
-            gameHistory.Add(GenerateFENPosition());
+            currentFENPosition = GenerateFENPosition();
+
+            gameHistory.Add(GetFENPosition());
             GenerateMoves();
 
             MoveResult result = DetermineMoveResult();
@@ -428,7 +441,7 @@ namespace NewChessProject
             }
             else
             {
-                GameEnded(result, Board.ReverseColour(IdentifyPlayersColour(gameState)));
+                GameEnded(result, playerMadeMove);
             }
         }
     }

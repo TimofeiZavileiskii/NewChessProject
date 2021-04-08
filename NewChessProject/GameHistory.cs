@@ -35,7 +35,6 @@ namespace NewChessProject
                 if (CompareFENPositions(previousPosition, currentPosition))
                     repetitions++;
             }
-            Console.WriteLine(repetitions);
             return !(repetitions < maxPositions);
         }
 

@@ -31,7 +31,7 @@ namespace NewChessProject
 
         private void MakeMove()
         {
-            engine.UploadPosition(game.GenerateFENPosition().FENString);
+            engine.UploadPosition(game.GetFENPosition().FENString);
 
             Thread thread = new Thread(() =>
             {
@@ -73,7 +73,7 @@ namespace NewChessProject
         private bool EvaluateDraw()
         {
             bool output = false;
-            engine.UploadPosition(game.GenerateFENPosition().FENString);
+            engine.UploadPosition(game.GetFENPosition().FENString);
             int assesment = engine.EvaluatePosition();
 
             int factor = 1;

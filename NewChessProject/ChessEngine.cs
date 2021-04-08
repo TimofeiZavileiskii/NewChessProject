@@ -43,6 +43,15 @@ namespace NewChessProject
             position = fenString;
         }
 
+        private bool DetermineEndOfMessage(string str)
+        {
+            bool output = false;
+            if (str != null)
+                if (str.Split(' ')[0] == "bestmove")
+                    output = true;
+            return output;
+        }
+
         public AiMove GetBestMove()
         {
             engine.StandardInput.WriteLine("position fen " + position);
@@ -52,12 +61,8 @@ namespace NewChessProject
             do
             {
                 currLine = engine.StandardOutput.ReadLine();
-                if(currLine == null)
-                {
-                    continue;
-                }
                 Console.WriteLine(currLine);
-            } while (currLine.Split(' ')[0] != "bestmove");
+            } while (!DetermineEndOfMessage(currLine));
 
             if (currLine.Split(' ')[1] == "(none)")
                 return new AiMove();
@@ -106,7 +111,7 @@ namespace NewChessProject
                 previousLine = currLine;
                 currLine = engine.StandardOutput.ReadLine();
                 Console.WriteLine(currLine);
-            } while (currLine.Split(' ')[0] != "bestmove") ;
+            } while (DetermineEndOfMessage(currLine)) ;
 
             int posEvaluation = Convert.ToInt32(previousLine.Split(' ')[9]);
 
