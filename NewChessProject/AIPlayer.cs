@@ -87,31 +87,5 @@ namespace NewChessProject
             return output;
         }
 
-        private Vector IdentifySpecialMove(Vector piece, Vector target)
-        {
-            PieceType type = game.GetPieceType(piece);
-            SpecialMove specailMove = SpecialMove.Nothing;
-
-            switch (type)
-            {
-                case PieceType.Pawn:
-                    if(Math.Abs(piece.Y - target.Y) == 2)
-                        specailMove = SpecialMove.DoubleFoward;
-                    if(Math.Abs(piece.X - target.X) == 1 && !game.PiecePresent(colour, target))
-                        specailMove = SpecialMove.EnPassante;
-
-                    break;
-                case PieceType.King:
-                    if (piece.X - target.X == 2)
-                        specailMove = SpecialMove.CastleLeft;
-                    if(piece.X - target.X == -2)
-                        specailMove = SpecialMove.CastleRight;
-
-                    break;
-            }
-
-            return new Vector(target.X, target.Y, specailMove);
-        }
-
     }
 }

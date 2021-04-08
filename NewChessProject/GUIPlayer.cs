@@ -137,17 +137,21 @@ namespace NewChessProject
         override public void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
             check = Vector.NullVector;
+            PlayerColour checkColour = colour;
+
             if (state == State.WaitForMove)
             {
                 state = State.SelectPiece;
-                if(e.Result == MoveResult.Check)
-                {
-                    check = game.GetKingsPosition(Colour);
-                }
             }
             else
             {
                 state = State.WaitForMove;
+                checkColour = Board.ReverseColour(checkColour);
+            }
+
+            if (e.Result == MoveResult.Check)
+            {
+                check = game.GetKingsPosition(checkColour);
             }
             ResetMove();
             GameRepresentationUpdated();

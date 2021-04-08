@@ -374,25 +374,31 @@ namespace NewChessProject
 
             //Now algorithm determines castling rights
 
-            char[] castlingRights = {'-', '-', '-', '-'};
-            if(this[0, 7] != null)
+            List<char> castlingRights = new List<char>();
+            if (this[0, 7] != null)
                 if (!this[0, 7].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
-                    castlingRights[0] = 'K';
+                    castlingRights.Add('K');
 
             if (this[0, 0] != null)
                 if (!this[0, 0].HasMoved && !this[kingPositions[(int)PlayerColour.White]].HasMoved)
-                    castlingRights[1] = 'Q';
+                    castlingRights.Add('Q');
 
             if (this[7, 7] != null)
                 if (!this[7, 7].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
-                    castlingRights[2] = 'k';
+                    castlingRights.Add('k');
 
             if (this[7, 0] != null)
-                if (!this[7, 0].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved)
-                    castlingRights[3] = 'q';
+                if (!this[7, 0].HasMoved && !this[kingPositions[(int)PlayerColour.Black]].HasMoved) 
+                    castlingRights.Add('q');
 
-
-            output.Castling = new String(castlingRights);
+            if (castlingRights.Count != 0)
+            {
+                output.Castling = castlingRights.ToString();
+            }
+            else
+            {
+                output.Castling = "-";
+            }
 
             output.HalfMoveTimer = rule50Counter.ToString();
 
