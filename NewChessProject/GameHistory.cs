@@ -21,9 +21,15 @@ namespace NewChessProject
 
         private bool CompareFENPositions(FENPosition p1, FENPosition p2)
         {
-            if (p1.Position == p2.Position && p1.Castling == p2.Castling && p1.EnPassante == p2.EnPassante)
-                return true;
-            return false;
+            return p1.Position == p2.Position && p1.Castling == p2.Castling && p1.EnPassante == p2.EnPassante && p1.CurrentPlayer == p2.CurrentPlayer;
+        }
+
+        public void ListGameHistory()
+        {
+            foreach(FENPosition pos in previousPositions)
+            {
+                Console.WriteLine(pos.Position + " " + pos.CurrentPlayer + " " + pos.Castling + " " + pos.EnPassante);
+            }
         }
 
         public bool CheckPositionRepetition(int maxPositions)
@@ -35,6 +41,11 @@ namespace NewChessProject
                 if (CompareFENPositions(previousPosition, currentPosition))
                     repetitions++;
             }
+            if(!(repetitions < maxPositions))
+            {
+                Console.WriteLine("Break");
+            }
+
             return !(repetitions < maxPositions);
         }
 

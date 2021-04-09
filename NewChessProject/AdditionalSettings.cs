@@ -12,6 +12,8 @@ namespace NewChessProject
     {
         bool flipTheBoard;
         bool hilightTakes;
+
+
     }
 
     class AiSettings : PlayerSettings
@@ -39,7 +41,7 @@ namespace NewChessProject
         PlayerSettings whitePlayerSettings;
 
         const int mainTitleFontSize = 14;
-        const int subTitleFontSize = 12;
+        const int subtitleFontSize = 12;
 
         public PlayerSettings WhitePlayerSettings
         {
@@ -123,14 +125,14 @@ namespace NewChessProject
 
         private void AddHumanSettings()
         {
-            AddTitle("Players' interface", subTitleFontSize);
+            AddTitle("Players' interface", subtitleFontSize);
             AddCheckBox("Flip board:");
             AddCheckBox("Hilight threats:");
         }
 
         private void AddAiPlayerSettings(PlayerColour playersColour)
         {
-            AddTitle("Ai settings (colour " + playersColour.ToString() + ")", subTitleFontSize);
+            AddTitle("Ai settings (colour " + playersColour.ToString() + ")", subtitleFontSize);
             AddTextBox("Difficulty:");
             AddTextBox("Time spend per turn:");
         }

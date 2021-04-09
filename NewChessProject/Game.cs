@@ -65,6 +65,7 @@ namespace NewChessProject
         public event EventHandler<GameEndedEventArgs> OnGameEnded;
         public event EventHandler<RequestMadeEventArgs> RequestMade;
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler ResetGame;
 
         GameState gameState;
         FENPosition currentFENPosition;
@@ -164,10 +165,9 @@ namespace NewChessProject
         {
             foreach (Timer timer in timers)
                 timer.Stop();
-                //timer.Terminate();
-
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
+            ResetGame?.Invoke(this, EventArgs.Empty);
         }
 
         public void EndImmediatly()
@@ -318,6 +318,7 @@ namespace NewChessProject
             }
             else if (gameHistory.CheckPositionRepetition(maxPositionRepetition))
             {
+                gameHistory.ListGameHistory();
                 result = MoveResult.MoveRepetition;
                 gameState = GameState.EndGame;
             }

@@ -76,6 +76,7 @@ namespace NewChessProject
         GUIBoard guiBoard;
         Game game;
         StackPanel inGameInterface;
+        MainWindow gameWindow;
 
         string importFENString;
         double initialTime;
@@ -182,17 +183,33 @@ namespace NewChessProject
             get { return possiblePlayerTypes; }
         }
 
-        public GameCreator(GUIBoard guiBoard, StackPanel inGameInterface)
+        private void PrepareForGameRestart(object sender, EventArgs e)
+        {
+            game = new Game(new Board());
+            game.ResetGame += PrepareForGameRestart;
+            guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
+            gameWindow.SetSettingsMenu();
+
+            ReadGameSettings();
+        }
+
+
+        public GameCreator(GUIBoard guiBoard, MainWindow gameWindow, StackPanel inGameInterface)
         {
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
+            this.gameWindow = gameWindow;
 
+            gameWindow.SetSettingsMenu();
             possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
             game = new Game(new Board());
+            game.ResetGame += PrepareForGameRestart;
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
 
             ReadGameSettings();
         }
+
+        
 
         public void StartGame()
         {

@@ -27,7 +27,7 @@ namespace NewChessProject
             ImportButton.Visibility = Visibility.Visible;
 
             guiBoard = new GUIBoard(Screen, PieceSelection, this);
-            gc = new GameCreator(guiBoard, InGameInterface);
+            gc = new GameCreator(guiBoard, this, InGameInterface);
             game = gc.GetGame();
             DataContext = gc;
         }
@@ -35,11 +35,25 @@ namespace NewChessProject
         private void Start(object sender, RoutedEventArgs e)
         {
             gc.StartGame();
+            SetGameScreen();
+        }
+
+        public void SetGameScreen()
+        {
             InGameInterface.Visibility = Visibility.Visible;
             Settings.Visibility = Visibility.Hidden;
             ImportButton.Visibility = Visibility.Hidden;
             ImportTextBox.Visibility = Visibility.Hidden;
             ImportLabel.Visibility = Visibility.Hidden;
+        }
+
+        public void SetSettingsMenu()
+        {
+            InGameInterface.Visibility = Visibility.Hidden;
+            Settings.Visibility = Visibility.Visible;
+            ImportButton.Visibility = Visibility.Visible;
+            ImportTextBox.Visibility = Visibility.Visible;
+            ImportLabel.Visibility = Visibility.Visible;
         }
 
         private void ImportFen(object sender, RoutedEventArgs e)
