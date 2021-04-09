@@ -172,8 +172,11 @@ namespace NewChessProject
 
         public void EndImmediatly()
         {
-            foreach (Timer timer in timers)
-                timer.Terminate();
+            if (timers != null)
+            {
+                foreach (Timer timer in timers)
+                    timer.Terminate();
+            }
 
             gameState = GameState.EndGame;
         }

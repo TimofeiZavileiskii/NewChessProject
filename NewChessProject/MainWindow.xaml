@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewChessProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Closed="WindowClosed">
+        Title="MainWindow" Height="450" Width="1000" Closed="WindowClosed">
 
 
 
@@ -66,19 +66,7 @@
             </StackPanel>
 
             <StackPanel x:Name="AdditionalSettings" Orientation="Vertical" Visibility="Visible">
-                <Label Content="Additional Settings:"/>
-                <WrapPanel Margin="0, 0, 0, 0" Name="TwoGUIPlayersSettings" Visibility="Visible">
-                    <Label Content="FlipBoard:"/>
-                    <CheckBox Margin="3,7,0,0"/>
-                </WrapPanel>
-                <WrapPanel Name="AiPlayerWhite" Margin ="0, 0, 0, 0">
-                    <Label Content ="Difficulty:"/>
-                    <TextBox MinWidth="30" Height="15" Margin="3, 0, 0, 0"/>
-                </WrapPanel>
-                <WrapPanel Name="AiPlayerBlack" Margin ="0, 0, 0, 0">
-                    <Label Content ="Difficulty:"/>
-                    <TextBox MinWidth="30" Height="15" Margin="3, 0, 0, 0"/>
-                </WrapPanel>
+
             </StackPanel>
         </StackPanel>
         

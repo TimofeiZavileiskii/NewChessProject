@@ -50,7 +50,14 @@ namespace NewChessProject
 
             static Player CreateAIPlayer(PlayerColour colour, GameCreator gc)
             {
-                AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", 20), gc.game);
+                AiSettings settings = ((AiSettings)gc.additionalSettings.PlayerSettings[(int)colour]);
+                int timePerTurn = settings.MaxTimePerTurn;
+                if(!(timePerTurn > 0))
+                {
+                    timePerTurn = -1;
+                }
+
+                AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", settings.Difficulty, timePerTurn), gc.game);
 
                 gc.game.GameStarted += player.GameStarted;
                 gc.game.RequestMade += player.RequestSend;
@@ -77,6 +84,7 @@ namespace NewChessProject
         Game game;
         StackPanel inGameInterface;
         MainWindow gameWindow;
+        AdditionalSettings additionalSettings;
 
         string importFENString;
         double initialTime;
@@ -149,6 +157,7 @@ namespace NewChessProject
             set 
             {
                 whitePlayerType = value;
+                additionalSettings.WhitePlayerType = value;
             }
         }
         public PlayerType BlackPlayerType
@@ -157,6 +166,7 @@ namespace NewChessProject
             set 
             {
                 blackPlayerType = value;
+                additionalSettings.BlackPlayerType = value;
             }
         }
 
@@ -194,17 +204,21 @@ namespace NewChessProject
         }
 
 
-        public GameCreator(GUIBoard guiBoard, MainWindow gameWindow, StackPanel inGameInterface)
+        public GameCreator(GUIBoard guiBoard, MainWindow gameWindow, AdditionalSettings adSett, StackPanel inGameInterface)
         {
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
             this.gameWindow = gameWindow;
 
             gameWindow.SetSettingsMenu();
+
+            additionalSettings = adSett;
+
             possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
             game = new Game(new Board());
             game.ResetGame += PrepareForGameRestart;
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
+            importFENString = "";
 
             ReadGameSettings();
         }
@@ -257,8 +271,8 @@ namespace NewChessProject
             if (File.Exists(@"GameSettings.txt"))
             {
                 StreamReader file = new StreamReader(@"GameSettings.txt");
-                whitePlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
-                blackPlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
+                WhitePlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
+                BlackPlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
                 initialTime = Convert.ToDouble(file.ReadLine());
                 timePerTurn = Convert.ToDouble(file.ReadLine());
                 touchRule = Convert.ToBoolean(file.ReadLine());
