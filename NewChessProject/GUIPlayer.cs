@@ -26,32 +26,48 @@ namespace NewChessProject
 
     class GUIPlayer : HumanPlayer
     {
-        Vector selectedPiece;
-        List<Vector> allowedPositions;
-        State state;
-        Vector check;
         GUIBoard guiBoard;
 
         delegate void StateTransition(Vector position);
         (StateTransition, State)[,] stateMachine;
 
-        public GUIPlayer(PlayerColour colour, Game game, GUIBoard guiBoard) : base(colour, game)
+        Vector selectedPiece;
+        List<Vector> allowedPositions;
+        State state;
+        Vector check;
+
+        bool flipBoard;
+        bool oneHumanPlayer;
+
+
+        public GUIPlayer(PlayerColour colour, Game game, GUIBoard guiBoard, bool flipBoard) : base(colour, game)
         {
             allowedPositions = new List<Vector>();
             this.guiBoard = guiBoard;
+            this.flipBoard = flipBoard;
             check = Vector.NullVector;
             selectedPiece = Vector.NullVector;
             CreateStateMachine();
-            if(colour == PlayerColour.White)
-            { 
+            if (colour == PlayerColour.White)
+            {
                 state = State.SelectPiece;
+                SetMySelfAsGUIUser();
             }
             else
             {
                 state = State.WaitForMove;
             }
         }
-        
+
+        public void StartGame(object sender, GameStartEventArgs e)
+        {
+            oneHumanPlayer = e.OneHumanPlayer;
+            if (e.OneHumanPlayer && colour == PlayerColour.Black)
+            {
+                GameRepresentationUpdated();
+            }
+        }
+
         private void CreateStateMachine()
         {
             stateMachine = new (StateTransition, State)[Enum.GetValues(typeof(State)).Length, Enum.GetValues(typeof(Input)).Length];
@@ -101,6 +117,11 @@ namespace NewChessProject
             ResetMove();
         }
 
+        private void SetMySelfAsGUIUser()
+        {
+            guiBoard.SetNewUser(OnBoardClicked, OnWindowClicked, PieceSelected, Resign, RequestTakeback, RequestDraw);
+        }
+
         private void ThrowException(Vector vec)
         {
             throw new NotImplementedException("At this state no move should be selected");
@@ -142,6 +163,7 @@ namespace NewChessProject
             if (state == State.WaitForMove)
             {
                 state = State.SelectPiece;
+                SetMySelfAsGUIUser();
             }
             else
             {
@@ -153,16 +175,17 @@ namespace NewChessProject
             {
                 check = game.GetKingsPosition(checkColour);
             }
-            ResetMove();
-            GameRepresentationUpdated();
+
+            if (oneHumanPlayer || state != State.WaitForMove)
+            {
+                ResetMove();
+                GameRepresentationUpdated();
+            }
         }
 
         public void RequestDraw(object sender, EventArgs e)
         {
-            if (state != State.WaitForMove)
-            {
-                game.OfferDraw(Colour);
-            }
+            game.OfferDraw(Colour);
         }
 
         public override void RequestSend(object sender, RequestMadeEventArgs e)
@@ -173,11 +196,8 @@ namespace NewChessProject
 
         public void RequestTakeback(object sender, EventArgs e)
         {
-            if (state != State.WaitForMove)
-            {
-                game.TakeBack(Colour);
-                GameRepresentationUpdated();
-            }
+            game.TakeBack(Colour);
+            GameRepresentationUpdated();
         }
 
         override public void GameEnded(object sender, GameEndedEventArgs e)
@@ -211,16 +231,14 @@ namespace NewChessProject
 
         public void Resign(object sender, EventArgs e)
         {
-            if(state != State.WaitForMove)
-            {
-                game.Resign(Colour);
-            }
+            game.Resign(Colour);
         }
 
         private void GameRepresentationUpdated()
         {
             GameRepresentation gr = new GameRepresentation(game.GetPieceRepresentations(), GenerateMoveTiles(), GenerateBoardHilights());
 
+            guiBoard.FlipBoard = (flipBoard && colour == PlayerColour.Black);
             guiBoard.Update(gr);
         }
 

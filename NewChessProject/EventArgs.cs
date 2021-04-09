@@ -6,6 +6,19 @@ using System.Threading.Tasks;
 
 namespace NewChessProject
 {
+    class GameStartEventArgs : EventArgs
+    {
+        public bool OneHumanPlayer
+        {
+            get;
+            set;
+        }
+
+        public GameStartEventArgs(bool oneHumanPlayer) : base()
+        {
+            OneHumanPlayer = oneHumanPlayer;
+        }
+    }
     class MadeMoveEventArgs : EventArgs
     {
         public MadeMoveEventArgs(MoveResult result, PlayerColour colour) : base()

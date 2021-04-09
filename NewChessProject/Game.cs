@@ -61,7 +61,7 @@ namespace NewChessProject
         const int max50MoveRule = 50;
 
         public event EventHandler<MadeMoveEventArgs> MoveMade;
-        public event EventHandler GameStarted;
+        public event EventHandler<GameStartEventArgs> GameStarted;
         public event EventHandler<GameEndedEventArgs> OnGameEnded;
         public event EventHandler<RequestMadeEventArgs> RequestMade;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -73,6 +73,8 @@ namespace NewChessProject
         List<Piece>[] takenPieces;
         Timer[] timers;
         double[] timesPerPlayer;
+        bool oneHumanPlayer;
+
         double addedTimePerTurn;
         GameHistory gameHistory;
         int fullMovesMade;
@@ -129,9 +131,10 @@ namespace NewChessProject
             gameHistory = new GameHistory();
         }
 
-        public void StartGame(double timePerPlayer, double timePerTurn)
+        public void StartGame(double timePerPlayer, double timePerTurn, bool oneHumanPlayer)
         {
             const double reportTime = 0.1;
+            this.oneHumanPlayer = oneHumanPlayer;
             //fullMovesMade = 1;
 
             addedTimePerTurn = timePerTurn;
@@ -158,7 +161,7 @@ namespace NewChessProject
 
             gameHistory.Add(GetFENPosition());
 
-            GameStarted?.Invoke(this, EventArgs.Empty);
+            GameStarted?.Invoke(this, new GameStartEventArgs(oneHumanPlayer));
         }
 
         private void GameEnded(MoveResult endReason, PlayerColour? winner)

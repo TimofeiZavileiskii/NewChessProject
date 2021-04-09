@@ -24,6 +24,9 @@ namespace NewChessProject
         public event EventHandler OnWindowClicked;
         public event EventHandler<PieceSelectedEventArgs> PieceSelected;
 
+        public event EventHandler Resign;
+        public event EventHandler TakeBack;
+        public event EventHandler RequestDraw;
 
         double squareWidth;
         double squareHeight;
@@ -43,6 +46,25 @@ namespace NewChessProject
             {
                 return gr;
             }
+        }
+
+        public void SetNewUser(EventHandler<BoardClickedEventArgs> boardClicked, EventHandler windowClicked, EventHandler<PieceSelectedEventArgs> pieceSelected,
+            EventHandler resign, EventHandler takeBack, EventHandler requestDraw)
+        {
+            OnBoardClicked = null;
+            OnWindowClicked = null;
+            PieceSelected = null;
+            Resign = null;
+            TakeBack = null;
+            RequestDraw = null;
+
+            OnBoardClicked += boardClicked;
+            OnWindowClicked += windowClicked;
+            PieceSelected += pieceSelected;
+
+            Resign += resign;
+            TakeBack += takeBack;
+            RequestDraw += requestDraw;
         }
 
         public GUIBoard(Canvas canvas, WrapPanel pieceSelection, MainWindow window)
@@ -121,7 +143,7 @@ namespace NewChessProject
                 for (int ii = 0; ii < Board.boardHeight; ii++)
                 {
                     Color colour = Color.FromRgb(90, 100, 90);
-                    if (((i + Board.boardHeight * ii + ii) % 2) != 1)
+                    if (((i + Board.boardHeight * ii + ii) % 2) != 0)
                     {
                         colour = Color.FromRgb(180, 200, 180);
                     }
@@ -171,6 +193,19 @@ namespace NewChessProject
             Canvas.SetTop(pieceImage, GetYCoordinate(piece.Position.Y) * squareHeight);
 
             canvas.Children.Add(pieceImage);
+        }
+
+        public void RecieveDrawRequest(object sender, RoutedEventArgs e)
+        {
+            RequestDraw?.Invoke(this, EventArgs.Empty);
+        }
+        public void RecieveSurrenderRequest(object sender, RoutedEventArgs e)
+        {
+            Resign?.Invoke(this, EventArgs.Empty);
+        }
+        public void RecieveTakeBackRequest(object sender, RoutedEventArgs e)
+        {
+            TakeBack?.Invoke(this, EventArgs.Empty);
         }
 
         private void DrawSquare(double x, double y, Color colour)

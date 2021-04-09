@@ -11,6 +11,7 @@ namespace NewChessProject
     class AIPlayer : Player
     {
         ChessEngine engine;
+        Thread readerThread;
 
         Dispatcher mainThreadDispatcher;
         bool analysing;
@@ -33,7 +34,7 @@ namespace NewChessProject
         {
             engine.UploadPosition(game.GetFENPosition().FENString);
 
-            Thread thread = new Thread(() =>
+            readerThread = new Thread(() =>
             {
                 AiMove chosenMove = engine.GetBestMove();
 
@@ -46,10 +47,14 @@ namespace NewChessProject
                     }
                 });
             });
-            thread.Start();
+            readerThread.Start();
         }
 
 
+        public override void GameEnded(object sender, GameEndedEventArgs e)
+        {
+            readerThread.Abort();
+        }
 
         public override void OnMadeMove(object sender, MadeMoveEventArgs e)
         {

@@ -31,19 +31,11 @@ namespace NewChessProject
 
             static Player CreateGUIPlayer(PlayerColour colour, GameCreator gc)
             {
-                GUIPlayer player = new GUIPlayer(colour, gc.game, gc.guiBoard);
-
-                gc.guiBoard.OnBoardClicked += player.OnBoardClicked;
-                gc.guiBoard.OnWindowClicked += player.OnWindowClicked;
-                gc.guiBoard.PieceSelected += player.PieceSelected;
-
+                GUIPlayer player = new GUIPlayer(colour, gc.game, gc.guiBoard, gc.additionalSettings.GeneralSettings.FlipBoard);
 
                 gc.game.OnGameEnded += player.GameEnded;
                 gc.game.RequestMade += player.RequestSend;
-
-                ((Button)((WrapPanel)gc.inGameInterface.Children[2]).Children[0]).Click += player.RequestTakeback;
-                ((Button)((WrapPanel)gc.inGameInterface.Children[2]).Children[1]).Click += player.RequestDraw;
-                ((Button)((WrapPanel)gc.inGameInterface.Children[2]).Children[2]).Click += player.Resign;
+                gc.game.GameStarted += player.StartGame;
 
                 return player;
             }
@@ -61,6 +53,8 @@ namespace NewChessProject
 
                 gc.game.GameStarted += player.GameStarted;
                 gc.game.RequestMade += player.RequestSend;
+                gc.game.OnGameEnded += player.GameEnded;
+
                 return player;
             }
 
@@ -198,7 +192,10 @@ namespace NewChessProject
             game = new Game(new Board());
             game.ResetGame += PrepareForGameRestart;
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
+            guiBoard.FlipBoard = false;
             gameWindow.SetSettingsMenu();
+
+
 
             ReadGameSettings();
         }
@@ -209,6 +206,10 @@ namespace NewChessProject
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
             this.gameWindow = gameWindow;
+
+            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[0]).Click += guiBoard.RecieveTakeBackRequest;
+            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[1]).Click += guiBoard.RecieveDrawRequest;
+            ((Button)((WrapPanel)inGameInterface.Children[2]).Children[2]).Click += guiBoard.RecieveSurrenderRequest;
 
             gameWindow.SetSettingsMenu();
 
@@ -239,7 +240,9 @@ namespace NewChessProject
             game.MoveMade += playerBlack.OnMadeMove;
             game.OnGameEnded += guiBoard.EndGame;
 
-            game.StartGame(initialTime, timePerTurn);
+            bool oneHumanPlayer = (whitePlayerType == PlayerType.GUIPlayer ^ blackPlayerType == PlayerType.GUIPlayer);
+
+            game.StartGame(initialTime, timePerTurn, oneHumanPlayer);
             BindTimersWithInterface();
         }
 

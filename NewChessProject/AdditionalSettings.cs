@@ -32,7 +32,7 @@ namespace NewChessProject
                 Console.WriteLine(value);
             }
         }
-        public bool HilightThreats
+        public bool HighlightThreats
         {
             get
             {
@@ -231,14 +231,14 @@ namespace NewChessProject
             flipBoardBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             flipBoardCb.SetBinding(CheckBox.IsCheckedProperty, flipBoardBind);
 
-            Label hilightThreatsLbl = CreateLabel("Hilight threats:", normalFontSize);
-            CheckBox hilightThreatsCb = CreateCheckBox();
-            AddWrapPanel(hilightThreatsLbl, hilightThreatsCb);
+            Label highlightThreatsLbl = CreateLabel("Highlight threats:", normalFontSize);
+            CheckBox highlightThreatsCb = CreateCheckBox();
+            AddWrapPanel(highlightThreatsLbl, highlightThreatsCb);
 
-            hilightThreatsCb.DataContext = playerSettings;
-            Binding hilightThreatsBind = new Binding("HilightThreats");
+            highlightThreatsCb.DataContext = playerSettings;
+            Binding hilightThreatsBind = new Binding("HighlightThreats");
             hilightThreatsBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            hilightThreatsCb.SetBinding(CheckBox.IsCheckedProperty, hilightThreatsBind);
+            highlightThreatsCb.SetBinding(CheckBox.IsCheckedProperty, hilightThreatsBind);
 
             return playerSettings;
         }
