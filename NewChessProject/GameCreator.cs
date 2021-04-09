@@ -148,7 +148,6 @@ namespace NewChessProject
             set 
             {
                 whitePlayerType = value;
-                SetAdditionalSettings();
             }
         }
         public PlayerType BlackPlayerType
@@ -157,7 +156,6 @@ namespace NewChessProject
             set 
             {
                 blackPlayerType = value;
-                SetAdditionalSettings();
             }
         }
 
@@ -195,11 +193,6 @@ namespace NewChessProject
 
             ReadGameSettings();
         }
-        
-        private void SetAdditionalSettings()
-        {
-            
-        }
 
         public void StartGame()
         {
@@ -208,12 +201,22 @@ namespace NewChessProject
             playerWhite = PlayerFactory.CreatePlayer(whitePlayerType, PlayerColour.White, this);
             playerBlack = PlayerFactory.CreatePlayer(BlackPlayerType, PlayerColour.Black, this);
 
+            if (blackPlayerType != PlayerType.GUIPlayer && whitePlayerType != PlayerType.GUIPlayer)
+                CreateGameViewer();
+
             game.MoveMade += playerWhite.OnMadeMove;
             game.MoveMade += playerBlack.OnMadeMove;
             game.OnGameEnded += guiBoard.EndGame;
 
             game.StartGame(initialTime, timePerTurn);
             BindTimersWithInterface();
+        }
+
+        private void CreateGameViewer()
+        {
+            GameViewer gv = new GameViewer(guiBoard);
+
+            game.MoveMade += gv.OnMadeMove;
         }
 
         private void BindTimersWithInterface()
@@ -268,6 +271,5 @@ namespace NewChessProject
             file.WriteLine(carryPieces);
             file.Close();
         }
-
     }
 }

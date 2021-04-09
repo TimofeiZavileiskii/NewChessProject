@@ -89,6 +89,7 @@ namespace NewChessProject
         {
             return pieceFENRepresentations[type];
         }
+
         public static PieceType GetTypeFromFENNotation(char c)
         {
             return pieceFENRepresentations[c];
@@ -316,7 +317,7 @@ namespace NewChessProject
 
 
             if(fenPos.EnPassante.Length == 2)
-                enPassantePiece = new Vector(fenPos.EnPassante[0] - 'a', Convert.ToInt32(fenPos.EnPassante[1]));
+                enPassantePiece = new Vector(fenPos.EnPassante[0] - 'a', Convert.ToInt32(fenPos.EnPassante[1].ToString()));
 
             rule50Counter = Convert.ToInt32(fenPos.HalfMoveTimer);
         }

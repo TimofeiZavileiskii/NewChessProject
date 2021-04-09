@@ -38,6 +38,8 @@ namespace NewChessProject
             InGameInterface.Visibility = Visibility.Visible;
             Settings.Visibility = Visibility.Hidden;
             ImportButton.Visibility = Visibility.Hidden;
+            ImportTextBox.Visibility = Visibility.Hidden;
+            ImportLabel.Visibility = Visibility.Hidden;
         }
 
         private void ImportFen(object sender, RoutedEventArgs e)

@@ -72,6 +72,7 @@
     <Compile Include="EventArgs.cs" />
     <Compile Include="FENPosition.cs" />
     <Compile Include="GameHistory.cs" />
+    <Compile Include="GameViewer.cs" />
     <Compile Include="GUIBoard.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameCreator.cs" />

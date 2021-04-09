@@ -13,9 +13,7 @@ namespace NewChessProject
 
         }
 
-        virtual public void OnMadeMove(object sender, MadeMoveEventArgs e)
-        {
+        abstract public void OnMadeMove(object sender, MadeMoveEventArgs e);
 
-        }
     }
 }
