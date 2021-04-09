@@ -251,6 +251,7 @@ namespace NewChessProject
             GameViewer gv = new GameViewer(guiBoard);
 
             game.MoveMade += gv.OnMadeMove;
+            game.OnGameEnded += gv.OnGameEnded;
         }
 
         private void BindTimersWithInterface()

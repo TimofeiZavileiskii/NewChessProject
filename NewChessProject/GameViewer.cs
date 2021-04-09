@@ -14,11 +14,21 @@ namespace NewChessProject
             this.guiBoard = guiBoard;
         }
 
-        public override void OnMadeMove(object sender, MadeMoveEventArgs e)
+        private void DrawGame(Game game)
         {
-            GameRepresentation gr = new GameRepresentation(((Game)sender).GetPieceRepresentations());
+            GameRepresentation gr = new GameRepresentation(game.GetPieceRepresentations());
 
             guiBoard.Update(gr);
+        }
+
+        public override void OnMadeMove(object sender, MadeMoveEventArgs e)
+        {
+            DrawGame((Game)sender);
+        }
+
+        public void OnGameEnded(object sender, EventArgs e)
+        {
+            DrawGame((Game)sender);
         }
 
     }
