@@ -175,13 +175,15 @@ namespace NewChessProject
 
         public void EndImmediatly()
         {
-            if (timers != null)
-            {
-                foreach (Timer timer in timers)
-                    timer.Terminate();
-            }
-
+            TerminateTimers();
             gameState = GameState.EndGame;
+        }
+
+        private void TerminateTimers()
+        {
+            if(timers != null)
+                foreach (Timer timer in timers)
+                  timer.Terminate();
         }
 
         private void UpdateTime(object sender, EventArgs e)
@@ -350,13 +352,27 @@ namespace NewChessProject
 
         private bool VerifyFENString(string fenString)
         {
-            bool output = true;
+            bool correctFormat = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (-|(K?Q?k?q?)) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
 
-            output = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (-|(K?Q?k?q?)) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
-            
-            
+            string[] splitString = fenString.Split(' ');
+            bool uniqueKings = Regex.Matches(splitString[0], @"k").Count == 1 && Regex.Matches(splitString[0], @"K").Count == 1;
 
-            return output;
+            bool correctLength = true;
+            foreach(string row in splitString[0].Split('/'))
+            {
+                int numbersSum = 0;
+                foreach (Match number in Regex.Matches(row, @"\d"))
+                {
+                    numbersSum += Convert.ToInt32(number.ToString());
+                }
+
+                correctLength = Regex.Matches(row, @"[rnbqkpRNBQKP]").Count + numbersSum == 8;
+
+                if (!correctLength)
+                    break;
+            }
+
+            return correctFormat && uniqueKings && correctLength;
         }
 
         private void ImportGame(FENPosition fenPosition)
@@ -424,6 +440,11 @@ namespace NewChessProject
 
             Console.WriteLine(output.FENString);
             return output;
+        }
+
+        ~Game()
+        {
+            TerminateTimers();
         }
 
         private void OnMadeMove(PlayerColour playerMadeMove)

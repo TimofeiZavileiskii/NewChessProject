@@ -68,23 +68,6 @@ namespace NewChessProject
             pieceFENRepresentations.Add('q', PieceType.Queen);
         }
 
-        public Board()
-        {
-            field = new Piece[boardHeight, boardWidth];
-            enPassantePiece =Vector.NullVector;
-            int numberOfColours = Enum.GetValues(typeof(PlayerColour)).Length;
-            kingPositions = new Vector[numberOfColours];
-            rule50Counter = 0;
-        }
-
-        static public PlayerColour ReverseColour(PlayerColour colour)
-        {
-            PlayerColour output = PlayerColour.Black;
-            if (colour == PlayerColour.Black)
-                output = PlayerColour.White;
-            return output;
-        }
-
         public static char GetFENNotationFromType(PieceType type)
         {
             return pieceFENRepresentations[type];
@@ -93,6 +76,24 @@ namespace NewChessProject
         public static PieceType GetTypeFromFENNotation(char c)
         {
             return pieceFENRepresentations[c];
+        }
+
+        static public PlayerColour ReverseColour(PlayerColour colour)
+
+        {
+            PlayerColour output = PlayerColour.Black;
+            if (colour == PlayerColour.Black)
+                output = PlayerColour.White;
+            return output;
+        }
+
+        public Board()
+        {
+            field = new Piece[boardHeight, boardWidth];
+            enPassantePiece =Vector.NullVector;
+            int numberOfColours = Enum.GetValues(typeof(PlayerColour)).Length;
+            kingPositions = new Vector[numberOfColours];
+            rule50Counter = 0;
         }
 
         public void TransformPawn(PlayerColour colour, PieceType piece)
@@ -161,6 +162,18 @@ namespace NewChessProject
             }
         }
 
+        public bool HasSufficientMaterial(PlayerColour colour)
+        {
+            List<Piece> playersPieces = new List<Piece>();
+
+            for(int i = 0; i < boardWidth; i++)
+                for(int ii = 0; ii < boardHeight; ii++)
+                    if(this[i, ii] != null)
+                        if(this[i, ii].Colour == colour)
+                            playersPieces.Add(this[i, ii]);
+
+            return false;
+        }
         private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = true)
         {
             return PieceFactory.ProducePiece(type, colour, hasMoved);
@@ -265,6 +278,7 @@ namespace NewChessProject
                         PieceType pieceType = pieceFENRepresentations[GetLowerChar(c)];
 
                         PlayerColour pieceColour = PlayerColour.Black;
+                        //Checks if the letter is capital
                         if (c < 'a')
                             pieceColour = PlayerColour.White;
 
@@ -429,8 +443,6 @@ namespace NewChessProject
             return output;
         }
 
-        //Returns if there is a threat for the player specified by 
-        //the colour parameter in the square specified by the vector parameter
         public bool IsThereThreat(Vector vector, PlayerColour colour)
         {
             bool output = false;
@@ -446,16 +458,14 @@ namespace NewChessProject
             return output;
         }
 
-        //Identifies wheather the player given by the colour parameter is in check
         public bool IsChecked(PlayerColour colour)
         {    
             return IsThereThreat(kingPositions[(int)colour], colour);
         }
 
-        //Returns kings position as a Vector owned by the player specified by the colour parameter
-        public Vector GetKingPosition(PlayerColour colour)
+        public Vector GetKingPosition(PlayerColour playersColour)
         {
-            return kingPositions[(int)colour];
+            return kingPositions[(int)playersColour];
         }
 
         //Checks if there are any available moves for the player given with colour parameter
@@ -489,6 +499,7 @@ namespace NewChessProject
             {
                 return this[vec.X, vec.Y];
             }
+            //Set is private so the only way to modify the board is with the methods, so the data in this class and within pieces is accurate 
             private set
             {
                 this[vec.X, vec.Y] = value;

@@ -14,16 +14,13 @@ namespace NewChessProject
         Thread readerThread;
 
         Dispatcher mainThreadDispatcher;
-        bool analysing;
 
         public AIPlayer(PlayerColour colour, ChessEngine engine, Game game) : base(colour, game)
         {
             this.engine = engine;
             mainThreadDispatcher = Dispatcher.CurrentDispatcher;
-            analysing = false;
         }
         
-
         public void GameStarted(object sender, EventArgs eventArgs)
         {
             if(colour == PlayerColour.White)
@@ -50,7 +47,6 @@ namespace NewChessProject
             readerThread.Start();
         }
 
-
         public override void GameEnded(object sender, GameEndedEventArgs e)
         {
             readerThread.Abort();
@@ -73,6 +69,11 @@ namespace NewChessProject
                     e.Request.Agreed = EvaluateDraw();
                     break;
             }
+        }
+
+        ~AIPlayer()
+        {
+            readerThread.Abort();
         }
 
         private bool EvaluateDraw()

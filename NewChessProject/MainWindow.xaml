@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NewChessProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000" Closed="WindowClosed">
+        Title="Chess" Height="600" Width="1000" Closed="WindowClosed">
 
 
 
@@ -77,7 +77,7 @@
             <Button x:Name="BishopChoice" Width="48" Height="45" Margin="10,0,0,0"/>
             <Button x:Name="KnightChoice" Width="48" Height="45" Margin="5,28,0,0"/>
         </WrapPanel>
-        <Label x:Name="ImportLabel" Grid.Column="0" Content="Import FEN string:" Height="27" Width="160" FontSize="12" Grid.ColumnSpan="2" Margin="0,350,236.8,43.4" Grid.RowSpan="2"/>
+        <Label x:Name="ImportLabel" Grid.Column="0" Content="FEN string:" Height="27" Width="160" FontSize="12" Grid.ColumnSpan="2" Margin="50,428,286.8,20.2"/>
         <Button x:Name="ImportButton" Grid.Column="0" Grid.Row="1" MaxHeight="25" MaxWidth="70" Content="Import" Margin="-30, 25, 0, 0" Click="ImportFen"/>
         <TextBox x:Name="ImportTextBox" Text="{Binding ImportedFENString, Mode = TwoWay}" Grid.Column="1" Height="20" FontSize="13" Grid.ColumnSpan="2" Margin="0.4,350,396.6,30.4" Grid.RowSpan="2"/>
     </Grid>
