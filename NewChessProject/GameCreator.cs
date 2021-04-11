@@ -27,6 +27,7 @@ namespace NewChessProject
             static readonly Dictionary<PlayerType, CreatePlayerDel> CreatePlayerFunctions;
             const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
 
+
             delegate Player CreatePlayerDel(PlayerColour colour, GameCreator gc);
 
             static Player CreateGUIPlayer(PlayerColour colour, GameCreator gc)
@@ -89,6 +90,8 @@ namespace NewChessProject
         List<PlayerType> possiblePlayerTypes;
         PlayerType whitePlayerType;
         PlayerType blackPlayerType;
+
+        const string settingsFileName = @"GameSettings.txt";
 
         public double InitialTime
         {
@@ -273,9 +276,9 @@ namespace NewChessProject
 
         private void ReadGameSettings()
         {
-            if (File.Exists(@"GameSettings.txt"))
+            if (File.Exists(settingsFileName))
             {
-                StreamReader file = new StreamReader(@"GameSettings.txt");
+                StreamReader file = new StreamReader(settingsFileName);
                 WhitePlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
                 BlackPlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
                 initialTime = Convert.ToDouble(file.ReadLine());
@@ -287,18 +290,23 @@ namespace NewChessProject
             }
             else
             {
-                whitePlayerType = PlayerType.GUIPlayer;
-                blackPlayerType = PlayerType.GUIPlayer;
-                initialTime = 30;
-                timePerTurn = 0;
-                touchRule = false;
-                carryPieces = false;
+                SetDefaultSettings();
             }
+        }
+
+        private void SetDefaultSettings()
+        {
+            whitePlayerType = PlayerType.GUIPlayer;
+            blackPlayerType = PlayerType.GUIPlayer;
+            initialTime = 30;
+            timePerTurn = 0;
+            touchRule = false;
+            carryPieces = false;
         }
 
         private void WriteGameSettings()
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(@"GameSettings.txt");
+            System.IO.StreamWriter file = new System.IO.StreamWriter(settingsFileName);
             file.WriteLine(whitePlayerType);
             file.WriteLine(blackPlayerType);
             file.WriteLine(initialTime);
