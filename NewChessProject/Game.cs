@@ -50,7 +50,8 @@ namespace NewChessProject
         Resignation,
         TimeOut,
         Draw,
-        move50Rule
+        move50Rule,
+        InsufficientMaterial
     }
 
     class Game : INotifyPropertyChanged
@@ -193,7 +194,16 @@ namespace NewChessProject
 
             if (((Timer)sender).TimeLeft < 0.05)
             {
-                GameEnded(MoveResult.TimeOut, Board.ReverseColour(IdentifyPlayersColour(gameState)));
+                PlayerColour playerRunOutOfTime = IdentifyPlayersColour(gameState);
+
+                if (board.EnoughMaterialForMate(Board.ReverseColour(playerRunOutOfTime)))
+                {
+                    GameEnded(MoveResult.InsufficientMaterial, null);
+                }
+                else
+                {
+                    GameEnded(MoveResult.TimeOut, playerRunOutOfTime);
+                }
             }
         }
 
@@ -312,7 +322,11 @@ namespace NewChessProject
             bool areAvailkableMoves = board.IsTherePossibleMoves(IdentifyPlayersColour(gameState));
             bool kingUnderThreat = board.IsChecked(IdentifyPlayersColour(gameState));
 
-            
+            if(board.EnoughMaterialForMate(IdentifyPlayersColour(gameState)) && board.EnoughMaterialForMate(Board.ReverseColour(IdentifyPlayersColour(gameState))))
+            {
+                result = MoveResult.InsufficientMaterial;
+                gameState = GameState.EndGame;
+            }
             if (!areAvailkableMoves && !kingUnderThreat)
             {
                 result = MoveResult.Stalemate;
@@ -394,7 +408,7 @@ namespace NewChessProject
 
         public void Resign(PlayerColour colour)
         {
-            GameEnded(MoveResult.Resignation, Board.ReverseColour(IdentifyPlayersColour(gameState)));
+            GameEnded(MoveResult.Resignation, Board.ReverseColour(colour));
         }
 
         private void MakeRequest(Request request)
