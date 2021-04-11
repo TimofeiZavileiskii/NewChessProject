@@ -97,7 +97,6 @@
     <Compile Include="Piece.cs" />
     <Compile Include="PieceRepresentation.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerCreator.cs" />
     <Compile Include="Queen.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="Rook.cs" />

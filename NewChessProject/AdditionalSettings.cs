@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Controls;
+using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -11,13 +13,29 @@ namespace NewChessProject
 {
     class HumanSettings : PlayerSettings
     {
+        static List<AssistanceLevel> assistanceLevels;
+
+        public static List<AssistanceLevel> PossibleAssistanceLevels
+        {
+            get
+            {
+                return assistanceLevels;
+            }
+        }
+
+
+        static HumanSettings()
+        {
+            assistanceLevels = ((AssistanceLevel[])Enum.GetValues(typeof(AssistanceLevel))).ToList();
+        }
+
         bool flipBoard;
-        bool hilightTakes;
+        AssistanceLevel assistance;
 
         public HumanSettings()
         {
             flipBoard = true;
-            hilightTakes = false;
+            assistance = AssistanceLevel.HilightMoves;
         }
 
         public bool FlipBoard
@@ -32,15 +50,15 @@ namespace NewChessProject
                 Console.WriteLine(value);
             }
         }
-        public bool HighlightThreats
+        public AssistanceLevel Assistance
         {
             get
             {
-                return hilightTakes;
+                return assistance;
             }
             set
             {
-                hilightTakes = value;
+                assistance = value;
                 Console.WriteLine(value);
             }
         }
@@ -232,13 +250,16 @@ namespace NewChessProject
             flipBoardCb.SetBinding(CheckBox.IsCheckedProperty, flipBoardBind);
 
             Label highlightThreatsLbl = CreateLabel("Highlight threats:", normalFontSize);
-            CheckBox highlightThreatsCb = CreateCheckBox();
+            ComboBox highlightThreatsCb = CreateComboBox();
             AddWrapPanel(highlightThreatsLbl, highlightThreatsCb);
 
             highlightThreatsCb.DataContext = playerSettings;
-            Binding hilightThreatsBind = new Binding("HighlightThreats");
-            hilightThreatsBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            highlightThreatsCb.SetBinding(CheckBox.IsCheckedProperty, hilightThreatsBind);
+            Binding hilightThreatsContentBind = new Binding("PossibleAssistanceLevels");
+            Binding hilightThreatSelectedsBind = new Binding("Assistance");
+            hilightThreatsContentBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            hilightThreatSelectedsBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            highlightThreatsCb.SetBinding(ComboBox.ItemsSourceProperty, hilightThreatsContentBind);
+            highlightThreatsCb.SetBinding(ComboBox.SelectedValueProperty, hilightThreatSelectedsBind);
 
             return playerSettings;
         }
@@ -301,6 +322,12 @@ namespace NewChessProject
         private CheckBox CreateCheckBox()
         {
             return new CheckBox();
+        }
+
+        private ComboBox CreateComboBox()
+        {
+            ComboBox cb = new ComboBox();
+            return cb;
         }
 
         private Label CreateLabel(string text, int fontSize)

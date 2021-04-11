@@ -15,6 +15,14 @@ namespace NewChessProject
         ClickNothing
     }
 
+    enum AssistanceLevel
+    {
+        NoAssistance,
+        HilightMoves,
+        HilightThreats,
+        HilightDefences
+    }
+
     enum State
     {
         SelectMove,
@@ -35,16 +43,18 @@ namespace NewChessProject
         List<Vector> allowedPositions;
         State state;
         Vector check;
+        AssistanceLevel assistance;
 
         bool flipBoard;
         bool oneHumanPlayer;
 
 
-        public GUIPlayer(PlayerColour colour, Game game, GUIBoard guiBoard, bool flipBoard) : base(colour, game)
+        public GUIPlayer(PlayerColour colour, Game game, GUIBoard guiBoard, HumanSettings humanSettings) : base(colour, game)
         {
             allowedPositions = new List<Vector>();
             this.guiBoard = guiBoard;
-            this.flipBoard = flipBoard;
+            this.flipBoard = humanSettings.FlipBoard;
+            assistance = humanSettings.Assistance;
             check = Vector.NullVector;
             selectedPiece = Vector.NullVector;
             CreateStateMachine();
@@ -137,10 +147,21 @@ namespace NewChessProject
         private List<BoardIndicator> GenerateMoveTiles()
         {
             List<BoardIndicator> output = new List<BoardIndicator>();
-            foreach(Vector vec in allowedPositions)
+            if(assistance != AssistanceLevel.NoAssistance)
             {
-                output.Add(new BoardIndicator(vec, Color.FromRgb(30, 220, 50))); //All moves have green colour
+                foreach (Vector vec in allowedPositions)
+                {
+                    Color moveColour = Color.FromRgb(30, 220, 50); //All moves have green colour
+                    if (assistance != AssistanceLevel.HilightMoves && game.CheckForAttackFrom(Board.ReverseColour(Colour), selectedPiece, vec))
+                    {
+                        moveColour = Color.FromRgb(200, 80, 50); //Moves under attack get red colour
+                        if (assistance != AssistanceLevel.HilightThreats && game.CheckForDefence(Colour, selectedPiece, vec))
+                            moveColour = Color.FromRgb(200, 200, 50); //Moves under attack and under defence get yellow colour
+                    }
+                    output.Add(new BoardIndicator(vec, moveColour));
+                }
             }
+
             return output;
         }
 

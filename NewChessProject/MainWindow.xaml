@@ -77,8 +77,8 @@
             <Button x:Name="BishopChoice" Width="48" Height="45" Margin="10,0,0,0"/>
             <Button x:Name="KnightChoice" Width="48" Height="45" Margin="5,28,0,0"/>
         </WrapPanel>
-        <Label x:Name="ImportLabel" Grid.Column="0" Content="FEN string:" Height="27" Width="160" FontSize="12" Grid.ColumnSpan="2" Margin="50,428,286.8,20.2"/>
+        <Label x:Name="ImportLabel" Grid.Column="0" Grid.Row="1" Content="FEN string:" Margin="80, -40, 0, 0" Height="27" Width="160" FontSize="12"/>
         <Button x:Name="ImportButton" Grid.Column="0" Grid.Row="1" MaxHeight="25" MaxWidth="70" Content="Import" Margin="-30, 25, 0, 0" Click="ImportFen"/>
-        <TextBox x:Name="ImportTextBox" Text="{Binding ImportedFENString, Mode = TwoWay}" Grid.Column="1" Height="20" FontSize="13" Grid.ColumnSpan="2" Margin="0.4,350,396.6,30.4" Grid.RowSpan="2"/>
+        <TextBox x:Name="ImportTextBox" Text="{Binding ImportedFENString, Mode = TwoWay}" Grid.Row="1" Grid.Column="1" Height="20" Margin="0, -40, 0, 0" FontSize="13"/>
     </Grid>
 </Window>

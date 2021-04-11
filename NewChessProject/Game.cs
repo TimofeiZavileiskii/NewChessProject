@@ -134,7 +134,6 @@ namespace NewChessProject
         public void StartGame(double timePerPlayer, double timePerTurn, bool oneHumanPlayer)
         {
             const double reportTime = 0.1;
-            this.oneHumanPlayer = oneHumanPlayer;
             //fullMovesMade = 1;
 
             addedTimePerTurn = timePerTurn;
@@ -366,7 +365,7 @@ namespace NewChessProject
                     numbersSum += Convert.ToInt32(number.ToString());
                 }
 
-                correctLength = Regex.Matches(row, @"[rnbqkpRNBQKP]").Count + numbersSum == 8;
+                correctLength = Regex.Matches(row, @"[rnbqkpRNBQKP]").Count + numbersSum == Board.boardWidth;
 
                 if (!correctLength)
                     break;
@@ -439,6 +438,41 @@ namespace NewChessProject
             output.TotalMoves = fullMovesMade.ToString();
 
             Console.WriteLine(output.FENString);
+            return output;
+        }
+
+        //Checks for the piece being under attack if it is moved
+
+        private Board TestMove(Board board, PlayerColour nextPlayerColour, Vector movedPiece, Vector move)
+        {
+            Board testBoard = board.Copy();
+            testBoard.MovePiece(movedPiece, move);
+            testBoard.GenerateMoves(nextPlayerColour);
+            testBoard.GenerateMoves(Board.ReverseColour(nextPlayerColour));
+            testBoard.FilterMovesByCheck(nextPlayerColour);
+
+            return testBoard;
+        }
+
+        public bool CheckForAttackFrom(PlayerColour colour, Vector movedPiece, Vector move)
+        {
+            return TestMove(board, colour, movedPiece, move).IsThereThreat(move, Board.ReverseColour(colour));
+        }
+        public bool CheckForDefence(PlayerColour colour, Vector movedPiece, Vector move)
+        {
+            bool output = true;
+
+            Board testBoard = TestMove(board, Board.ReverseColour(colour), movedPiece, move);
+            List<Vector> attackingPieces = testBoard.GetAttackingPieces(Board.ReverseColour(colour), move);
+            
+            foreach(Vector attackingPiece in attackingPieces)
+            {
+                Board newTestBoard = TestMove(testBoard, colour, attackingPiece, move);
+                output = newTestBoard.IsThereThreat(move, Board.ReverseColour(colour));
+                if (!output)
+                    break;
+            }
+
             return output;
         }
 

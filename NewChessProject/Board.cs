@@ -87,6 +87,8 @@ namespace NewChessProject
             return output;
         }
 
+
+
         public Board()
         {
             field = new Piece[boardHeight, boardWidth];
@@ -177,6 +179,22 @@ namespace NewChessProject
         private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = true)
         {
             return PieceFactory.ProducePiece(type, colour, hasMoved);
+        }
+
+        public List<Vector> GetAttackingPieces(PlayerColour pieceOwner, Vector checkedSquare)
+        {
+            List<Vector> output = new List<Vector>();
+
+            for (int i = 0; i < boardWidth; i++)
+                for (int ii = 0; ii < boardHeight; ii++)
+                    if (field[i, ii] != null)
+                        if (field[i, ii].Colour == pieceOwner && field[i, ii].AvailableMoves.Contains(checkedSquare))
+                        {
+                            output.Add(new Vector(i, ii));
+                            break;
+                        }
+
+            return output;
         }
 
         public void RemoveEnPassante()
@@ -443,6 +461,7 @@ namespace NewChessProject
             return output;
         }
 
+        //Returns true or false depending is there a move on the player of (colour) on the square (vector)
         public bool IsThereThreat(Vector vector, PlayerColour colour)
         {
             bool output = false;

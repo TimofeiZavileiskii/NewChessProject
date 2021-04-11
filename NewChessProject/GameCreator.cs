@@ -31,7 +31,7 @@ namespace NewChessProject
 
             static Player CreateGUIPlayer(PlayerColour colour, GameCreator gc)
             {
-                GUIPlayer player = new GUIPlayer(colour, gc.game, gc.guiBoard, gc.additionalSettings.GeneralSettings.FlipBoard);
+                GUIPlayer player = new GUIPlayer(colour, gc.game, gc.guiBoard, gc.additionalSettings.GeneralSettings);
 
                 gc.game.OnGameEnded += player.GameEnded;
                 gc.game.RequestMade += player.RequestSend;
@@ -229,6 +229,7 @@ namespace NewChessProject
         public void StartGame()
         {
             WriteGameSettings();
+
 
             playerWhite = PlayerFactory.CreatePlayer(whitePlayerType, PlayerColour.White, this);
             playerBlack = PlayerFactory.CreatePlayer(BlackPlayerType, PlayerColour.Black, this);
