@@ -196,7 +196,7 @@ namespace NewChessProject
             {
                 PlayerColour playerRunOutOfTime = IdentifyPlayersColour(gameState);
 
-                if (board.EnoughMaterialForMate(Board.ReverseColour(playerRunOutOfTime)))
+                if (board.NotEnoughMaterialForMate(Board.ReverseColour(playerRunOutOfTime)))
                 {
                     GameEnded(MoveResult.InsufficientMaterial, null);
                 }
@@ -322,7 +322,7 @@ namespace NewChessProject
             bool areAvailkableMoves = board.IsTherePossibleMoves(IdentifyPlayersColour(gameState));
             bool kingUnderThreat = board.IsChecked(IdentifyPlayersColour(gameState));
 
-            if(board.EnoughMaterialForMate(IdentifyPlayersColour(gameState)) && board.EnoughMaterialForMate(Board.ReverseColour(IdentifyPlayersColour(gameState))))
+            if(board.NotEnoughMaterialForMate(IdentifyPlayersColour(gameState)) && board.NotEnoughMaterialForMate(Board.ReverseColour(IdentifyPlayersColour(gameState))))
             {
                 result = MoveResult.InsufficientMaterial;
                 gameState = GameState.EndGame;
@@ -460,7 +460,7 @@ namespace NewChessProject
         private Board TestMove(Board board, PlayerColour nextPlayerColour, Vector movedPiece, Vector move)
         {
             Board testBoard = board.Copy();
-            testBoard.MovePiece(movedPiece, move);
+            testBoard.MovePiece(movedPiece, board[movedPiece].AvailableMoves.Find(x => x == move));
             testBoard.GenerateMoves(nextPlayerColour);
             testBoard.GenerateMoves(Board.ReverseColour(nextPlayerColour));
             testBoard.FilterMovesByCheck(nextPlayerColour);

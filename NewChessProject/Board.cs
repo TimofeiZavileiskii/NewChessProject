@@ -358,8 +358,10 @@ namespace NewChessProject
             return c.ToString().ToLower()[0];
         }
 
-        public bool EnoughMaterialForMate(PlayerColour checkedPlayersColour)
+        public bool NotEnoughMaterialForMate(PlayerColour checkedPlayersColour)
         {
+            bool output = false;
+
             List<PieceRepresentation> allPieces = OutputPieces();
             List<PieceRepresentation>[] pieces = new List<PieceRepresentation>[Enum.GetValues(typeof(PlayerColour)).Length];
             foreach(PlayerColour colour in Enum.GetValues(typeof(PlayerColour)))
@@ -367,31 +369,39 @@ namespace NewChessProject
                 pieces[(int)colour] = allPieces.Where(piece => piece.Colour == colour).ToList();
             }
 
-            bool loneKing = pieces[(int)ReverseColour(checkedPlayersColour)].Count == 1;//Checks that other player has only the king
-            bool lackOfMaterial = false;
-
-            if(pieces[(int)checkedPlayersColour].Count == 2)
+            if (pieces[(int)checkedPlayersColour].Count == 1)
             {
-                lackOfMaterial = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Bishop || x.Type == PieceType.Knight).ToList().Count == 1;
+                output = true;
             }
-            else if(pieces[(int)checkedPlayersColour].Count == 3)
+            else
             {
-                List<PieceRepresentation> bishopList = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Bishop).ToList();
-                List<PieceRepresentation> knightList = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Knight).ToList();
+                bool loneKing = pieces[(int)ReverseColour(checkedPlayersColour)].Count == 1;//Checks that other player has only the king
+                bool lackOfMaterial = false;
+                if (pieces[(int)checkedPlayersColour].Count == 2)
+                {
+                    lackOfMaterial = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Bishop || x.Type == PieceType.Knight).ToList().Count == 1;
+                }
+                else if (pieces[(int)checkedPlayersColour].Count == 3)
+                {
+                    List<PieceRepresentation> bishopList = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Bishop).ToList();
+                    List<PieceRepresentation> knightList = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Knight).ToList();
 
-                //Checks if there are only 2 knights left - checkmate is impossible with 2 knights
-                if (knightList.Count == 2)
-                {
-                    lackOfMaterial = true;
+                    //Checks if there are only 2 knights left - checkmate is impossible with 2 knights
+                    if (knightList.Count == 2)
+                    {
+                        lackOfMaterial = true;
+                    }
+                    //Checks that there are 2 bishops, checkmate is impossible if they are on the same colour
+                    else if (bishopList.Count == 2)
+                    {
+                        lackOfMaterial = (bishopList[0].Position.X % 2 + bishopList[0].Position.Y % 2) == (bishopList[1].Position.X % 2 + bishopList[1].Position.Y % 2);
+                    }
                 }
-                //Checks that there are 2 bishops, checkmate is impossible if they are on the same colour
-                else if(bishopList.Count == 2)
-                {
-                    lackOfMaterial = (bishopList[0].Position.X + bishopList[0].Position.Y * boardWidth) % 2 == (bishopList[1].Position.X + bishopList[1].Position.Y * boardWidth) % 2;
-                }
+
+                output = lackOfMaterial && loneKing;
             }
 
-            return loneKing && lackOfMaterial;
+            return output;
         }
 
         //Returns all the information on the board
