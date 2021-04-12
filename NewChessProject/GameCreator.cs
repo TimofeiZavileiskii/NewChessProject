@@ -233,6 +233,8 @@ namespace NewChessProject
         {
             WriteGameSettings();
 
+            VisualSettings vs = new VisualSettings();
+            vs.WriteVisualSettings();
 
             playerWhite = PlayerFactory.CreatePlayer(whitePlayerType, PlayerColour.White, this);
             playerBlack = PlayerFactory.CreatePlayer(BlackPlayerType, PlayerColour.Black, this);

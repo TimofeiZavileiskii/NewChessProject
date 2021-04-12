@@ -460,6 +460,8 @@ namespace NewChessProject
         private Board TestMove(Board board, PlayerColour nextPlayerColour, Vector movedPiece, Vector move)
         {
             Board testBoard = board.Copy();
+            //testBoard.GenerateMoves(Board.ReverseColour(nextPlayerColour));
+            //testBoard.GenerateMoves(nextPlayerColour);
             testBoard.MovePiece(movedPiece, board[movedPiece].AvailableMoves.Find(x => x == move));
             testBoard.GenerateMoves(nextPlayerColour);
             testBoard.GenerateMoves(Board.ReverseColour(nextPlayerColour));

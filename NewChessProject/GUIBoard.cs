@@ -351,6 +351,9 @@ namespace NewChessProject
                     case MoveResult.move50Rule:
                         text = drawMessage + " 50 moves were made without pawn advancing or piece taken";
                         break;
+                    case MoveResult.InsufficientMaterial:
+                        text = drawMessage + " insufficient material for a checkmate";
+                        break;
                 }
 
                 ShowMessage(text);

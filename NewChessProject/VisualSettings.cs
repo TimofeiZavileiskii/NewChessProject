@@ -75,10 +75,41 @@ namespace NewChessProject
             whiteBoardSquares = file.ReadLine();
             defendedHilight = file.ReadLine();
             attackedHilight = file.ReadLine();
-            file.WriteLine(moveHilight);
-            file.WriteLine(selectedPieceHilight);
-            file.WriteLine(checkHilight);
-            file.Close(); */
+            moveHilight = file.ReadLine();
+            selectedPieceHilight = file.ReadLine();
+            checkHilight = file.ReadLine();
+            file.Close();*/
+        }
+
+        private int ConvertHexadecimalToDenary(string number)
+        {
+            int output = 0;
+
+            for(int i = 0; i < number.Length; i++)
+            {
+                char digit = number[i];
+                int numericValue;
+                if(digit > 'A')
+                {
+                    numericValue = 10 + digit - 'A';
+                }
+                else
+                {
+                    numericValue = (int)Char.GetNumericValue(digit);
+                }
+
+                output = (int)Math.Pow(numericValue, i);
+            }
+            return output;
+        }
+
+        private Color ConvertStringToColor(string str)
+        {
+            int red = ConvertHexadecimalToDenary(str.Substring(1, 2));
+            int green = ConvertHexadecimalToDenary(str.Substring(3, 2));
+            int blue = ConvertHexadecimalToDenary(str.Substring(5, 2));
+
+            return Color.FromRgb((byte)red, (byte)green, (byte)blue);
         }
 
         private void SetDefaultSettings()
@@ -92,9 +123,15 @@ namespace NewChessProject
             checkHilight = Color.FromRgb(180, 40, 40);
         }
 
-        private void WriteVisualSettings()
+        public void WriteVisualSettings()
         {
+            SetDefaultSettings();
+
             System.IO.StreamWriter file = new System.IO.StreamWriter(visualSettingsFileName);
+
+            Console.WriteLine(blackBoardSquares);
+            Console.WriteLine(whiteBoardSquares);
+
             file.WriteLine(blackBoardSquares);
             file.WriteLine(whiteBoardSquares);
             file.WriteLine(defendedHilight);
