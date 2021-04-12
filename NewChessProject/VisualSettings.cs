@@ -63,22 +63,23 @@ namespace NewChessProject
 
         public VisualSettings()
         {
+            if(File.Exists(visualSettingsFileName))
+            ReadVisualSettings();
 
         }
 
 
         private void ReadVisualSettings()
         {
-            /*
             System.IO.StreamReader file = new System.IO.StreamReader(visualSettingsFileName);
-            blackBoardSquares = file.ReadLine();
-            whiteBoardSquares = file.ReadLine();
-            defendedHilight = file.ReadLine();
-            attackedHilight = file.ReadLine();
-            moveHilight = file.ReadLine();
-            selectedPieceHilight = file.ReadLine();
-            checkHilight = file.ReadLine();
-            file.Close();*/
+            blackBoardSquares = ConvertStringToColor(file.ReadLine());
+            whiteBoardSquares = ConvertStringToColor(file.ReadLine());
+            defendedHilight = ConvertStringToColor(file.ReadLine());
+            attackedHilight = ConvertStringToColor(file.ReadLine());
+            moveHilight = ConvertStringToColor(file.ReadLine());
+            selectedPieceHilight = ConvertStringToColor(file.ReadLine());
+            checkHilight = ConvertStringToColor(file.ReadLine());
+            file.Close();
         }
 
         private int ConvertHexadecimalToDenary(string number)
