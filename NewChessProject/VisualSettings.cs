@@ -68,9 +68,7 @@ namespace NewChessProject
                 ReadVisualSettings();
             else
                 SetDefaultSettings();
-
         }
-
 
         private void ReadVisualSettings()
         {

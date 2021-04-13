@@ -168,8 +168,6 @@ namespace NewChessProject
         {
             TerminateTimers();
 
-
-
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
             ResetGame?.Invoke(this, EventArgs.Empty);
         }
