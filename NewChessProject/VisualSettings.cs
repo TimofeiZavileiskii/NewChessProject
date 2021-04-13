@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,8 +64,10 @@ namespace NewChessProject
 
         public VisualSettings()
         {
-            if(File.Exists(visualSettingsFileName))
-            ReadVisualSettings();
+            if (File.Exists(visualSettingsFileName))
+                ReadVisualSettings();
+            else
+                SetDefaultSettings();
 
         }
 

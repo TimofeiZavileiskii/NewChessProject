@@ -166,8 +166,9 @@ namespace NewChessProject
 
         private void GameEnded(MoveResult endReason, PlayerColour? winner)
         {
-            foreach (Timer timer in timers)
-                timer.Stop();
+            TerminateTimers();
+
+
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
             ResetGame?.Invoke(this, EventArgs.Empty);
@@ -490,11 +491,6 @@ namespace NewChessProject
             }
 
             return output;
-        }
-
-        ~Game()
-        {
-            TerminateTimers();
         }
 
         private void OnMadeMove(PlayerColour playerMadeMove)

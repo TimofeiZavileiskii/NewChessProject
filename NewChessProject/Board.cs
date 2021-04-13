@@ -613,15 +613,15 @@ namespace NewChessProject
         //The method returns the deep copy of the board
         public Board Copy()
         {
-            Board output = new Board();
+            Board copy = new Board();
             for (int i = 0; i < boardWidth; i++)
                 for (int ii = 0; ii < boardHeight; ii++)
                     if (field[i, ii] != null)
                     {
                         Vector pieceCopyPosition = new Vector(i, ii);
-                        output.AddPiece(MakePiece(field[i, ii].Type, field[i, ii].Colour, field[i, ii].HasMoved), pieceCopyPosition);
+                        copy.AddPiece(MakePiece(field[i, ii].Type, field[i, ii].Colour, field[i, ii].HasMoved), pieceCopyPosition);
                     }
-            return output;
+            return copy;
         }
     }
 }
