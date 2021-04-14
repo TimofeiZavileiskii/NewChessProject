@@ -241,6 +241,12 @@ namespace NewChessProject
             DrawGame();
         }
 
+        public void Update()
+        {
+            DrawGame();
+        }
+
+
         public void Clicked(object sender, MouseButtonEventArgs e)
         {
             int x = (int)Math.Floor((double)e.GetPosition(canvas).X / squareWidth);

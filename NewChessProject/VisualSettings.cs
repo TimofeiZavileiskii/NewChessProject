@@ -16,6 +16,8 @@ namespace NewChessProject
     {
         const string visualSettingsFileName = "visualSettings.txt";
 
+        GUIBoard guiBoard;
+
         Color blackBoardSquares;
         Color whiteBoardSquares;
         Color defendedHilight;
