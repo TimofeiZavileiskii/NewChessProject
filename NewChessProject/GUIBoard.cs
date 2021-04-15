@@ -19,6 +19,7 @@ namespace NewChessProject
 
         BitmapImage[,] pieceTiles;
         GameRepresentation gr;
+        VisualSettings visualSettings;
 
         public event EventHandler<BoardClickedEventArgs> OnBoardClicked;
         public event EventHandler OnWindowClicked;
@@ -118,13 +119,40 @@ namespace NewChessProject
                 squareHeight = squareWidth;
         }
 
+        private Color GetHilightColor(HilightType type)
+        {
+            Color output = Color.FromRgb(0, 0, 0);
+            switch(type)
+            {
+                case HilightType.Check:
+                    output = visualSettings.CheckHilight;
+                    break;
+                case HilightType.SelectedPiece:
+                    output = visualSettings.SelectedPieceHilight;
+                    break;
+                case HilightType.SafeMove:
+                    output = visualSettings.MoveHilight;
+                    break;
+                case HilightType.DefendedMove:
+                    output = visualSettings.DefendedHilight;
+                    break;
+                case HilightType.ThreatenedMove:
+                    output = visualSettings.AttackedHilight;
+                    break;
+                  
+            }
+
+            return output;
+
+        }
+
         private void DrawGame()
         {
             canvas.Children.Clear();
             DrawBoard();
             foreach (BoardIndicator highlight in gr.PieceHilights)
             {
-                DrawSquare(highlight.Position.X, GetYCoordinate(highlight.Position.Y), highlight.Colour);
+                DrawSquare(highlight.Position.X, GetYCoordinate(highlight.Position.Y), GetHilightColor(highlight.Type));
             }
             foreach (PieceRepresentation piece in gr.Pieces)
             {
@@ -132,7 +160,7 @@ namespace NewChessProject
             }
             foreach (BoardIndicator move in gr.Moves)
             {
-                DrawPosition(move.Position.X, GetYCoordinate(move.Position.Y), move.Colour);
+                DrawPosition(move.Position.X, GetYCoordinate(move.Position.Y), GetHilightColor(move.Type));
             }
         }
 

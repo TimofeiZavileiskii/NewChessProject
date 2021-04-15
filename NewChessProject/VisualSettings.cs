@@ -12,11 +12,30 @@ using System.Windows.Shapes;
 
 namespace NewChessProject
 {
+    enum ColourThemes
+    {
+        Standard,
+        ExtraContrast,
+        BlueTheme,
+        GreenTheme
+    }
+
+    enum PieceTileset
+    {
+        Classical
+    }
+
     class VisualSettings
     {
         const string visualSettingsFileName = "visualSettings.txt";
 
         GUIBoard guiBoard;
+
+        ColourThemes selectedColourTheme;
+        PieceTileset pieceTileset;
+
+        List<ColourThemes> possibleColourThemes;
+        List<PieceTileset> possiblePieceTilesets;
 
         Color blackBoardSquares;
         Color whiteBoardSquares;
@@ -25,6 +44,29 @@ namespace NewChessProject
         Color moveHilight;
         Color checkHilight;
         Color selectedPieceHilight;
+
+
+        public List<ColourThemes> PossibleColourSchemes
+        {
+            get { return possibleColourThemes; }
+        }
+        public List<PieceTileset> PossiblePieceTilesets
+        {
+            get { return possiblePieceTilesets; }
+        }
+
+
+        public ColourThemes ColourTheme
+        {
+            get { return selectedColourTheme; }
+            set { selectedColourTheme = value; }
+        }
+
+        public PieceTileset PieceTileset
+        {
+            get { return pieceTileset; }
+            set { pieceTileset = value; }
+        }
 
         public Color BlackBoardSquares
         {
