@@ -60,14 +60,17 @@ namespace NewChessProject
 
         public override void RequestSend(object sender, RequestMadeEventArgs e)
         {
-            switch (e.Request.Type)
+            if (e.Request.ToWhichPlayer == Colour)
             {
-                case(RequestType.ProposeTakeback):
-                    e.Request.Agreed = true;
-                    break;
-                case (RequestType.OfferDraw):
-                    e.Request.Agreed = EvaluateDraw();
-                    break;
+                switch (e.Request.Type)
+                {
+                    case (RequestType.ProposeTakeback):
+                        e.Request.Agreed = true;
+                        break;
+                    case (RequestType.OfferDraw):
+                        e.Request.Agreed = EvaluateDraw();
+                        break;
+                }
             }
         }
 

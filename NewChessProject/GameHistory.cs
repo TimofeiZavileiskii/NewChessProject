@@ -49,11 +49,21 @@ namespace NewChessProject
             return !(repetitions < maxPositions);
         }
 
-        public FENPosition ReverseMove()
+        public FENPosition ReverseMove(int movesToGoBack)
         {
-            previousPositions.Pop();
-            previousPositions.Pop();
-            return previousPositions.Peek();
+            if (previousPositions.Count > movesToGoBack)
+            {
+                for (int i = 0; i < movesToGoBack; i++)
+                {
+                    previousPositions.Pop();
+                }
+
+                return previousPositions.Peek();
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+
+
+
 
 namespace NewChessProject
 {
@@ -417,21 +421,38 @@ namespace NewChessProject
 
         public void OfferDraw(PlayerColour colour)
         {
-            Request request = new Request(RequestType.OfferDraw, "Agree to the draw?");
+            Request request = new Request(RequestType.OfferDraw, "Agree to the draw?", Board.ReverseColour(colour));
             MakeRequest(request);
             if (request.Agreed)
                 GameEnded(MoveResult.Draw, null);
         }
 
-        public void TakeBack(PlayerColour colour)
+        public bool TakeBack(PlayerColour colour)
         {
-            Request request = new Request(RequestType.ProposeTakeback, "Accept takeback from " + colour.ToString() + " player");
+            Request request = new Request(RequestType.ProposeTakeback, "Accept takeback from " + colour.ToString() + " player", Board.ReverseColour(colour));
             MakeRequest(request);
             if (request.Agreed)
             {
-                ImportGame(gameHistory.ReverseMove());
-                GenerateMoves();
+                int reverseMoves = 2;
+                if(IdentifyPlayersColour(gameState) != colour)
+                {
+                    reverseMoves = 1;
+                }
+
+                FENPosition lastPosition = gameHistory.ReverseMove(reverseMoves);
+
+                if (lastPosition != null)
+                {
+                    ImportGame(lastPosition);
+                    GenerateMoves();
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("There is no previous move to return to.");
+                }
             }
+            return false;
         }
 
         public PieceType GetPieceType(Vector location)

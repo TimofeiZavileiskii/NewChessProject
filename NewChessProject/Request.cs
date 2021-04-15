@@ -17,7 +17,13 @@ namespace NewChessProject
         string text;
         string title;
         RequestType type;
+        PlayerColour toWhichPlayer;
         public bool Agreed { get; set; }
+
+        public PlayerColour ToWhichPlayer
+        {
+            get { return toWhichPlayer; }
+        }
 
         public string Text{ 
             get { return text; } 
@@ -33,8 +39,9 @@ namespace NewChessProject
             get { return type; }
         }
 
-        public Request(RequestType type, string text, string title = "")
+        public Request(RequestType type, string text, PlayerColour toWhichPlayer, string title = "")
         {
+            this.toWhichPlayer = toWhichPlayer;
             this.text = text;
             this.title = title;
             this.type = type;

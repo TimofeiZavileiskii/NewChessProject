@@ -211,14 +211,17 @@ namespace NewChessProject
 
         public override void RequestSend(object sender, RequestMadeEventArgs e)
         {
-            if(state == State.WaitForMove)
+            if(e.Request.ToWhichPlayer == Colour)
                 guiBoard.MakeRequest(e.Request);
         }
 
         public void RequestTakeback(object sender, EventArgs e)
         {
-            game.TakeBack(Colour);
+            bool result = game.TakeBack(Colour);
             GameRepresentationUpdated();
+            if (result)
+                state = State.SelectPiece;
+
         }
 
         override public void GameEnded(object sender, GameEndedEventArgs e)
