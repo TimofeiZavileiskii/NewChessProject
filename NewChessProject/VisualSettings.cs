@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace NewChessProject
 {
-    enum ColourThemes
+    public enum ColourThemes
     {
         Standard,
         ExtraContrast,
@@ -20,16 +20,17 @@ namespace NewChessProject
         GreenTheme
     }
 
-    enum PieceTileset
+    public enum PieceTileset
     {
         Classical
     }
 
-    class VisualSettings
-    {
-        const string visualSettingsFileName = "visualSettings.txt";
 
-        GUIBoard guiBoard;
+    public class VisualSettings
+    {
+        public event EventHandler SettingUpdated;
+
+        const string visualSettingsFileName = "visualSettings.txt";
 
         ColourThemes selectedColourTheme;
         PieceTileset pieceTileset;
@@ -45,6 +46,7 @@ namespace NewChessProject
         Color checkHilight;
         Color selectedPieceHilight;
 
+        int movementAnimationSpeed;
 
         public List<ColourThemes> PossibleColourSchemes
         {
@@ -52,56 +54,62 @@ namespace NewChessProject
         }
         public List<PieceTileset> PossiblePieceTilesets
         {
-            get { return possiblePieceTilesets; }
+            get 
+            { return possiblePieceTilesets; }
         }
 
-
+        public int MovementAnimationSpeed
+        {
+            get { return movementAnimationSpeed; }
+            set 
+            { 
+                movementAnimationSpeed = value;
+                Console.WriteLine(movementAnimationSpeed);
+            }
+        }
         public ColourThemes ColourTheme
         {
             get { return selectedColourTheme; }
-            set { selectedColourTheme = value; }
+            set { selectedColourTheme = value;
+                Console.WriteLine(selectedColourTheme);
+            }
         }
 
         public PieceTileset PieceTileset
         {
             get { return pieceTileset; }
-            set { pieceTileset = value; }
+            set { pieceTileset = value;
+                Console.WriteLine(pieceTileset);
+            }
         }
 
         public Color BlackBoardSquares
         {
             get {return blackBoardSquares; }
-            set { blackBoardSquares = value; }
         }
         public Color WhiteBoardSquares
         {
             get { return whiteBoardSquares; }
-            set { whiteBoardSquares = value; }
         }
         public Color DefendedHilight
         {
             get { return defendedHilight; }
-            set { defendedHilight = value; }
         }
         public Color AttackedHilight
         {
             get { return attackedHilight; }
-            set { attackedHilight = value; }
         }
         public Color MoveHilight
         {
             get { return moveHilight; }
-            set { moveHilight = value; }
         }
         public Color CheckHilight
         {
             get { return checkHilight; }
-            set { checkHilight = value; }
         }
         public Color SelectedPieceHilight
         {
             get { return selectedPieceHilight; }
-            set { selectedPieceHilight = value; }
         }
 
 
@@ -112,6 +120,9 @@ namespace NewChessProject
                 ReadVisualSettings();
             else
                 SetDefaultSettings();
+
+            possibleColourThemes = ((ColourThemes[])Enum.GetValues(typeof(ColourThemes))).ToList<ColourThemes>();
+            possiblePieceTilesets = ((PieceTileset[])Enum.GetValues(typeof(PieceTileset))).ToList<PieceTileset>();
         }
 
         private void ReadVisualSettings()
@@ -124,6 +135,12 @@ namespace NewChessProject
             moveHilight = ConvertStringToColor(file.ReadLine());
             selectedPieceHilight = ConvertStringToColor(file.ReadLine());
             checkHilight = ConvertStringToColor(file.ReadLine());
+
+            /*
+            selectedColourTheme = file.ReadLine();
+            pieceTileset = file.ReadLine();
+            movementAnimationSpeed = file.ReadLine();
+            */
             file.Close();
         }
 
@@ -158,6 +175,7 @@ namespace NewChessProject
             return Color.FromRgb((byte)red, (byte)green, (byte)blue);
         }
 
+
         private void SetDefaultSettings()
         {
             blackBoardSquares = Color.FromRgb(90, 100, 90);
@@ -167,12 +185,15 @@ namespace NewChessProject
             moveHilight = Color.FromRgb(200, 200, 50);
             selectedPieceHilight = Color.FromRgb(50, 230, 50);
             checkHilight = Color.FromRgb(180, 40, 40);
+
+            selectedColourTheme = ColourThemes.Standard;
+            pieceTileset = PieceTileset.Classical;
+            movementAnimationSpeed = 8;
+            
         }
 
         public void WriteVisualSettings()
         {
-            SetDefaultSettings();
-
             System.IO.StreamWriter file = new System.IO.StreamWriter(visualSettingsFileName);
 
             Console.WriteLine(blackBoardSquares);
@@ -185,6 +206,11 @@ namespace NewChessProject
             file.WriteLine(moveHilight);
             file.WriteLine(selectedPieceHilight);
             file.WriteLine(checkHilight);
+
+            file.WriteLine(selectedColourTheme);
+            file.WriteLine(pieceTileset);
+            file.WriteLine(movementAnimationSpeed);
+
             file.Close();
         }
     }

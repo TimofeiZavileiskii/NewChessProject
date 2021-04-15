@@ -17,11 +17,16 @@ namespace NewChessProject
     /// <summary>
     /// Interaction logic for VisualSettingsWindow.xaml
     /// </summary>
-    public partial class VisualSettingsWindow : Window
+    partial class VisualSettingsWindow : Window
     {
-        public VisualSettingsWindow()
+        VisualSettings visualSettings;
+
+        public VisualSettingsWindow(VisualSettings vs)
         {
             InitializeComponent();
+
+            visualSettings = vs;
+            DataContext = vs;
         }
     }
 }

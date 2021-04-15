@@ -68,7 +68,7 @@ namespace NewChessProject
             RequestDraw += requestDraw;
         }
 
-        public GUIBoard(Canvas canvas, WrapPanel pieceSelection, MainWindow window)
+        public GUIBoard(Canvas canvas, WrapPanel pieceSelection, MainWindow window, VisualSettings vs)
         {
             this.canvas = canvas;
             this.pieceSelection = pieceSelection;
@@ -76,6 +76,7 @@ namespace NewChessProject
             canvas.SizeChanged += ChangeDimensions;
             canvas.MouseLeftButtonDown += Clicked;
             flipBoard = false;
+            visualSettings = vs;
 
             GetPieceTiles();
             Resize();
@@ -221,6 +222,11 @@ namespace NewChessProject
             Canvas.SetTop(pieceImage, GetYCoordinate(piece.Position.Y) * squareHeight);
 
             canvas.Children.Add(pieceImage);
+        }
+
+        public void RedrawBoard(object sender, EventArgs e)
+        {
+            Update();
         }
 
         public void RecieveDrawRequest(object sender, RoutedEventArgs e)

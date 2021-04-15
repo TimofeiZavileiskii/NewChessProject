@@ -19,9 +19,9 @@
             <Label Content="Animations:" Margin="0, 10, 0, 0"/>
         </StackPanel>
         <StackPanel x:Name="Settings" Grid.Column="1" Margin="0, 10, 0, 0">
-            <ComboBox ItemsSource="{Binding PossibleBoardColours}" SelectedItem="{Binding BoardColours}" Margin="0, 13, 0, 0"/>
-            <ComboBox ItemsSource="{Binding PossibleBoardColours}" SelectedItem="{Binding PieceTileset}" Margin="0, 13, 0, 0"/>
-            <ComboBox ItemsSource="{Binding PossibleBoardColours}" SelectedItem="{Binding BoardColours}" Margin="0, 13, 0, 0"/>
+            <ComboBox ItemsSource="{Binding PossibleColourSchemes}" SelectedItem="{Binding ColourTheme}" Margin="0, 13, 0, 0"/>
+            <ComboBox ItemsSource="{Binding PossiblePieceTilesets}" SelectedItem="{Binding PieceTileset}" Margin="0, 13, 0, 0"/>
+            <Slider Value="{Binding MovementAnimationSpeed}" Margin="0, 13, 0, 0"/>
         </StackPanel>
         <StackPanel x:Name="ColourExamples" Grid.Column="2" Margin="0, 10, 0, 0">
             

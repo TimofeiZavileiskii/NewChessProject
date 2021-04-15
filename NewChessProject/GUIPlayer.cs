@@ -161,14 +161,14 @@ namespace NewChessProject
             {
                 foreach (Vector vec in allowedPositions)
                 {
-                    Color moveColour = Color.FromRgb(30, 220, 50); //All moves have green colour
+                    HilightType tileType = HilightType.SafeMove; //All moves have green colour
                     if (assistance != AssistanceLevel.HilightMoves && game.CheckForAttackFrom(Board.ReverseColour(Colour), selectedPiece, vec))
                     {
-                        moveColour = Color.FromRgb(200, 80, 50); //Moves under attack get red colour
+                        tileType = HilightType.ThreatenedMove; //Moves under attack get red colour
                         if (assistance != AssistanceLevel.HilightThreats && game.CheckForDefence(Colour, selectedPiece, vec))
-                            moveColour = Color.FromRgb(200, 200, 50); //Moves under attack and under defence get yellow colour
+                            tileType = HilightType.DefendedMove; //Moves under attack and under defence get yellow colour
                     }
-                    output.Add(new BoardIndicator(vec, moveColour));
+                    output.Add(new BoardIndicator(vec, tileType));
                 }
             }
 
@@ -281,9 +281,9 @@ namespace NewChessProject
             List<BoardIndicator> output = new List<BoardIndicator>();
 
             if (selectedPiece != Vector.NullVector)
-                output.Add(new BoardIndicator(selectedPiece, Color.FromRgb(50, 230, 50)));
+                output.Add(new BoardIndicator(selectedPiece, HilightType.SelectedPiece));
             if (check != Vector.NullVector)
-                output.Add(new BoardIndicator(check, Color.FromRgb(180, 40, 40)));
+                output.Add(new BoardIndicator(check, HilightType.Check));
 
             return output;
         }

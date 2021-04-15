@@ -18,6 +18,9 @@ namespace NewChessProject
         GameCreator gc;
         GUIBoard guiBoard;
         Game game;
+        
+        VisualSettingsWindow settingsWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -26,8 +29,13 @@ namespace NewChessProject
             Settings.Visibility = Visibility.Visible;
             ImportButton.Visibility = Visibility.Visible;
 
-            guiBoard = new GUIBoard(Screen, PieceSelection, this);
+
             AdditionalSettings additionalSettings = new AdditionalSettings(AdditionalSettings);
+            VisualSettings vs = new VisualSettings();
+
+            guiBoard = new GUIBoard(Screen, PieceSelection, this, vs);
+            settingsWindow = new VisualSettingsWindow(vs);
+            settingsWindow.Show();
 
             gc = new GameCreator(guiBoard, this, additionalSettings, InGameInterface);
             game = gc.GetGame();
