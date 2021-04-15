@@ -32,6 +32,16 @@ namespace NewChessProject
         WaitForMove
     }
 
+    enum HilightType
+    {
+        SafeMove,
+        DefendedMove,
+        ThreatenedMove,
+        Check,
+        SelectedPiece
+    }
+
+
     class GUIPlayer : HumanPlayer
     {
         GUIBoard guiBoard;

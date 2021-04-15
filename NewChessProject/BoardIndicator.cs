@@ -13,12 +13,12 @@ namespace NewChessProject
     struct BoardIndicator
     {
         Vector vector;
-        Color colour;
+        HilightType type;
 
-        public BoardIndicator(Vector vector, Color colour)
+        public BoardIndicator(Vector vector, HilightType type)
         {
             this.vector = vector;
-            this.colour = colour;
+            this.type = type;
         }
 
         public Vector Position
@@ -29,11 +29,11 @@ namespace NewChessProject
             }
         }
 
-        public Color Colour
+        public HilightType Type
         {
             get
             {
-                return colour;
+                return type;
             }
         }
 
