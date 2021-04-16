@@ -35,7 +35,6 @@ namespace NewChessProject
 
             guiBoard = new GUIBoard(Screen, PieceSelection, this, vs);
             settingsWindow = new VisualSettingsWindow(vs);
-            settingsWindow.Show();
 
             gc = new GameCreator(guiBoard, this, additionalSettings, InGameInterface);
             game = gc.GetGame();
@@ -79,6 +78,11 @@ namespace NewChessProject
         private void WindowClosed(object sender, EventArgs e)
         {
             game.EndImmediatly();
+        }
+
+        private void OpenSettings(object sender, RoutedEventArgs e)
+        {
+            settingsWindow.Show();
         }
     }
 }
