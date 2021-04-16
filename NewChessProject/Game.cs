@@ -58,6 +58,15 @@ namespace NewChessProject
         InsufficientMaterial
     }
 
+    /*title This is a title
+
+GameCreator->Game:StartGame
+Game->Board:GenerateMoves(PlayerColour currentPlayer)
+Game->Board:GenerateMoves(PlayerColour OppositeColour(currentPlayer))
+Game->Board:FilterMovesByCheck(PlayerColour currentPlayer)
+Game->Board:GenerateMoves
+*/
+
     class Game : INotifyPropertyChanged
     {
 
