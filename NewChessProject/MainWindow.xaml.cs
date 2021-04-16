@@ -20,6 +20,7 @@ namespace NewChessProject
         Game game;
         
         VisualSettingsWindow settingsWindow;
+        VisualSettings visualSettings;
 
         public MainWindow()
         {
@@ -31,10 +32,9 @@ namespace NewChessProject
 
 
             AdditionalSettings additionalSettings = new AdditionalSettings(AdditionalSettings);
-            VisualSettings vs = new VisualSettings();
+            visualSettings = new VisualSettings();
 
-            guiBoard = new GUIBoard(Screen, PieceSelection, this, vs);
-            settingsWindow = new VisualSettingsWindow(vs);
+            guiBoard = new GUIBoard(Screen, PieceSelection, this, visualSettings);
 
             gc = new GameCreator(guiBoard, this, additionalSettings, InGameInterface);
             game = gc.GetGame();
@@ -82,6 +82,7 @@ namespace NewChessProject
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
+            settingsWindow = new VisualSettingsWindow(visualSettings);
             settingsWindow.Show();
         }
     }

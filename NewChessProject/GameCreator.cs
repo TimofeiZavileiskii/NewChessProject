@@ -192,7 +192,7 @@ namespace NewChessProject
 
         private void PrepareForGameRestart(object sender, EventArgs e)
         {
-            game = new Game(new Board());
+            game = new Game();
             game.ResetGame += PrepareForGameRestart;
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
             guiBoard.FlipBoard = false;
@@ -204,7 +204,7 @@ namespace NewChessProject
         }
 
 
-        public GameCreator(GUIBoard guiBoard, MainWindow gameWindow, AdditionalSettings adSett, StackPanel inGameInterface)
+        public GameCreator(GUIBoard guiBoard, MainWindow gameWindow, AdditionalSettings aditionalSettings, StackPanel inGameInterface)
         {
             this.guiBoard = guiBoard; 
             this.inGameInterface = inGameInterface;
@@ -216,10 +216,10 @@ namespace NewChessProject
 
             gameWindow.SetSettingsMenu();
 
-            additionalSettings = adSett;
+            this.additionalSettings = aditionalSettings;
 
             possiblePlayerTypes = ((PlayerType[])Enum.GetValues(typeof(PlayerType))).ToList();
-            game = new Game(new Board());
+            game = new Game();
             game.ResetGame += PrepareForGameRestart;
             guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
             importFENString = "";

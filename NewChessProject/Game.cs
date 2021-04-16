@@ -127,9 +127,9 @@ namespace NewChessProject
             return output;
         }
 
-        public Game(Board board)
+        public Game()
         {
-            this.board = board;
+            board = new Board();
             board.SetDefaultBoardPosition();
 
             gameState = GameState.WhiteMove;
