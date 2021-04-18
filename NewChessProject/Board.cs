@@ -162,19 +162,6 @@ namespace NewChessProject
             }
         }
 
-        public bool HasSufficientMaterial(PlayerColour colour)
-        {
-            List<Piece> playersPieces = new List<Piece>();
-
-            for(int i = 0; i < boardWidth; i++)
-                for(int ii = 0; ii < boardHeight; ii++)
-                    if(this[i, ii] != null)
-                        if(this[i, ii].Colour == colour)
-                            playersPieces.Add(this[i, ii]);
-
-            return false;
-        }
-
         private Piece MakePiece(PieceType type, PlayerColour colour, bool hasMoved = true)
         {
             return PieceFactory.ProducePiece(type, colour, hasMoved);
@@ -369,6 +356,7 @@ namespace NewChessProject
                 pieces[(int)colour] = allPieces.Where(piece => piece.Colour == colour).ToList();
             }
 
+            //If there is only 1 piece then it is a king, then there is defenetly not enough material for a checkmate
             if (pieces[(int)checkedPlayersColour].Count == 1)
             {
                 output = true;
@@ -379,12 +367,12 @@ namespace NewChessProject
                 bool lackOfMaterial = false;
                 if (pieces[(int)checkedPlayersColour].Count == 2)
                 {
-                    lackOfMaterial = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Bishop || x.Type == PieceType.Knight).ToList().Count == 1;
+                    lackOfMaterial = pieces[(int)checkedPlayersColour].Where(piece => piece.Type == PieceType.Bishop || piece.Type == PieceType.Knight).ToList().Count == 1;
                 }
                 else if (pieces[(int)checkedPlayersColour].Count == 3)
                 {
-                    List<PieceRepresentation> bishopList = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Bishop).ToList();
-                    List<PieceRepresentation> knightList = pieces[(int)checkedPlayersColour].Where(x => x.Type == PieceType.Knight).ToList();
+                    List<PieceRepresentation> bishopList = pieces[(int)checkedPlayersColour].Where(piece => piece.Type == PieceType.Bishop).ToList();
+                    List<PieceRepresentation> knightList = pieces[(int)checkedPlayersColour].Where(piece => piece.Type == PieceType.Knight).ToList();
 
                     //Checks if there are only 2 knights left - checkmate is impossible with 2 knights
                     if (knightList.Count == 2)

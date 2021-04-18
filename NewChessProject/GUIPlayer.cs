@@ -236,12 +236,12 @@ namespace NewChessProject
 
         override public void GameEnded(object sender, GameEndedEventArgs e)
         {
-            if(state != State.WaitForMove)
-            {
-                state = State.WaitForMove;
-            }
             ResetMove();
-            GameRepresentationUpdated();
+
+            if(oneHumanPlayer || state != State.WaitForMove) 
+                GameRepresentationUpdated();
+
+            state = State.WaitForMove;
         }
 
         public void OnBoardClicked(object sender, BoardClickedEventArgs e)
@@ -287,6 +287,7 @@ namespace NewChessProject
 
             return output;
         }
+
         public void OnWindowClicked(object sender, EventArgs e)
         {
             InputAction(Vector.NullVector, Input.ClickNothing);
