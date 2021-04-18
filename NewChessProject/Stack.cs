@@ -12,6 +12,7 @@ namespace NewChessProject
         Type[] array;
         int top;
         int length;
+        const int minLength = 4;
 
         public int Count
         {
@@ -21,7 +22,7 @@ namespace NewChessProject
             }
         }
 
-        public Stack(int length = 4)
+        public Stack(int length = minLength)
         {
             this.length = length;
             array = new Type[length];
@@ -73,7 +74,8 @@ namespace NewChessProject
         public bool IsEmpty()
         {
             bool output = false;
-            if (top == 0) output = true;
+            if (top == 0) 
+                output = true;
             return output;
         }
 

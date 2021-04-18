@@ -14,9 +14,16 @@ namespace NewChessProject
             set;
         }
 
-        public GameStartEventArgs(bool oneHumanPlayer) : base()
+        public PlayerColour StartingPlayer
+        {
+            get;
+            set;
+        }
+
+        public GameStartEventArgs(bool oneHumanPlayer, PlayerColour colour) : base()
         {
             OneHumanPlayer = oneHumanPlayer;
+            StartingPlayer = colour;
         }
     }
     class MadeMoveEventArgs : EventArgs

@@ -68,20 +68,19 @@ namespace NewChessProject
             check = Vector.NullVector;
             selectedPiece = Vector.NullVector;
             CreateStateMachine();
-            if (colour == PlayerColour.White)
-            {
-                state = State.SelectPiece;
-                SetMySelfAsGUIUser();
-            }
-            else
-            {
-                state = State.WaitForMove;
-            }
         }
 
         public void StartGame(object sender, GameStartEventArgs e)
         {
             oneHumanPlayer = e.OneHumanPlayer;
+            if (colour == e.StartingPlayer)
+            {
+                state = State.SelectPiece;
+                SetMySelfAsGUIUser();
+            }
+            else
+                state = State.WaitForMove;
+
             if (e.OneHumanPlayer && colour == PlayerColour.Black)
             {
                 GameRepresentationUpdated();
@@ -140,6 +139,7 @@ namespace NewChessProject
         private void SetMySelfAsGUIUser()
         {
             guiBoard.SetNewUser(OnBoardClicked, OnWindowClicked, PieceSelected, Resign, RequestTakeback, RequestDraw);
+            GameRepresentationUpdated();
         }
 
         private void ThrowException(Vector vec)

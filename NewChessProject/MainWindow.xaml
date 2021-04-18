@@ -52,8 +52,6 @@
                 <Label Content="Black player:" HorizontalAlignment="Right" FontSize="15"></Label>
                 <Label Content="Initial time (min):" Margin="0,20,0,0" HorizontalAlignment="Right" FontSize="15"></Label>
                 <Label Content="Time per turn (sec):" HorizontalAlignment="Right" FontSize="15"></Label>
-                <Label Content="Touch rule:" Margin="0,30,0,0" HorizontalAlignment="Right" FontSize="15"></Label>
-                <Label Content="Drag pieces:" HorizontalAlignment="Right" FontSize="15"></Label>
             </StackPanel>
 
             <StackPanel x:Name="SettingsSelection" Orientation="Vertical" Visibility="Visible">
@@ -61,8 +59,6 @@
                 <ComboBox Margin="5,7,0,0" Width="100" Height="25" Name ="BlackPlayerSelection" ItemsSource="{Binding PossiblePlayerTypes}" SelectedItem="{Binding BlackPlayerType}"/>
                 <TextBox x:Name="InitialTimeBox" Margin="5,28,0,0" Text="{Binding InitialTime, Mode = TwoWay}"/>
                 <TextBox x:Name="TimePerTurnBox" Margin="5,12,0,0" Text="{Binding TimePerTurn, Mode = TwoWay}"/>
-                <CheckBox x:Name="TouchRuleBox" Margin="5,43,0,0"  IsChecked="{Binding TouchRule, Mode = TwoWay}"/>
-                <CheckBox x:Name="CarryPiecesBox" Margin="5,16,0,0" IsChecked="{Binding CarryPieces, Mode = TwoWay}"/>
             </StackPanel>
 
             <StackPanel x:Name="AdditionalSettings" Orientation="Vertical" Visibility="Visible">

@@ -164,7 +164,7 @@ namespace NewChessProject
 
             gameHistory.Add(GetFENPosition());
 
-            GameStarted?.Invoke(this, new GameStartEventArgs(oneHumanPlayer));
+            GameStarted?.Invoke(this, new GameStartEventArgs(oneHumanPlayer, IdentifyPlayersColour(gameState)));
         }
 
         private void GameEnded(MoveResult endReason, PlayerColour? winner)
@@ -173,6 +173,14 @@ namespace NewChessProject
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
             ResetGame?.Invoke(this, EventArgs.Empty);
+        }
+
+        private PlayerColour FENPlayerToMove(FENPosition fenPos)
+        {
+            PlayerColour output = PlayerColour.White;
+            if (fenPos.CurrentPlayer == "b")
+                output = PlayerColour.Black;
+            return PlayerColour.White;
         }
 
         public void EndImmediatly()
@@ -188,6 +196,7 @@ namespace NewChessProject
                   timer.Terminate();
         }
 
+        //The event called by timers to update the values, used in properties
         private void UpdateTime(object sender, EventArgs e)
         {
             timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
@@ -377,6 +386,8 @@ namespace NewChessProject
             bool uniqueKings = Regex.Matches(splitString[0], @"k").Count == 1 && Regex.Matches(splitString[0], @"K").Count == 1;
 
             bool correctLength = true;
+
+            //Checks that length of each row is correct
             foreach(string row in splitString[0].Split('/'))
             {
                 int numbersSum = 0;
@@ -391,7 +402,21 @@ namespace NewChessProject
                     break;
             }
 
-            return correctFormat && uniqueKings && correctLength;
+            //Checks that no pawn is standing on the square, where it has to promote
+            bool noPawnsNeedToPromote = !splitString[0].Split('/')[0].Contains("P") && !splitString[0].Split('/')[Board.boardHeight - 1].Contains("p");
+
+            //Checks that king of the player, who cannot move right now, is not in check
+            //It requires to generatePositions
+            Board testBoard = new Board();
+            FENPosition testedFENPosition = new FENPosition(fenString);
+            testBoard.UploadFENPosition(testedFENPosition);
+
+            PlayerColour currentTurn = FENPlayerToMove(testedFENPosition);
+            testBoard.GenerateMoves(currentTurn);
+
+            bool kingIsSafe = !testBoard.IsChecked(Board.ReverseColour(currentTurn));
+
+            return correctFormat && uniqueKings && correctLength && noPawnsNeedToPromote && noPawnsNeedToPromote && kingIsSafe;
         }
 
         //Sets the current game to the state specified by the passed FEN string

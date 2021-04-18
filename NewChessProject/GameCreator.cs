@@ -82,8 +82,6 @@ namespace NewChessProject
         string importFENString;
         double initialTime;
         double timePerTurn;
-        bool touchRule;
-        bool carryPieces;
 
         List<PlayerType> possiblePlayerTypes;
         PlayerType whitePlayerType;
@@ -111,28 +109,6 @@ namespace NewChessProject
             set
             {
                 timePerTurn = Convert.ToDouble(value);
-            }
-        }
-        public bool TouchRule
-        {
-            get
-            {
-                return touchRule;
-            }
-            set
-            {
-                touchRule = value;
-            }
-        }
-        public bool CarryPieces
-        {
-            get
-            {
-                return carryPieces;
-            }
-            set
-            {
-                carryPieces = value;
             }
         }
         public string ImportedFENString
@@ -280,8 +256,6 @@ namespace NewChessProject
                 BlackPlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), file.ReadLine());
                 initialTime = Convert.ToDouble(file.ReadLine());
                 timePerTurn = Convert.ToDouble(file.ReadLine());
-                touchRule = Convert.ToBoolean(file.ReadLine());
-                carryPieces = Convert.ToBoolean(file.ReadLine());
 
                 file.Close();
             }
@@ -297,8 +271,6 @@ namespace NewChessProject
             blackPlayerType = PlayerType.GUIPlayer;
             initialTime = 30;
             timePerTurn = 0;
-            touchRule = false;
-            carryPieces = false;
         }
 
         private void WriteGameSettings()
@@ -308,8 +280,6 @@ namespace NewChessProject
             file.WriteLine(blackPlayerType);
             file.WriteLine(initialTime);
             file.WriteLine(timePerTurn);
-            file.WriteLine(touchRule);
-            file.WriteLine(carryPieces);
             file.Close();
         }
     }

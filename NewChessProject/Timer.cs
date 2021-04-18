@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Threading;
-using System.Threading.Tasks;
 
 namespace NewChessProject
 {

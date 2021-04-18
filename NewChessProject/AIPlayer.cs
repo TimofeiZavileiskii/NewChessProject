@@ -51,7 +51,10 @@ namespace NewChessProject
 
         public override void GameEnded(object sender, GameEndedEventArgs e)
         {
-            readerThread.Abort();
+            if (readerThread != null)
+            {
+                readerThread.Abort();
+            }
         }
 
         public override void OnMadeMove(object sender, MadeMoveEventArgs e)
