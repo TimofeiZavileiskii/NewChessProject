@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Stack.cs" />
     <Compile Include="VisualSettings.cs" />
     <Compile Include="VisualSettingsWindow.xaml.cs">
       <DependentUpon>VisualSettingsWindow.xaml</DependentUpon>
@@ -82,7 +83,6 @@
     <Compile Include="GameCreator.cs" />
     <Compile Include="GameRepresentation.cs" />
     <Compile Include="GUIPlayer.cs" />
-    <Compile Include="HumanPlayer.cs" />
     <Compile Include="King.cs" />
     <Compile Include="Knight.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -98,7 +98,6 @@
     <Compile Include="ManyStepPiece.cs" />
     <Compile Include="BoardIndicator.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="NetworkPlayer.cs" />
     <Compile Include="OneStepPiece.cs" />
     <Compile Include="Participant.cs" />
     <Compile Include="Pawn.cs" />

@@ -404,7 +404,7 @@ namespace NewChessProject
             return output;
         }
 
-        //Returns all the information on the board
+        //Returns FEN string with all the information, for which Board class is responsible
         public FENPosition GetFENInformation()
         {
             FENPosition output = new FENPosition();

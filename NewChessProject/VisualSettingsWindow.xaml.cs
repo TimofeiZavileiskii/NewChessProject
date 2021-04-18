@@ -28,5 +28,10 @@ namespace NewChessProject
             visualSettings = vs;
             DataContext = vs;
         }
+
+        private void WindowClosed(object sender, EventArgs e)
+        {
+            visualSettings.WriteVisualSettings();
+        }
     }
 }

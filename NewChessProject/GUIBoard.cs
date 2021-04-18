@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,11 +9,18 @@ using System.Windows.Shapes;
 
 namespace NewChessProject
 {
-
     class GUIBoard
     {
+        static GUIBoard()
+        {
+            pieceAddressDictionary = new Dictionary<PieceTileset, string>();
+            pieceAddressDictionary.Add(PieceTileset.Classical, "Classical");
+            pieceAddressDictionary.Add(PieceTileset.Modern, "Modern");
+        }
+
         const double proportionOfMoveIndicator = 0.5;
 
+        static Dictionary<PieceTileset, string> pieceAddressDictionary;
 
         Canvas canvas;
         WrapPanel pieceSelection;
@@ -99,7 +107,7 @@ namespace NewChessProject
             {
                 foreach (int type in Enum.GetValues(typeof(PieceType)))
                 {
-                    string path = @"\Resources\" + Enum.GetName(typeof(PlayerColour), colour).Substring(0, 1)
+                    string path = @"\Resources\" + pieceAddressDictionary[visualSettings.PieceTileset] + "\\" + Enum.GetName(typeof(PlayerColour), colour).Substring(0, 1)
                          + Enum.GetName(typeof(PieceType), type) + ".png";
                     BitmapImage image = new BitmapImage(
                         new Uri($@"{ Environment.CurrentDirectory }{ path }"));
@@ -171,10 +179,10 @@ namespace NewChessProject
             {
                 for (int ii = 0; ii < Board.boardHeight; ii++)
                 {
-                    Color colour = Color.FromRgb(90, 100, 90);
+                    Color colour = visualSettings.BlackBoardSquares;
                     if (((i + Board.boardHeight * ii + ii) % 2) != 0)
                     {
-                        colour = Color.FromRgb(180, 200, 180);
+                        colour = visualSettings.WhiteBoardSquares;
                     }
                     DrawSquare(i, GetYCoordinate(ii), colour);
                 }
@@ -226,6 +234,7 @@ namespace NewChessProject
 
         public void RedrawBoard(object sender, EventArgs e)
         {
+            GetPieceTiles();
             Update();
         }
 

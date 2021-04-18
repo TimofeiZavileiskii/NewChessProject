@@ -42,7 +42,7 @@ namespace NewChessProject
     }
 
 
-    class GUIPlayer : HumanPlayer
+    class GUIPlayer : Player
     {
         GUIBoard guiBoard;
 

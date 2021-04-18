@@ -33,8 +33,10 @@ namespace NewChessProject
 
             AdditionalSettings additionalSettings = new AdditionalSettings(AdditionalSettings);
             visualSettings = new VisualSettings();
+            settingsWindow = new VisualSettingsWindow(visualSettings);
 
             guiBoard = new GUIBoard(Screen, PieceSelection, this, visualSettings);
+            visualSettings.SettingsUpdated += guiBoard.RedrawBoard;
 
             gc = new GameCreator(guiBoard, this, additionalSettings, InGameInterface);
             game = gc.GetGame();
@@ -78,12 +80,16 @@ namespace NewChessProject
         private void WindowClosed(object sender, EventArgs e)
         {
             game.EndImmediatly();
+            settingsWindow.Close();
         }
 
         private void OpenSettings(object sender, RoutedEventArgs e)
         {
-            settingsWindow = new VisualSettingsWindow(visualSettings);
-            settingsWindow.Show();
+            if (!settingsWindow.Activate())
+            {
+                settingsWindow = new VisualSettingsWindow(visualSettings);
+                settingsWindow.Show();
+            }
         }
     }
 }

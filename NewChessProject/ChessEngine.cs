@@ -83,7 +83,7 @@ namespace NewChessProject
             return output;
         }
 
-
+        //Outputs the string which will set boundaries for the AI search
         private string GetBoundary()
         {
             if(maximumTime != -1)
@@ -94,11 +94,6 @@ namespace NewChessProject
             {
                 return "depth " + maxumumDepth.ToString();
             }
-        }
-
-        private string TurnVectorToString(Vector vec)
-        {
-            return ((char)('a' + vec.X)).ToString() + (vec.Y + 1).ToString();
         }
 
         public int EvaluatePosition()

@@ -25,8 +25,6 @@ namespace NewChessProject
         static private class PlayerFactory
         {
             static readonly Dictionary<PlayerType, CreatePlayerDel> CreatePlayerFunctions;
-            const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
-
 
             delegate Player CreatePlayerDel(PlayerColour colour, GameCreator gc);
 
@@ -50,7 +48,7 @@ namespace NewChessProject
                     timePerTurn = -1;
                 }
 
-                AIPlayer player = new AIPlayer(colour, new ChessEngine(stockFishAddress, "StockFish", settings.Difficulty, timePerTurn), gc.game);
+                AIPlayer player = new AIPlayer(colour, gc.game, settings.Difficulty, timePerTurn);
 
                 gc.game.GameStarted += player.GameStarted;
                 gc.game.RequestMade += player.RequestSend;
@@ -194,8 +192,8 @@ namespace NewChessProject
         {
             game = new Game();
             game.ResetGame += PrepareForGameRestart;
-            guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
             guiBoard.FlipBoard = false;
+            guiBoard.Update(new GameRepresentation(game.GetPieceRepresentations()));
             gameWindow.SetSettingsMenu();
 
 

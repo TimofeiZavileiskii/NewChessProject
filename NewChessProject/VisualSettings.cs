@@ -16,19 +16,20 @@ namespace NewChessProject
     {
         Standard,
         ExtraContrast,
-        BlueTheme,
-        GreenTheme
+        ColdTheme,
+        WarmTheme
     }
 
     public enum PieceTileset
     {
-        Classical
+        Classical,
+        Modern,
     }
 
 
     public class VisualSettings
     {
-        public event EventHandler SettingUpdated;
+        public event EventHandler SettingsUpdated;
 
         const string visualSettingsFileName = "visualSettings.txt";
 
@@ -64,14 +65,13 @@ namespace NewChessProject
             set 
             { 
                 movementAnimationSpeed = value;
-                Console.WriteLine(movementAnimationSpeed);
             }
         }
         public ColourThemes ColourTheme
         {
             get { return selectedColourTheme; }
             set { selectedColourTheme = value;
-                Console.WriteLine(selectedColourTheme);
+                UpdateBoard();
             }
         }
 
@@ -79,7 +79,7 @@ namespace NewChessProject
         {
             get { return pieceTileset; }
             set { pieceTileset = value;
-                Console.WriteLine(pieceTileset);
+                UpdateBoard();
             }
         }
 
@@ -112,6 +112,10 @@ namespace NewChessProject
             get { return selectedPieceHilight[selectedColourTheme]; }
         }
 
+        public void UpdateBoard()
+        {
+            SettingsUpdated?.Invoke(this, EventArgs.Empty);
+        }
 
         private void SetColourThemesArrays()
         {
@@ -125,11 +129,35 @@ namespace NewChessProject
 
             blackBoardSquares.Add(ColourThemes.Standard, Color.FromRgb(90, 100, 90));
             whiteBoardSquares.Add(ColourThemes.Standard, Color.FromRgb(180, 200, 180));
-            defendedHilight.Add(ColourThemes.Standard, Color.FromRgb(30, 220, 50));
-            attackedHilight.Add(ColourThemes.Standard, Color.FromRgb(200, 80, 50));
-            moveHilight.Add(ColourThemes.Standard, Color.FromRgb(200, 200, 50));
+            defendedHilight.Add(ColourThemes.Standard, Color.FromRgb(210, 170, 0));
+            attackedHilight.Add(ColourThemes.Standard, Color.FromRgb(170, 60, 40));
+            moveHilight.Add(ColourThemes.Standard, Color.FromRgb(30, 220, 50));
             selectedPieceHilight.Add(ColourThemes.Standard, Color.FromRgb(50, 230, 50));
             checkHilight.Add(ColourThemes.Standard, Color.FromRgb(180, 40, 40));
+
+            blackBoardSquares.Add(ColourThemes.ExtraContrast, Color.FromRgb(87, 105, 84));
+            whiteBoardSquares.Add(ColourThemes.ExtraContrast, Color.FromRgb(214, 218, 200));
+            defendedHilight.Add(ColourThemes.ExtraContrast, Color.FromRgb(220, 180, 0));
+            attackedHilight.Add(ColourThemes.ExtraContrast, Color.FromRgb(165, 6, 22));
+            moveHilight.Add(ColourThemes.ExtraContrast, Color.FromRgb(88, 223, 78));
+            selectedPieceHilight.Add(ColourThemes.ExtraContrast, Color.FromRgb(100, 254, 89));
+            checkHilight.Add(ColourThemes.ExtraContrast, Color.FromRgb(160, 35, 35));
+
+            blackBoardSquares.Add(ColourThemes.WarmTheme, Color.FromRgb(188, 144, 56));
+            whiteBoardSquares.Add(ColourThemes.WarmTheme, Color.FromRgb(208, 194, 166));
+            defendedHilight.Add(ColourThemes.WarmTheme, Color.FromRgb(238, 214, 0));
+            attackedHilight.Add(ColourThemes.WarmTheme, Color.FromRgb(232, 70, 30));
+            moveHilight.Add(ColourThemes.WarmTheme, Color.FromRgb(142, 240, 44));
+            selectedPieceHilight.Add(ColourThemes.WarmTheme, Color.FromRgb(114, 209, 19));
+            checkHilight.Add(ColourThemes.WarmTheme, Color.FromRgb(195, 79, 2));
+
+            blackBoardSquares.Add(ColourThemes.ColdTheme, Color.FromRgb(125, 137, 164));
+            whiteBoardSquares.Add(ColourThemes.ColdTheme, Color.FromRgb(172, 205, 225));
+            defendedHilight.Add(ColourThemes.ColdTheme, Color.FromRgb(221, 242, 117));
+            attackedHilight.Add(ColourThemes.ColdTheme, Color.FromRgb(235, 104, 104));
+            moveHilight.Add(ColourThemes.ColdTheme, Color.FromRgb(110, 179, 144));
+            selectedPieceHilight.Add(ColourThemes.ColdTheme, Color.FromRgb(133, 255, 88));
+            checkHilight.Add(ColourThemes.ColdTheme, Color.FromRgb(220, 147, 162));
         }
 
         public VisualSettings()
@@ -178,15 +206,6 @@ namespace NewChessProject
             return output;
         }
 
-        private Color ConvertStringToColor(string str)
-        {
-            int red = ConvertHexadecimalToDenary(str.Substring(1, 2));
-            int green = ConvertHexadecimalToDenary(str.Substring(3, 2));
-            int blue = ConvertHexadecimalToDenary(str.Substring(5, 2));
-
-            return Color.FromRgb((byte)red, (byte)green, (byte)blue);
-        }
-
 
         private void SetDefaultSettings()
         {
@@ -199,17 +218,6 @@ namespace NewChessProject
         public void WriteVisualSettings()
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(visualSettingsFileName);
-
-            Console.WriteLine(blackBoardSquares);
-            Console.WriteLine(whiteBoardSquares);
-
-            file.WriteLine(blackBoardSquares);
-            file.WriteLine(whiteBoardSquares);
-            file.WriteLine(defendedHilight);
-            file.WriteLine(attackedHilight);
-            file.WriteLine(moveHilight);
-            file.WriteLine(selectedPieceHilight);
-            file.WriteLine(checkHilight);
 
             file.WriteLine(selectedColourTheme);
             file.WriteLine(pieceTileset);

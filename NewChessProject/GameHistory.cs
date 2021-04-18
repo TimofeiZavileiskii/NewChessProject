@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +25,9 @@ namespace NewChessProject
 
         public void ListGameHistory()
         {
-            foreach(FENPosition pos in previousPositions)
+            for(int i = 0; i < previousPositions.Count; i++)
             {
+                FENPosition pos = previousPositions[i];
                 Console.WriteLine(pos.Position + " " + pos.CurrentPlayer + " " + pos.Castling + " " + pos.EnPassante);
             }
         }
@@ -36,9 +36,9 @@ namespace NewChessProject
         {
             int repetitions = 0;
             FENPosition currentPosition = previousPositions.Peek();
-            foreach(FENPosition previousPosition in previousPositions)
+            for(int i = 0; i < previousPositions.Count; i++) 
             {
-                if (CompareFENPositions(previousPosition, currentPosition))
+                if (CompareFENPositions(previousPositions[i], currentPosition))
                     repetitions++;
             }
             if(!(repetitions < maxPositions))

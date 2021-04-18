@@ -10,14 +10,16 @@ namespace NewChessProject
 {
     class AIPlayer : Player
     {
+        const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
+
         ChessEngine engine;
         Thread readerThread;
 
         Dispatcher mainThreadDispatcher;
 
-        public AIPlayer(PlayerColour colour, ChessEngine engine, Game game) : base(colour, game)
+        public AIPlayer(PlayerColour colour, Game game, int difficulty, int timePerTurn) : base(colour, game)
         {
-            this.engine = engine;
+            engine = new ChessEngine(stockFishAddress, "Stockfish", difficulty, timePerTurn);
             mainThreadDispatcher = Dispatcher.CurrentDispatcher;
         }
         

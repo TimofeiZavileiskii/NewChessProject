@@ -24,7 +24,6 @@ namespace NewChessProject
                 return colour;
             }
         }
-
         public abstract void RequestSend(object sender, RequestMadeEventArgs e);
 
         public virtual void GameEnded(object sender, GameEndedEventArgs e)

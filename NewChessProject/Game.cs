@@ -58,15 +58,6 @@ namespace NewChessProject
         InsufficientMaterial
     }
 
-    /*title This is a title
-
-GameCreator->Game:StartGame
-Game->Board:GenerateMoves(PlayerColour currentPlayer)
-Game->Board:GenerateMoves(PlayerColour OppositeColour(currentPlayer))
-Game->Board:FilterMovesByCheck(PlayerColour currentPlayer)
-Game->Board:GenerateMoves
-*/
-
     class Game : INotifyPropertyChanged
     {
 
@@ -87,7 +78,6 @@ Game->Board:GenerateMoves
         List<Piece>[] takenPieces;
         Timer[] timers;
         double[] timesPerPlayer;
-        bool oneHumanPlayer;
 
         double addedTimePerTurn;
         GameHistory gameHistory;
@@ -109,6 +99,7 @@ Game->Board:GenerateMoves
             }
         }
 
+        //Presents the time value in timer as a string suitable for the timer label
         private string TurnTimeToMinutes(double totalTime)
         {
             const double decimalThreshold = 20;
@@ -148,7 +139,6 @@ Game->Board:GenerateMoves
         public void StartGame(double timePerPlayer, double timePerTurn, bool oneHumanPlayer)
         {
             const double reportTime = 0.1;
-            //fullMovesMade = 1;
 
             addedTimePerTurn = timePerTurn;
 
@@ -263,6 +253,7 @@ Game->Board:GenerateMoves
             }
         }
 
+        //Outputs the game state, which corresponds to the pawn by the player of colour, whose turn was represented by the inputed game state
         private GameState TurnSelectPawnState(GameState gm)
         {
             GameState result = GameState.BlackPawnSelection;
@@ -273,6 +264,7 @@ Game->Board:GenerateMoves
             return result;
         }
 
+        //Outputs colour of a player, whose turn is represented by the inputed state
         private PlayerColour IdentifyPlayersColour(GameState state)
         {
             PlayerColour output = PlayerColour.White;
@@ -298,6 +290,7 @@ Game->Board:GenerateMoves
             timers[(int)IdentifyPlayersColour(gameState)].Add(addedTimePerTurn);
         }
 
+        //Outputs wheather or not a piece is present on the given square
         public bool PiecePresent(PlayerColour colour, Vector vector)
         {
             if (board[vector] != null)
@@ -326,7 +319,7 @@ Game->Board:GenerateMoves
                     output = board[movedPiece].AvailableMoves;
             return output;
         }
-          
+        
         private MoveResult DetermineMoveResult()
         {
             MoveResult result = MoveResult.Continue;
@@ -363,6 +356,7 @@ Game->Board:GenerateMoves
             return result;
         }
 
+        //Method is used to set an unverified FEN position. It will not input anything and return false, if FEN string is not valid
         public bool SetFENString(string FenString)
         {
             if (!VerifyFENString(FenString))
@@ -400,6 +394,7 @@ Game->Board:GenerateMoves
             return correctFormat && uniqueKings && correctLength;
         }
 
+        //Sets the current game to the state specified by the passed FEN string
         private void ImportGame(FENPosition fenPosition)
         {
             currentFENPosition = fenPosition;
@@ -474,6 +469,7 @@ Game->Board:GenerateMoves
             return currentFENPosition;
         }
 
+        //Outputs the FEN string corresponding to the current game state
         private FENPosition GenerateFENPosition()
         {
             FENPosition output = board.GetFENInformation();
@@ -484,13 +480,10 @@ Game->Board:GenerateMoves
             return output;
         }
 
-        //Checks for the piece being under attack if it is moved
-
+        //Makes the move specified by the vectors, and outputs the board wich will appear as a result of the move
         private Board TestMove(Board board, PlayerColour nextPlayerColour, Vector movedPiece, Vector move)
         {
             Board testBoard = board.Copy();
-            //testBoard.GenerateMoves(Board.ReverseColour(nextPlayerColour));
-            //testBoard.GenerateMoves(nextPlayerColour);
             testBoard.MovePiece(movedPiece, board[movedPiece].AvailableMoves.Find(x => x == move));
             testBoard.GenerateMoves(nextPlayerColour);
             testBoard.GenerateMoves(Board.ReverseColour(nextPlayerColour));
@@ -521,6 +514,7 @@ Game->Board:GenerateMoves
             return output;
         }
 
+        //Event fireds if move was finished
         private void OnMadeMove(PlayerColour playerMadeMove)
         {
             if (IdentifyPlayersColour(gameState) == PlayerColour.Black)
