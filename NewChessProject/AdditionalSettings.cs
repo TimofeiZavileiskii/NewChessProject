@@ -23,7 +23,6 @@ namespace NewChessProject
             }
         }
 
-
         static HumanSettings()
         {
             assistanceLevels = ((AssistanceLevel[])Enum.GetValues(typeof(AssistanceLevel))).ToList();
@@ -100,11 +99,6 @@ namespace NewChessProject
         }
     }
 
-    class NetworkingSettings : PlayerSettings
-    {
-
-    }
-
     abstract class PlayerSettings
     {
 
@@ -153,6 +147,7 @@ namespace NewChessProject
                 generalSettings = value;
             }
         }
+
         public PlayerSettings BlackPlayerSettings
         {
             get
@@ -208,6 +203,7 @@ namespace NewChessProject
             playerSettings = new PlayerSettings[Enum.GetValues(typeof(PlayerColour)).Length];
         }
 
+        //Refills and redraws the stackpanel with the additional settings
         private void UpdateSettingsPresentation() 
         {
             panel.Children.Clear();
@@ -221,6 +217,7 @@ namespace NewChessProject
             blackPlayerSettings = AddPlayerSettings(PlayerColour.Black, blackPlayerType, blackPlayerSettings);
         }
 
+        //Adds settings specific for one player (Currently only AI player has specific settings)
         private PlayerSettings AddPlayerSettings(PlayerColour colour, PlayerType type, PlayerSettings settings)
         {
             switch (type)
@@ -233,7 +230,7 @@ namespace NewChessProject
             return settings;
         }
 
-
+        //Adds settings, which are common for both human players
         private HumanSettings AddHumanSettings(HumanSettings playerSettings)
         {
             if (playerSettings == null)
@@ -292,12 +289,6 @@ namespace NewChessProject
             return aiSettings;
         }
 
-        private void AddNetworkingSettings(PlayerColour playersColour)
-        {
-             
-        }
-
-
         private void AddWrapPanel(UIElement ui1, UIElement ui2)
         {
             WrapPanel wp = new WrapPanel();
@@ -305,7 +296,6 @@ namespace NewChessProject
             wp.Children.Add(ui2);
             panel.Children.Add(wp);
         }
-
      
         private void AddTitle(string text, int fontSize)
         {

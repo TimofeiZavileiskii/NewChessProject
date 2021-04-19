@@ -22,13 +22,6 @@ namespace NewChessProject
             engine = new ChessEngine(stockFishAddress, "Stockfish", difficulty, timePerTurn);
             mainThreadDispatcher = Dispatcher.CurrentDispatcher;
         }
-        
-        public void GameStarted(object sender, EventArgs eventArgs)
-        {
-            if(colour == PlayerColour.White)
-                MakeMove();
-        }
-
         private void MakeMove()
         {
             engine.UploadPosition(game.GetFENPosition().FENString);
@@ -49,17 +42,32 @@ namespace NewChessProject
             readerThread.Start();
         }
 
-        public override void GameEnded(object sender, GameEndedEventArgs e)
+        private bool EvaluateDraw()
         {
-            if (readerThread != null)
+            bool output = false;
+            engine.UploadPosition(game.GetFENPosition().FENString);
+            int assesment = engine.EvaluatePosition();
+
+            int factor = 1;
+            if (colour == PlayerColour.Black)
+                factor = -1;
+
+            if (assesment * factor < -2)
             {
-                readerThread.Abort();
+                output = true;
             }
+            return output;
+        }
+
+        public override void StartGame(object sender, GameStartEventArgs e)
+        {
+            if(e.StartingPlayer == Colour)
+                MakeMove();
         }
 
         public override void OnMadeMove(object sender, MadeMoveEventArgs e)
         {
-            if(e.PlayerToMove == colour)
+            if (e.PlayerToMove == colour)
                 MakeMove();
         }
 
@@ -79,26 +87,12 @@ namespace NewChessProject
             }
         }
 
-        ~AIPlayer()
+        public override void GameEnded(object sender, GameEndedEventArgs e)
         {
-            readerThread.Abort();
-        }
-
-        private bool EvaluateDraw()
-        {
-            bool output = false;
-            engine.UploadPosition(game.GetFENPosition().FENString);
-            int assesment = engine.EvaluatePosition();
-
-            int factor = 1;
-            if (colour == PlayerColour.Black)
-                factor = -1;
-
-            if (assesment * factor < -2)
+            if (readerThread != null)
             {
-                output = true;
+                readerThread.Abort();
             }
-            return output;
         }
 
     }

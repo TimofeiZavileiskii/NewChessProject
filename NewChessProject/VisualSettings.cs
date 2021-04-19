@@ -184,28 +184,6 @@ namespace NewChessProject
             file.Close();
         }
 
-        private int ConvertHexadecimalToDenary(string number)
-        {
-            int output = 0;
-
-            for(int i = 0; i < number.Length; i++)
-            {
-                char digit = number[i];
-                int numericValue;
-                if(digit > 'A')
-                {
-                    numericValue = 10 + digit - 'A';
-                }
-                else
-                {
-                    numericValue = (int)Char.GetNumericValue(digit);
-                }
-
-                output = (int)Math.Pow(numericValue, i);
-            }
-            return output;
-        }
-
 
         private void SetDefaultSettings()
         {

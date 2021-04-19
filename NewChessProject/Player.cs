@@ -10,13 +10,6 @@ namespace NewChessProject
     {
         protected PlayerColour colour;
         protected Game game;
-
-        public Player(PlayerColour colour, Game game)
-        {
-            this.colour = colour;
-            this.game = game;
-        }
-
         public PlayerColour Colour
         {
             get
@@ -24,12 +17,27 @@ namespace NewChessProject
                 return colour;
             }
         }
+
+        public Player(PlayerColour colour, Game game)
+        {
+            this.colour = colour;
+            this.game = game;
+        }
+
+        public virtual void StartGame(object sender, GameStartEventArgs e)
+        {
+
+        }
+
+        //All players must be able to respond to requests
         public abstract void RequestSend(object sender, RequestMadeEventArgs e);
 
         public virtual void GameEnded(object sender, GameEndedEventArgs e)
         {
 
         }
+
+
 
     }
 }

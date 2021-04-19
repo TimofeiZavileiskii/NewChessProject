@@ -99,6 +99,45 @@ namespace NewChessProject
             }
         }
 
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public PieceType GetPieceType(Vector location)
+        {
+            return board[location].Type;
+        }
+
+        public Vector GetKingsPosition(PlayerColour colour)
+        {
+            return board.GetKingPosition(colour);
+        }
+
+        public List<PieceRepresentation> GetPieceRepresentations()
+        {
+            return board.OutputPieces();
+        }
+
+        public List<Vector> GetAllowedPositions(PlayerColour colour, Vector movedPiece)
+        {
+            List<Vector> output = new List<Vector>();
+            if (board[movedPiece] != null)
+                if (board[movedPiece].Colour == colour)
+                    output = board[movedPiece].AvailableMoves;
+            return output;
+        }
+
+        public Game()
+        {
+            board = new Board();
+            board.SetDefaultBoardPosition();
+
+            gameState = GameState.WhiteMove;
+            gameHistory = new GameHistory();
+        }
+
+
         //Presents the time value in timer as a string suitable for the timer label
         private string TurnTimeToMinutes(double totalTime)
         {
@@ -127,13 +166,26 @@ namespace NewChessProject
             return output;
         }
 
-        public Game()
+        //The event called by timers to update the values, used in properties
+        private void UpdateTime(object sender, EventArgs e)
         {
-            board = new Board();
-            board.SetDefaultBoardPosition();
+            timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
+            NotifyPropertyChanged("WhiteTime");
+            NotifyPropertyChanged("BlackTime");
 
-            gameState = GameState.WhiteMove;
-            gameHistory = new GameHistory();
+            if (((Timer)sender).TimeLeft < 0.05)
+            {
+                PlayerColour playerRunOutOfTime = IdentifyPlayersColour(gameState);
+
+                if (board.NotEnoughMaterialForMate(Board.ReverseColour(playerRunOutOfTime)))
+                {
+                    GameEnded(MoveResult.InsufficientMaterial, null);
+                }
+                else
+                {
+                    GameEnded(MoveResult.TimeOut, playerRunOutOfTime);
+                }
+            }
         }
 
         public void StartGame(double timePerPlayer, double timePerTurn, bool oneHumanPlayer)
@@ -167,20 +219,39 @@ namespace NewChessProject
             GameStarted?.Invoke(this, new GameStartEventArgs(oneHumanPlayer, IdentifyPlayersColour(gameState)));
         }
 
+        //Event fireds if move was finished
+        private void OnMadeMove(PlayerColour playerMadeMove)
+        {
+            if (IdentifyPlayersColour(gameState) == PlayerColour.Black)
+                fullMovesMade++;
+            SwitchPlayers();
+
+            currentFENPosition = GenerateFENPosition();
+
+            gameHistory.Add(GetFENPosition());
+            GenerateMoves();
+
+            MoveResult result = DetermineMoveResult();
+
+            if (result == MoveResult.Check || result == MoveResult.Continue)
+            {
+                if (board.Rule50Counter >= max50MoveRule)
+                    GameEnded(MoveResult.move50Rule, null);
+                else
+                    MoveMade?.Invoke(this, new MadeMoveEventArgs(result, IdentifyPlayersColour(gameState)));
+            }
+            else
+            {
+                GameEnded(result, playerMadeMove);
+            }
+        }
+
         private void GameEnded(MoveResult endReason, PlayerColour? winner)
         {
             TerminateTimers();
 
             OnGameEnded?.Invoke(this, new GameEndedEventArgs(endReason, winner));
             ResetGame?.Invoke(this, EventArgs.Empty);
-        }
-
-        private PlayerColour FENPlayerToMove(FENPosition fenPos)
-        {
-            PlayerColour output = PlayerColour.White;
-            if (fenPos.CurrentPlayer == "b")
-                output = PlayerColour.Black;
-            return PlayerColour.White;
         }
 
         public void EndImmediatly()
@@ -191,36 +262,17 @@ namespace NewChessProject
 
         private void TerminateTimers()
         {
-            if(timers != null)
+            if (timers != null)
                 foreach (Timer timer in timers)
-                  timer.Terminate();
+                    timer.Terminate();
         }
 
-        //The event called by timers to update the values, used in properties
-        private void UpdateTime(object sender, EventArgs e)
+        private PlayerColour FENPlayerToMove(FENPosition fenPos)
         {
-            timesPerPlayer[(int)((Timer)sender).Owner] = ((Timer)sender).TimeLeft;
-            NotifyPropertyChanged("WhiteTime");
-            NotifyPropertyChanged("BlackTime");
-
-            if (((Timer)sender).TimeLeft < 0.05)
-            {
-                PlayerColour playerRunOutOfTime = IdentifyPlayersColour(gameState);
-
-                if (board.NotEnoughMaterialForMate(Board.ReverseColour(playerRunOutOfTime)))
-                {
-                    GameEnded(MoveResult.InsufficientMaterial, null);
-                }
-                else
-                {
-                    GameEnded(MoveResult.TimeOut, playerRunOutOfTime);
-                }
-            }
-        }
-
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PlayerColour output = PlayerColour.White;
+            if (fenPos.CurrentPlayer == "b")
+                output = PlayerColour.Black;
+            return PlayerColour.White;
         }
 
         private void GenerateMoves()
@@ -314,20 +366,6 @@ namespace NewChessProject
 
             OnMadeMove(sendersColour);
         }
-
-        public List<PieceRepresentation> GetPieceRepresentations()
-        {
-            return board.OutputPieces();
-        }
-
-        public List<Vector> GetAllowedPositions(PlayerColour colour, Vector movedPiece)
-        {
-            List<Vector> output = new List<Vector>();
-            if (board[movedPiece] != null)
-                if (board[movedPiece].Colour == colour)
-                    output = board[movedPiece].AvailableMoves;
-            return output;
-        }
         
         private MoveResult DetermineMoveResult()
         {
@@ -380,6 +418,9 @@ namespace NewChessProject
 
         private bool VerifyFENString(string fenString)
         {
+            if (fenString == "")
+                return false;
+
             bool correctFormat = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (-|(K?Q?k?q?)) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
 
             string[] splitString = fenString.Split(' ');
@@ -433,11 +474,6 @@ namespace NewChessProject
             board.UploadFENPosition(fenPosition);
         }
 
-        public Vector GetKingsPosition(PlayerColour colour)
-        {
-            return board.GetKingPosition(colour);
-        }
-
         public void Resign(PlayerColour colour)
         {
             GameEnded(MoveResult.Resignation, Board.ReverseColour(colour));
@@ -484,11 +520,6 @@ namespace NewChessProject
             return false;
         }
 
-        public PieceType GetPieceType(Vector location)
-        {
-            return board[location].Type;
-        }
-
         public FENPosition GetFENPosition()
         {
             return currentFENPosition;
@@ -521,6 +552,7 @@ namespace NewChessProject
         {
             return TestMove(board, colour, movedPiece, move).IsThereThreat(move, Board.ReverseColour(colour));
         }
+
         public bool CheckForDefence(PlayerColour colour, Vector movedPiece, Vector move)
         {
             bool output = true;
@@ -537,33 +569,6 @@ namespace NewChessProject
             }
 
             return output;
-        }
-
-        //Event fireds if move was finished
-        private void OnMadeMove(PlayerColour playerMadeMove)
-        {
-            if (IdentifyPlayersColour(gameState) == PlayerColour.Black)
-                fullMovesMade++;
-            SwitchPlayers();
-
-            currentFENPosition = GenerateFENPosition();
-
-            gameHistory.Add(GetFENPosition());
-            GenerateMoves();
-
-            MoveResult result = DetermineMoveResult();
-
-            if (result == MoveResult.Check || result == MoveResult.Continue)
-            {
-                if (board.Rule50Counter >= max50MoveRule)
-                    GameEnded(MoveResult.move50Rule, null);
-                else
-                    MoveMade?.Invoke(this, new MadeMoveEventArgs(result, IdentifyPlayersColour(gameState)));
-            }
-            else
-            {
-                GameEnded(result, playerMadeMove);
-            }
         }
     }
 }

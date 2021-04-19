@@ -70,7 +70,7 @@ namespace NewChessProject
             CreateStateMachine();
         }
 
-        public void StartGame(object sender, GameStartEventArgs e)
+        public override void StartGame(object sender, GameStartEventArgs e)
         {
             oneHumanPlayer = e.OneHumanPlayer;
             if (colour == e.StartingPlayer)
@@ -112,33 +112,53 @@ namespace NewChessProject
             stateMachine[(int)State.WaitForMove, (int)Input.ClickValidMove] = (ThrowException, State.WaitForMove);
         }
 
+        private void InputAction(Vector vector, Input input)
+        {
+            State originalState = state;
+
+            state = stateMachine[(int)state, (int)input].Item2;
+            if (stateMachine[(int)originalState, (int)input].Item1 != null)
+            {
+                stateMachine[(int)originalState, (int)input].Item1(vector);
+            }
+        }
+
+        public void OnWindowClicked(object sender, EventArgs e)
+        {
+            InputAction(Vector.NullVector, Input.ClickNothing);
+        }
+
+        public void OnBoardClicked(object sender, BoardClickedEventArgs e)
+        {
+            InputAction(e.Position, DetermineInput(e.Position));
+        }
+
+        private Input DetermineInput(Vector vector)
+        {
+            Input output = Input.ClickNothing;
+            if (allowedPositions.Contains(vector))
+            {
+                output = Input.ClickValidMove;
+            }
+            if (game.PiecePresent(colour, vector))
+            {
+                output = Input.ClickYourPiece;
+            }
+            return output;
+        }
+
+        public void PieceSelected(object sender, PieceSelectedEventArgs e)
+        {
+            if (state == State.SlectPawnTransformation)
+            {
+                game.ChoosePawnTransformation(colour, e.SelectedPieceType);
+            }
+        }
+
         private void DiselectPiece(Vector vec)
         {
             selectedPiece = Vector.NullVector;
             allowedPositions.Clear();
-            GameRepresentationUpdated();
-        }
-
-        private void ResetMove()
-        {
-            allowedPositions.Clear();
-            selectedPiece = Vector.NullVector;
-        }
-
-        private void MakeMove(Vector vec)
-        {
-            EnterResult result = game.EnterMove(colour, selectedPiece, allowedPositions.Find(x => x == vec));
-            if (result == EnterResult.WaitForPawnSlection)
-            {
-                state = State.SlectPawnTransformation;
-                guiBoard.ShowPieceSelection(Colour);
-            }
-            ResetMove();
-        }
-
-        private void SetMySelfAsGUIUser()
-        {
-            guiBoard.SetNewUser(OnBoardClicked, OnWindowClicked, PieceSelected, Resign, RequestTakeback, RequestDraw);
             GameRepresentationUpdated();
         }
 
@@ -154,36 +174,21 @@ namespace NewChessProject
             GameRepresentationUpdated();
         }
 
-        private List<BoardIndicator> GenerateMoveTiles()
+        private void MakeMove(Vector vec)
         {
-            List<BoardIndicator> output = new List<BoardIndicator>();
-            if(assistance != AssistanceLevel.NoAssistance)
+            EnterResult result = game.EnterMove(colour, selectedPiece, allowedPositions.Find(x => x == vec));
+            if (result == EnterResult.WaitForPawnSlection)
             {
-                foreach (Vector vec in allowedPositions)
-                {
-                    HilightType tileType = HilightType.SafeMove; //All moves have green colour
-                    if (assistance != AssistanceLevel.HilightMoves && game.CheckForAttackFrom(Board.ReverseColour(Colour), selectedPiece, vec))
-                    {
-                        tileType = HilightType.ThreatenedMove; //Moves under attack get red colour
-                        if (assistance != AssistanceLevel.HilightThreats && game.CheckForDefence(Colour, selectedPiece, vec))
-                            tileType = HilightType.DefendedMove; //Moves under attack and under defence get yellow colour
-                    }
-                    output.Add(new BoardIndicator(vec, tileType));
-                }
+                state = State.SlectPawnTransformation;
+                guiBoard.ShowPieceSelection(Colour);
             }
-
-            return output;
+            ResetMove();
         }
 
-        private void InputAction(Vector vector, Input input)
+        private void ResetMove()
         {
-            State originalState = state;
-
-            state = stateMachine[(int)state, (int)input].Item2;
-            if (stateMachine[(int)originalState, (int)input].Item1 != null)
-            {
-                stateMachine[(int)originalState, (int)input].Item1(vector);
-            }
+            allowedPositions.Clear();
+            selectedPiece = Vector.NullVector;
         }
 
         override public void OnMadeMove(object sender, MadeMoveEventArgs e)
@@ -234,6 +239,11 @@ namespace NewChessProject
 
         }
 
+        public void Resign(object sender, EventArgs e)
+        {
+            game.Resign(Colour);
+        }
+
         override public void GameEnded(object sender, GameEndedEventArgs e)
         {
             ResetMove();
@@ -244,28 +254,10 @@ namespace NewChessProject
             state = State.WaitForMove;
         }
 
-        public void OnBoardClicked(object sender, BoardClickedEventArgs e)
+        private void SetMySelfAsGUIUser()
         {
-            InputAction(e.Position, DetermineInput(e.Position));
-        }
-
-        private Input DetermineInput(Vector vector)
-        {
-            Input output = Input.ClickNothing;
-            if (allowedPositions.Contains(vector))
-            {
-                output = Input.ClickValidMove;
-            }
-            if (game.PiecePresent(colour, vector))
-            {
-                output = Input.ClickYourPiece;
-            }
-            return output;
-        }
-
-        public void Resign(object sender, EventArgs e)
-        {
-            game.Resign(Colour);
+            guiBoard.SetNewUser(OnBoardClicked, OnWindowClicked, PieceSelected, Resign, RequestTakeback, RequestDraw);
+            GameRepresentationUpdated();
         }
 
         private void GameRepresentationUpdated()
@@ -288,18 +280,25 @@ namespace NewChessProject
             return output;
         }
 
-        public void OnWindowClicked(object sender, EventArgs e)
+        private List<BoardIndicator> GenerateMoveTiles()
         {
-            InputAction(Vector.NullVector, Input.ClickNothing);
-        }
-
-        public void PieceSelected(object sender, PieceSelectedEventArgs e)
-        {
-            if (state == State.SlectPawnTransformation)
+            List<BoardIndicator> output = new List<BoardIndicator>();
+            if (assistance != AssistanceLevel.NoAssistance)
             {
-                game.ChoosePawnTransformation(colour, e.SelectedPieceType);
+                foreach (Vector vec in allowedPositions)
+                {
+                    HilightType tileType = HilightType.SafeMove; //All moves have green colour
+                    if (assistance != AssistanceLevel.HilightMoves && game.CheckForAttackFrom(Board.ReverseColour(Colour), selectedPiece, vec))
+                    {
+                        tileType = HilightType.ThreatenedMove; //Moves under attack get red colour
+                        if (assistance != AssistanceLevel.HilightThreats && game.CheckForDefence(Colour, selectedPiece, vec))
+                            tileType = HilightType.DefendedMove; //Moves under attack and under defence get yellow colour
+                    }
+                    output.Add(new BoardIndicator(vec, tileType));
+                }
             }
-        }
 
+            return output;
+        }
     }
 }

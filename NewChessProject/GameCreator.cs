@@ -27,21 +27,27 @@ namespace NewChessProject
             static readonly Dictionary<PlayerType, CreatePlayerDel> CreatePlayerFunctions;
 
             delegate Player CreatePlayerDel(PlayerColour colour, GameCreator gc);
+            
+            private static void BindPlayer(Player player, Game game)
+            {
+                game.OnGameEnded += player.GameEnded;
+                game.RequestMade += player.RequestSend;
+                game.GameStarted += player.StartGame;
+
+            }
 
             static Player CreateGUIPlayer(PlayerColour colour, GameCreator gc)
             {
                 GUIPlayer player = new GUIPlayer(colour, gc.game, gc.guiBoard, gc.additionalSettings.GeneralSettings);
 
-                gc.game.OnGameEnded += player.GameEnded;
-                gc.game.RequestMade += player.RequestSend;
-                gc.game.GameStarted += player.StartGame;
+                BindPlayer(player, gc.game);
 
                 return player;
             }
 
             static Player CreateAIPlayer(PlayerColour colour, GameCreator gc)
             {
-                AiSettings settings = ((AiSettings)gc.additionalSettings.PlayerSettings[(int)colour]);
+                AiSettings settings = (AiSettings)gc.additionalSettings.PlayerSettings[(int)colour];
                 int timePerTurn = settings.MaxTimePerTurn;
                 if(!(timePerTurn > 0))
                 {
@@ -50,9 +56,7 @@ namespace NewChessProject
 
                 AIPlayer player = new AIPlayer(colour, gc.game, settings.Difficulty, timePerTurn);
 
-                gc.game.GameStarted += player.GameStarted;
-                gc.game.RequestMade += player.RequestSend;
-                gc.game.OnGameEnded += player.GameEnded;
+                BindPlayer(player, gc.game);
 
                 return player;
             }

@@ -23,6 +23,7 @@ namespace NewChessProject
             engine = new Process();
             this.name = name;
             this.maximumTime = maximumTime;
+            this.difficulty = difficulty;
             maxumumDepth = 18;
 
             engine.EnableRaisingEvents = true;

@@ -11,7 +11,6 @@ namespace NewChessProject
         List<PieceRepresentation> pieces;
         List<BoardIndicator> moves;
         List<BoardIndicator> pieceHilights;
-        (Vector, Vector) PieceRepresentation;
 
         public GameRepresentation(List<PieceRepresentation> pieces = null, List<BoardIndicator> moves = null, List<BoardIndicator> pieceHilights = null)
         {

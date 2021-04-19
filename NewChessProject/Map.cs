@@ -6,46 +6,46 @@ using System.Threading.Tasks;
 
 namespace NewChessProject
 {
-    class Map<T1, T2>
+    class Map<Type1, Type2>
     {
-        Dictionary<T1, T2> forward;
-        Dictionary<T2, T1> reverse;
+        Dictionary<Type1, Type2> forward;
+        Dictionary<Type2, Type1> reverse;
 
         public Map()
         {
-            forward = new Dictionary<T1, T2>();
-            reverse = new Dictionary<T2, T1>();
+            forward = new Dictionary<Type1, Type2>();
+            reverse = new Dictionary<Type2, Type1>();
         }
 
-        public void Add(T1 t1, T2 t2)
+        public void Add(Type1 item1, Type2 item2)
         {
-            forward.Add(t1, t2);
-            reverse.Add(t2, t1);
+            forward.Add(item1, item2);
+            reverse.Add(item2, item1);
         }
 
-        public bool Contains(T1 t1)
+        public bool Contains(Type1 item1)
         {
-            return forward.ContainsKey(t1);
+            return forward.ContainsKey(item1);
         }
 
-        public bool Contains(T2 t2)
+        public bool Contains(Type2 item2)
         {
-            return reverse.ContainsKey(t2);
+            return reverse.ContainsKey(item2);
         }
 
-        public T2 this[T1 t1]
+        public Type2 this[Type1 item1]
         {
             get
             {
-                return forward[t1];
+                return forward[item1];
             }
         }
 
-        public T1 this[T2 t2]
+        public Type1 this[Type2 item2]
         {
             get
             {
-                return reverse[t2];
+                return reverse[item2];
             }
         }
 
