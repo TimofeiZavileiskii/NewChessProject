@@ -101,7 +101,9 @@ namespace NewChessProject
             }
             set
             {
-                initialTime = Convert.ToDouble(value);
+                double inputedTime = Convert.ToDouble(value);
+                if (inputedTime > 0)
+                    initialTime = inputedTime;
             }
         }
         public double TimePerTurn
@@ -112,7 +114,9 @@ namespace NewChessProject
             }
             set
             {
-                timePerTurn = Convert.ToDouble(value);
+                double inputedTime = Convert.ToDouble(value);
+                if (inputedTime > 0)
+                    timePerTurn = inputedTime;
             }
         }
         public string ImportedFENString

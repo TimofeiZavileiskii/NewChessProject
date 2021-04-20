@@ -108,7 +108,7 @@ namespace NewChessProject
                 previousLine = currLine;
                 currLine = engine.StandardOutput.ReadLine();
                 Console.WriteLine(currLine);
-            } while (DetermineEndOfMessage(currLine)) ;
+            } while (!DetermineEndOfMessage(currLine)) ;
 
             int posEvaluation = Convert.ToInt32(previousLine.Split(' ')[9]);
 

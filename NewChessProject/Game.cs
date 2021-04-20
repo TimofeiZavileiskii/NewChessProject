@@ -421,42 +421,55 @@ namespace NewChessProject
             if (fenString == "")
                 return false;
 
-            bool correctFormat = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (-|(K?Q?k?q?)) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
+            bool correctFormat = false;
+            bool kingIsSafe = false;
+            bool uniqueKings = false;
+            bool correctLength = false;
+            bool noPawnsNeedToPromote = false;
 
-            string[] splitString = fenString.Split(' ');
-            bool uniqueKings = Regex.Matches(splitString[0], @"k").Count == 1 && Regex.Matches(splitString[0], @"K").Count == 1;
+            correctFormat = Regex.IsMatch(fenString, @"^(([rnbqkpRNBQKP1-8]{1,8}\/){7}([rnbqkpRNBQKP1-8]{1,8}) (w|b) (-|(K?Q?k?q?)) (-|([a-h][1-8])) (([0-9])|([1-9][0-9]*)) [1-9][0-9]*)$");
 
-            bool correctLength = true;
-
-            //Checks that length of each row is correct
-            foreach(string row in splitString[0].Split('/'))
+            if (correctFormat)
             {
-                int numbersSum = 0;
-                foreach (Match number in Regex.Matches(row, @"\d"))
+                string[] splitString = fenString.Split(' ');
+                uniqueKings = Regex.Matches(splitString[0], @"k").Count == 1 && Regex.Matches(splitString[0], @"K").Count == 1;
+
+                //Checks that length of each row is correct
+                foreach (string row in splitString[0].Split('/'))
                 {
-                    numbersSum += Convert.ToInt32(number.ToString());
+                    int numbersSum = 0;
+                    foreach (Match number in Regex.Matches(row, @"\d"))
+                    {
+                        numbersSum += Convert.ToInt32(number.ToString());
+                    }
+
+                    correctLength = Regex.Matches(row, @"[rnbqkpRNBQKP]").Count + numbersSum == Board.boardWidth;
+
+                    if (!correctLength)
+                        break;
                 }
 
-                correctLength = Regex.Matches(row, @"[rnbqkpRNBQKP]").Count + numbersSum == Board.boardWidth;
+                if (uniqueKings && correctLength)
+                {
+                    //Checks that no pawn is standing on the square, where it has to promote
+                    noPawnsNeedToPromote = !splitString[0].Split('/')[0].Contains("P") && !splitString[0].Split('/')[Board.boardHeight - 1].Contains("p");
 
-                if (!correctLength)
-                    break;
+                    //Checks that king of the player, who cannot move right now, is not in check
+                    //It requires to generatePositions
+
+                    if (correctFormat && uniqueKings && correctLength && noPawnsNeedToPromote && noPawnsNeedToPromote)
+                    {
+                        Board testBoard = new Board();
+                        FENPosition testedFENPosition = new FENPosition(fenString);
+                        testBoard.UploadFENPosition(testedFENPosition);
+
+                        PlayerColour currentTurn = FENPlayerToMove(testedFENPosition);
+                        testBoard.GenerateMoves(currentTurn);
+
+                        kingIsSafe = !testBoard.IsChecked(Board.ReverseColour(currentTurn));
+                    }
+                }
             }
-
-            //Checks that no pawn is standing on the square, where it has to promote
-            bool noPawnsNeedToPromote = !splitString[0].Split('/')[0].Contains("P") && !splitString[0].Split('/')[Board.boardHeight - 1].Contains("p");
-
-            //Checks that king of the player, who cannot move right now, is not in check
-            //It requires to generatePositions
-            Board testBoard = new Board();
-            FENPosition testedFENPosition = new FENPosition(fenString);
-            testBoard.UploadFENPosition(testedFENPosition);
-
-            PlayerColour currentTurn = FENPlayerToMove(testedFENPosition);
-            testBoard.GenerateMoves(currentTurn);
-
-            bool kingIsSafe = !testBoard.IsChecked(Board.ReverseColour(currentTurn));
-
             return correctFormat && uniqueKings && correctLength && noPawnsNeedToPromote && noPawnsNeedToPromote && kingIsSafe;
         }
 
