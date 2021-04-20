@@ -11,9 +11,6 @@ namespace NewChessProject
     class AIPlayer : Player
     {
         const string stockFishAddress = @"stockfish_13_win_x64_bmi2\stockfish_13_win_x64_bmi2";
-        const int WaitForEndOfProcess = 50; 
-
-        bool working;
 
         ChessEngine engine;
         Thread readerThread;
@@ -24,7 +21,6 @@ namespace NewChessProject
         {
             engine = new ChessEngine(stockFishAddress, "Stockfish", difficulty, timePerTurn);
             mainThreadDispatcher = Dispatcher.CurrentDispatcher;
-            working = false;
         }
         private void MakeMove()
         {
@@ -33,18 +29,12 @@ namespace NewChessProject
             readerThread = new Thread(() =>
             {
                 AiMove chosenMove = engine.GetBestMove();
-                while (working)
-                {
-                    Thread.Sleep(WaitForEndOfProcess);
-                }
-                working = true;
                 mainThreadDispatcher.Invoke(() =>
                 {
                     EnterResult result = game.EnterMove(colour, chosenMove.Move.Item1, game.GetAllowedPositions(colour, chosenMove.Move.Item1).Find(x => x == chosenMove.Move.Item2));
                     if (result == EnterResult.WaitForPawnSlection)
                     {
                         game.ChoosePawnTransformation(colour, (PieceType)chosenMove.ChosenPawnTransformation);
-                        working = false;
                     }
                 });
             });
