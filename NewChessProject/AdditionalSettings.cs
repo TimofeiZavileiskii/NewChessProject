@@ -6,9 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+
 
 
 namespace NewChessProject
@@ -71,7 +69,6 @@ namespace NewChessProject
         int maxTimePerTurn;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
 
 
         public AiSettings()

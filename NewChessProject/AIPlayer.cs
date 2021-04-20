@@ -47,7 +47,7 @@ namespace NewChessProject
         private bool EvaluateDraw()
         {
             bool output = false;
-            int assesment = 0;
+            double assesment = 0;
 
             hasFinishedWorking.WaitOne();
             hasFinishedWorking.Reset();
@@ -59,7 +59,7 @@ namespace NewChessProject
             if (colour == PlayerColour.Black)
                 factor = -1;
 
-            if (assesment * factor < -3)
+            if (assesment * factor < -2)
             {
                 output = true;
             }

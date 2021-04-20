@@ -3,8 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Windows.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Input;
@@ -117,7 +115,7 @@ namespace NewChessProject
             set
             {
                 double inputedTime = Convert.ToDouble(value);
-                if (inputedTime > 0)
+                if (inputedTime > -1)
                     timePerTurn = inputedTime;
                 NotifyPropertyChanged("TimePerTurn");
             }

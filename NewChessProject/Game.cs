@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 
 
 
-
 namespace NewChessProject
 {
     enum PlayerColour

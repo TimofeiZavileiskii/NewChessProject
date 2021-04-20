@@ -52,6 +52,14 @@ namespace NewChessProject
                     output = true;
             return output;
         }
+        private bool DetermineEndOfEvalMessage(string str)
+        {
+            bool output = false;
+            if (str != null)
+                if (str.Split(' ')[0] == "Final")
+                    output = true;
+            return output;
+        }
 
         public AiMove GetBestMove()
         {
@@ -97,22 +105,18 @@ namespace NewChessProject
             }
         }
 
-        public int EvaluatePosition()
+        public double EvaluatePosition()
         {
             engine.StandardInput.WriteLine("position fen " + position);
-            engine.StandardInput.WriteLine("go " + GetBoundary());
+            engine.StandardInput.WriteLine("eval");
 
-            string previousLine = "";
             string currLine = "";
             do{
-                previousLine = currLine;
                 currLine = engine.StandardOutput.ReadLine();
                 Console.WriteLine(currLine);
-            } while (!DetermineEndOfMessage(currLine)) ;
+            } while (!DetermineEndOfEvalMessage(currLine)) ;
 
-            int posEvaluation = Convert.ToInt32(previousLine.Split(' ')[9]);
-
-            return posEvaluation;
+            return Convert.ToDouble(currLine.Split(' ')[6]);
         }
     }
 }
