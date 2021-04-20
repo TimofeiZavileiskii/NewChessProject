@@ -40,7 +40,7 @@ namespace NewChessProject
         Done,
         NotPlayersMove,
         WrongSquareSelected,
-        WaitForPawnSlection,
+        WaitForPawnPromotion,
         NoMoveExist
     }
 
@@ -304,7 +304,7 @@ namespace NewChessProject
             if(board.IsPawnTransformationNeeded(sendersColour))
             {
                 gameState = TurnSelectPawnState(gameState);
-                return EnterResult.WaitForPawnSlection;
+                return EnterResult.WaitForPawnPromotion;
             }
             else
             {
@@ -359,10 +359,10 @@ namespace NewChessProject
             return false;
         }
 
-        public void ChoosePawnTransformation(PlayerColour sendersColour, PieceType type)
+        public void ChoosePawnPromotion(PlayerColour sendersColour, PieceType type)
         {
             if(IdentifyPlayersColour(gameState) == sendersColour)
-                board.TransformPawn(sendersColour, type);
+                board.PromotePawn(sendersColour, type);
 
             OnMadeMove(sendersColour);
         }

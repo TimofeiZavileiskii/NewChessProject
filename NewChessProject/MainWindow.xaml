@@ -31,8 +31,7 @@
                 <Label FontSize="15" Content=""/>
             </WrapPanel>
             <WrapPanel Margin="0, 30, 0, 0">
-                <Label FontSize="15" Content="Previous moves"/>
-                <Label FontSize="15" Content=""/>
+
             </WrapPanel>
             <WrapPanel Name="ControlButtons" Margin="0,30, 0, 0">
                 <Button FontSize="15" Content="Take back" Margin ="100, 10, 0, 10" HorizontalAlignment="Center"/>

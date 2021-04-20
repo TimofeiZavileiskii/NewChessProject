@@ -35,9 +35,9 @@ namespace NewChessProject
                 mainThreadDispatcher.Invoke(() =>
                 {
                     EnterResult result = game.EnterMove(colour, chosenMove.Move.Item1, game.GetAllowedPositions(colour, chosenMove.Move.Item1).Find(x => x == chosenMove.Move.Item2));
-                    if (result == EnterResult.WaitForPawnSlection)
+                    if (result == EnterResult.WaitForPawnPromotion)
                     {
-                        game.ChoosePawnTransformation(colour, (PieceType)chosenMove.ChosenPawnTransformation);
+                        game.ChoosePawnPromotion(colour, (PieceType)chosenMove.ChosenPawnTransformation);
                     }            
                 });
             });

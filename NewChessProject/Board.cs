@@ -96,7 +96,7 @@ namespace NewChessProject
             rule50Counter = 0;
         }
 
-        public void TransformPawn(PlayerColour colour, PieceType piece)
+        public void PromotePawn(PlayerColour colour, PieceType piece)
         {
             this[LocatePawnNeedingTransformation(colour)] = MakePiece(piece, colour, true);
         }

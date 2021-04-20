@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Shapes;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Windows.Input;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace NewChessProject
 {
@@ -20,7 +19,7 @@ namespace NewChessProject
         AIPlayer
     }
 
-    class GameCreator
+    class GameCreator : INotifyPropertyChanged
     {
         static private class PlayerFactory
         {
@@ -83,6 +82,8 @@ namespace NewChessProject
         MainWindow gameWindow;
         AdditionalSettings additionalSettings;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         string importFENString;
         double initialTime;
         double timePerTurn;
@@ -104,6 +105,7 @@ namespace NewChessProject
                 double inputedTime = Convert.ToDouble(value);
                 if (inputedTime > 0)
                     initialTime = inputedTime;
+                NotifyPropertyChanged("InitialTime");
             }
         }
         public double TimePerTurn
@@ -117,6 +119,7 @@ namespace NewChessProject
                 double inputedTime = Convert.ToDouble(value);
                 if (inputedTime > 0)
                     timePerTurn = inputedTime;
+                NotifyPropertyChanged("TimePerTurn");
             }
         }
         public string ImportedFENString
@@ -253,6 +256,10 @@ namespace NewChessProject
             Binding blackBinding = new Binding("BlackTime");
             blackBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             blackTime.SetBinding(ContentControl.ContentProperty, blackBinding);
+        }
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void ReadGameSettings()

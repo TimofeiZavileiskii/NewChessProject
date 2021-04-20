@@ -27,7 +27,7 @@ namespace NewChessProject
     {
         SelectMove,
         SelectPiece,
-        SlectPawnTransformation,
+        SlectPawnPromotion,
         WaitForRequestAnswer,
         WaitForMove
     }
@@ -99,9 +99,9 @@ namespace NewChessProject
             stateMachine[(int)State.SelectMove, (int)Input.ClickYourPiece] = (SelectPiece, State.SelectMove);
             stateMachine[(int)State.SelectMove, (int)Input.ClickValidMove] = (MakeMove, State.SelectPiece);
 
-            stateMachine[(int)State.SlectPawnTransformation, (int)Input.ClickNothing] = (null, State.SlectPawnTransformation);
-            stateMachine[(int)State.SlectPawnTransformation, (int)Input.ClickYourPiece] = (null, State.SlectPawnTransformation);
-            stateMachine[(int)State.SlectPawnTransformation, (int)Input.ClickValidMove] = (null, State.SlectPawnTransformation);
+            stateMachine[(int)State.SlectPawnPromotion, (int)Input.ClickNothing] = (null, State.SlectPawnPromotion);
+            stateMachine[(int)State.SlectPawnPromotion, (int)Input.ClickYourPiece] = (null, State.SlectPawnPromotion);
+            stateMachine[(int)State.SlectPawnPromotion, (int)Input.ClickValidMove] = (null, State.SlectPawnPromotion);
 
             stateMachine[(int)State.WaitForRequestAnswer, (int)Input.ClickNothing] = (null, State.WaitForRequestAnswer);
             stateMachine[(int)State.WaitForRequestAnswer, (int)Input.ClickYourPiece] = (null, State.WaitForRequestAnswer);
@@ -149,9 +149,9 @@ namespace NewChessProject
 
         public void PieceSelected(object sender, PieceSelectedEventArgs e)
         {
-            if (state == State.SlectPawnTransformation)
+            if (state == State.SlectPawnPromotion)
             {
-                game.ChoosePawnTransformation(colour, e.SelectedPieceType);
+                game.ChoosePawnPromotion(colour, e.SelectedPieceType);
             }
         }
 
@@ -177,9 +177,9 @@ namespace NewChessProject
         private void MakeMove(Vector vec)
         {
             EnterResult result = game.EnterMove(colour, selectedPiece, allowedPositions.Find(x => x == vec));
-            if (result == EnterResult.WaitForPawnSlection)
+            if (result == EnterResult.WaitForPawnPromotion)
             {
-                state = State.SlectPawnTransformation;
+                state = State.SlectPawnPromotion;
                 guiBoard.ShowPieceSelection(Colour);
             }
             ResetMove();

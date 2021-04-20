@@ -4,6 +4,8 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -63,10 +65,14 @@ namespace NewChessProject
         }
     }
 
-    class AiSettings : PlayerSettings
+    class AiSettings : PlayerSettings, INotifyPropertyChanged
     {
         int difficulty;
         int maxTimePerTurn;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
 
         public AiSettings()
         {
@@ -81,8 +87,13 @@ namespace NewChessProject
             }
             set
             {
-                difficulty = value;
-                Console.WriteLine(value);
+                int input = Convert.ToInt32(value);
+                if (input < 1)
+                    input = 1;
+                if (input > 20)
+                    input = 20;
+                difficulty = input;
+                NotifyPropertyChanged("Difficulty");
             }
         }
         public int MaxTimePerTurn
@@ -93,9 +104,17 @@ namespace NewChessProject
             }
             set
             {
-                maxTimePerTurn = value;
-                Console.WriteLine(value);
+                int input = Convert.ToInt32(value);
+                if (input < 0)
+                    input = 0;
+                maxTimePerTurn = input;
+
+                NotifyPropertyChanged("MaxTimePerTurn");
             }
+        }
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
@@ -274,6 +293,7 @@ namespace NewChessProject
 
             difficultTb.DataContext = aiSettings;
             Binding difficultyBind = new Binding("Difficulty");
+            difficultyBind.Mode = BindingMode.TwoWay;
             difficultyBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             difficultTb.SetBinding(TextBox.TextProperty, difficultyBind);
 
@@ -283,6 +303,7 @@ namespace NewChessProject
 
             maxTimeTb.DataContext = aiSettings;
             Binding maxTimeBind = new Binding("MaxTimePerTurn");
+            maxTimeBind.Mode = BindingMode.TwoWay;
             maxTimeBind.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             maxTimeTb.SetBinding(TextBox.TextProperty, maxTimeBind);
 
