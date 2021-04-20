@@ -272,7 +272,7 @@ namespace NewChessProject
             PlayerColour output = PlayerColour.White;
             if (fenPos.CurrentPlayer == "b")
                 output = PlayerColour.Black;
-            return PlayerColour.White;
+            return output;
         }
 
         private void GenerateMoves()
@@ -503,6 +503,8 @@ namespace NewChessProject
             MakeRequest(request);
             if (request.Agreed)
                 GameEnded(MoveResult.Draw, null);
+            else
+                MessageBox.Show("Draw was refused");
         }
 
         public bool TakeBack(PlayerColour colour)
