@@ -334,8 +334,15 @@ namespace NewChessProject
 
 
 
-            if(fenPos.EnPassante.Length == 2)
-                enPassantePiece = new Vector(fenPos.EnPassante[0] - 'a', Convert.ToInt32(fenPos.EnPassante[1].ToString()));
+            if (fenPos.EnPassante.Length == 2)
+            {
+                int offset = -1;
+                if (fenPos.CurrentPlayer == "b")
+                    offset = 1;
+
+                enPassantePiece = new Vector(fenPos.EnPassante[0] - 'a', Convert.ToInt32(fenPos.EnPassante[1].ToString()) - 1 + offset);
+                ((Pawn)this[enPassantePiece]).VulnurableToEnPassante = true;
+            }
 
             rule50Counter = Convert.ToInt32(fenPos.HalfMoveTimer);
         }

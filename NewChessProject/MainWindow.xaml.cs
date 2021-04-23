@@ -79,7 +79,7 @@ namespace NewChessProject
 
         private void WindowClosed(object sender, EventArgs e)
         {
-            game.EndImmediatly();
+            gc.CloseGame();
             settingsWindow.Close();
         }
 

@@ -70,7 +70,7 @@
             <Button x:Name="QueenChoice" Width="48" Height="45" Margin="0,0,0,0"/>
             <Button x:Name="RookChoice" Width="48" Height="45" Margin="10,0,0,0"/>
             <Button x:Name="BishopChoice" Width="48" Height="45" Margin="10,0,0,0"/>
-            <Button x:Name="KnightChoice" Width="48" Height="45" Margin="5,28,0,0"/>
+            <Button x:Name="KnightChoice" Width="48" Height="45" Margin="10,0,0,0"/>
         </WrapPanel>
         <Label x:Name="ImportLabel" Grid.Column="0" Grid.Row="1" Content="FEN string:" Margin="80, -40, 0, 0" Height="27" Width="160" FontSize="12"/>
         <Button x:Name="ImportButton" Grid.Column="0" Grid.Row="1" MaxHeight="25" MaxWidth="70" Content="Import" Margin="-30, 25, 0, 0" Click="ImportFen"/>

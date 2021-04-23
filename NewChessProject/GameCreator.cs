@@ -106,6 +106,7 @@ namespace NewChessProject
                 NotifyPropertyChanged("InitialTime");
             }
         }
+
         public double TimePerTurn
         {
             get
@@ -230,6 +231,10 @@ namespace NewChessProject
 
             game.StartGame(initialTime, timePerTurn, oneHumanPlayer);
             BindTimersWithInterface();
+        }
+        public void CloseGame()
+        {
+            game.EndImmediatly();
         }
 
         private void CreateGameViewer()

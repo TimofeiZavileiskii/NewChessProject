@@ -358,6 +358,7 @@ namespace NewChessProject
             return false;
         }
 
+        //Promotes the pawn of the players' colour
         public void ChoosePawnPromotion(PlayerColour sendersColour, PieceType type)
         {
             if(IdentifyPlayersColour(gameState) == sendersColour)
@@ -562,22 +563,24 @@ namespace NewChessProject
             return testBoard;
         }
 
-        public bool CheckForAttackFrom(PlayerColour colour, Vector movedPiece, Vector move)
+        //Returns true if the piece is attacked by opponents pieces
+        public bool CheckForAttackFrom(PlayerColour playersColour, Vector movedPiece, Vector move)
         {
-            return TestMove(board, colour, movedPiece, move).IsThereThreat(move, Board.ReverseColour(colour));
+            return TestMove(board, playersColour, movedPiece, move).IsThereThreat(move, Board.ReverseColour(playersColour));
         }
-
-        public bool CheckForDefence(PlayerColour colour, Vector movedPiece, Vector move)
+        
+        //Returns true if the piece is attakced by opponents pieces and defended by the player's pieces
+        public bool CheckForDefence(PlayerColour playersColour, Vector movedPiece, Vector move)
         {
             bool output = true;
 
-            Board testBoard = TestMove(board, Board.ReverseColour(colour), movedPiece, move);
-            List<Vector> attackingPieces = testBoard.GetAttackingPieces(Board.ReverseColour(colour), move);
+            Board testBoard = TestMove(board, Board.ReverseColour(playersColour), movedPiece, move);
+            List<Vector> attackingPieces = testBoard.GetAttackingPieces(Board.ReverseColour(playersColour), move);
             
             foreach(Vector attackingPiece in attackingPieces)
             {
-                Board newTestBoard = TestMove(testBoard, colour, attackingPiece, move);
-                output = newTestBoard.IsThereThreat(move, Board.ReverseColour(colour));
+                Board newTestBoard = TestMove(testBoard, playersColour, attackingPiece, move);
+                output = newTestBoard.IsThereThreat(move, Board.ReverseColour(playersColour));
                 if (!output)
                     break;
             }
