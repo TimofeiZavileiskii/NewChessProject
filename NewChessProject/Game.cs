@@ -207,7 +207,7 @@ namespace NewChessProject
                 timers[(int)colour] = new Timer(reportTime, timePerPlayer * minuteLength, colour);
                 timers[(int)colour].OnTimePassed += UpdateTime;
             }
-            timers[(int)PlayerColour.White].Start();
+            timers[(int)IdentifyPlayersColour(gameState)].Start();
 
             GenerateMoves();
 
